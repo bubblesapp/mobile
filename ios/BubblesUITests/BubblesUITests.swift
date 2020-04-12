@@ -23,25 +23,32 @@ class BubblesUITests: XCTestCase {
     }
 
     func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        setupSnapshot(app)
-        app.launch()
-        sleep(3)
-        snapshot("Bubble")
+      // UI tests must launch the application that they test.
+      let app = XCUIApplication()
+      setupSnapshot(app)
+      app.launch()
+      sleep(10)
+      app.otherElements["signIn"].tap()
+      sleep(10)
+      snapshot("Bubble")
+      sleep(2)
+      app.otherElements["popButton"].tap()
+      sleep(2)
+      app.otherElements["confirmPopButton"].tap()
+      sleep(2)
+      snapshot("Popped")
+      sleep(2)
+      app.otherElements["resetBubble"].tap()
+      sleep(2)
       app.otherElements["newInviteButton"].tap()
-        snapshot("NewInvite")
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-                        
-    }
-
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTOSSignpostMetric.applicationLaunch]) {
-                XCUIApplication().launch()
-            }
-        }
+      sleep(2)
+      snapshot("NewInvite")
+      sleep(2)
+      app.otherElements["profileTab"].tap()
+      sleep(2)
+      app.otherElements["signOut"].tap()
+      sleep(2)
+      // Use recording to get started writing UI tests.
+      // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 }

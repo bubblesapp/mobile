@@ -1,1 +1,6 @@
-test_instrumentation_runner('org.bubblesapp.bubbles.test.CustomTestRunner')
+test_instrumentation_runner 'org.bubblesapp.bubbles.test.CustomTestRunner'
+use_adb_root true
+skip_open_summary true
+exit_on_test_failure false
+clear_previous_screenshots true
+reinstall_app true

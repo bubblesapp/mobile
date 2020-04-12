@@ -121,7 +121,7 @@ const styles = StyleSheet.create<Styles>({
     backgroundColor: 'rgba(0,0,0,0.3)',
   },
   modalSubContainer: {
-    flex: 0.6,
+    flex: 0.8,
     width: '90%',
     borderRadius: 12,
     justifyContent: 'center',

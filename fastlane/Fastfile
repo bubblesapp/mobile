@@ -10,21 +10,7 @@ platform :ios do
 
 	desc 'Generate iOS app screenshots'
 	lane :screenshots do
-    	capture_screenshots( # See Snapfile
-    		workspace('ios/bubbles.xcworkspace'),
-    		devices([
-				#"iPhone 8",
-				#"iPhone SE",
-				"iPhone 11"
-			]),
-			languages([
-				"en-US"
-			]),
-			configuration('Release'),
-			erase_simulator(true),
-			reinstall_app(true),
-			output_directory('screenshots/ios')
-    	) 
+    	capture_ios_screenshots  # See Snapfile
 	end
 
 	lane :beta do
@@ -34,19 +20,19 @@ platform :ios do
 			podfile: './ios/Podfile'
 		)
 		increment_build_number(
-			build_number: ENV['TRAVIS_BUILD_NUMBER'],
+			#build_number: ENV['TRAVIS_BUILD_NUMBER'],
 			xcodeproj: "./ios/bubbles.xcodeproj"
 		)
-		package = load_json(json_path: '../package.json')
-		increment_version_number(version_number: package['version'])
-		sync_code_signing(type: 'appstore')
+		package = load_json(json_path: 'package.json')
+		#increment_version_number(version_number: package['version'])
+		sync_code_signing(type: 'appstore')  # See Matchfile
       	build_app(
       		clean: true,
         	scheme: 'Bubbles Prod',
         	workspace: './ios/bubbles.xcworkspace',
 			output_directory: './ios/ipas/beta'
       	)
-      	upload_to_testflight
+      	upload_to_testflight # See Appfile
     end
 
     lane :release do
@@ -75,12 +61,12 @@ platform :ios do
     	)
     	capture_screenshots
         upload_to_app_store(
-        	screenshots_path: './screenshots/ios/',
-        	metadata_path: './metadata/ios/',
+        	screenshots_path: 'fastlane/metadata/ios/screenshots',
+        	metadata_path: 'fastlane/metadata/ios',
         	reject_if_possible: true,
         	submit_for_review: true,
         	overwrite_screenshots: true
-    	)
+    	) # See Deliverfile
     end
 end
 
@@ -117,26 +103,27 @@ platform :android do
 			flavor: 'screenshots'
 		)
 		test_apk_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
-    	capture_android_screenshots(
-    		use_adb_root: true,
-    		skip_open_summary: true,
-    		exit_on_test_failure: false,
-    		clear_previous_screenshots: true,
-    		reinstall_app: true,
+		capture_android_screenshots(
     		app_apk_path: app_apk_path,
 			tests_apk_path: test_apk_path
-		)
+		)  # See Screengrabfile
 	end
 
 	lane :beta do
 		increment_version_code(
-			version_code: ENV['TRAVIS_BUILD_NUMBER'],
+			#version_code: ENV['TRAVIS_BUILD_NUMBER'],
 			gradle_file_path: 'android/app/build.gradle'
 		)
 		package = load_json(json_path: 'package.json')
 		gradle(
+			project_dir: './android/',
+			gradle_path: './gradlew',
+			task: 'clean'
+		)
+		gradle(
 			task: 'bundle',
 			build_type: 'Release',
+			flavor: 'prod',
 			print_command: false,
 			project_dir: './android/',
 			gradle_path: './gradlew',
