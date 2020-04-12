@@ -12,8 +12,8 @@ import {StatusBar} from 'react-native';
 import {DynamicLinkHandler} from './src/nav/DynamicLinkHandler';
 import {NotificationsManager} from './src/notifications/NotificationsManager';
 import {APIProvider} from './src/api/useAPI';
-import getTheme from './native-base-theme/components';
-import commonColor from './native-base-theme/variables/commonColor';
+import getTheme from './src/native-base-theme/components';
+import commonColor from './src/native-base-theme/variables/commonColor';
 
 console.disableYellowBox = true;
 
