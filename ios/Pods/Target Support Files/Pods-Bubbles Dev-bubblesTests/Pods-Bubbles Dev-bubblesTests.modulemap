@@ -1,0 +1,6 @@
+module Pods_Bubbles_Dev_bubblesTests {
+  umbrella header "Pods-Bubbles Dev-bubblesTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

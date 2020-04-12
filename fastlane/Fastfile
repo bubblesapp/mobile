@@ -1,0 +1,158 @@
+platform :ios do
+    desc 'Generate iOS app icons'
+    lane :icons do
+    	appicon(
+    	    appicon_image_file: 'fastlane/metadata/app_icon.png',
+		   	appicon_devices: [:ipad, :iphone, :ios_marketing],
+		   	appicon_path: 'ios/bubbles/Images.xcassets'
+		)
+	end
+
+	desc 'Generate iOS app screenshots'
+	lane :screenshots do
+    	capture_screenshots( # See Snapfile
+    		workspace('ios/bubbles.xcworkspace'),
+    		devices([
+				#"iPhone 8",
+				#"iPhone SE",
+				"iPhone 11"
+			]),
+			languages([
+				"en-US"
+			]),
+			configuration('Release'),
+			erase_simulator(true),
+			reinstall_app(true),
+			output_directory('screenshots/ios')
+    	) 
+	end
+
+	lane :beta do
+		cocoapods(
+			clean_install: true,
+			repo_update: true,
+			podfile: './ios/Podfile'
+		)
+		increment_build_number(
+			build_number: ENV['TRAVIS_BUILD_NUMBER'],
+			xcodeproj: "./ios/bubbles.xcodeproj"
+		)
+		package = load_json(json_path: '../package.json')
+		increment_version_number(version_number: package['version'])
+		sync_code_signing(type: 'appstore')
+      	build_app(
+      		clean: true,
+        	scheme: 'Bubbles Prod',
+        	workspace: './ios/bubbles.xcworkspace',
+			output_directory: './ios/ipas/beta'
+      	)
+      	upload_to_testflight
+    end
+
+    lane :release do
+    	cocoapods(
+			clean_install: true,
+			repo_update: true,
+			podfile: './ios/Podfile'
+		)
+    	appicon(
+    	    appicon_image_file: 'metadata/app_icon.png',
+		   	appicon_devices: [:ipad, :iphone, :ios_marketing],
+		   	appicon_path: 'ios/bubbles/Images.xcassets'
+		)
+        increment_build_number(
+			build_number: app_store_build_number + 1,
+			xcodeproj: "./ios/bubbles.xcodeproj"
+		)
+		package = load_json(json_path: 'package.json')
+		increment_version_number(version_number: package['version'])
+        sync_code_signing(type: "appstore")
+        build_app(
+        	clean: true,
+    		scheme: 'Bubbles Prod',
+        	workspace: './ios/bubbles.xcworkspace',
+        	output_directory: './ios/ipas/release'
+    	)
+    	capture_screenshots
+        upload_to_app_store(
+        	screenshots_path: './screenshots/ios/',
+        	metadata_path: './metadata/ios/',
+        	reject_if_possible: true,
+        	submit_for_review: true,
+        	overwrite_screenshots: true
+    	)
+    end
+end
+
+platform :android do
+	desc 'Generate Android app icons'
+	lane :icons do
+		android_appicon(
+	    	appicon_image_file: 'fastlane/metadata/app_icon.png',
+		    appicon_path: 'android/app/src/res/mipmap'
+		)
+
+	end
+
+	desc 'Generate iOS app screenshots'
+	lane :screenshots do
+		gradle(
+			project_dir: './android/',
+			gradle_path: './gradlew',
+			task: 'clean'
+		)
+		gradle(
+			project_dir: './android/',
+			gradle_path: './gradlew',
+			task: 'assemble',
+			build_type: 'debug',
+			flavor: 'screenshots'
+		)
+		app_apk_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+		gradle(
+			project_dir: './android/',
+			gradle_path: './gradlew',
+			task: 'assemble',
+			build_type: 'debugAndroidTest',
+			flavor: 'screenshots'
+		)
+		test_apk_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    	capture_android_screenshots(
+    		use_adb_root: true,
+    		skip_open_summary: true,
+    		exit_on_test_failure: false,
+    		clear_previous_screenshots: true,
+    		reinstall_app: true,
+    		app_apk_path: app_apk_path,
+			tests_apk_path: test_apk_path
+		)
+	end
+
+	lane :beta do
+		increment_version_code(
+			version_code: ENV['TRAVIS_BUILD_NUMBER'],
+			gradle_file_path: 'android/app/build.gradle'
+		)
+		package = load_json(json_path: 'package.json')
+		gradle(
+			task: 'bundle',
+			build_type: 'Release',
+			print_command: false,
+			project_dir: './android/',
+			gradle_path: './gradlew',
+			properties: {
+				'versionName' => package['version'],
+				'android.injected.signing.store.file' => ENV['ANDROID_KEYSTORE_PATH'],
+				'android.injected.signing.store.password' => ENV['ANDROID_KEYSTORE_PASSWORD'],
+				'android.injected.signing.key.alias' => ENV['ANDROID_KEY_ALIAS'],
+				'android.injected.signing.key.password' => ENV['ANDROID_KEY_PASSWORD'],
+			}
+		)
+		upload_to_play_store(
+			release_status: 'draft',
+			skip_upload_apk: true,
+			track: 'beta',
+			aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
+		)
+	end
+end

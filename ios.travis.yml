@@ -1,0 +1,10 @@
+# Untested
+jobs:
+  include:
+  - language: objective-c
+    osx_image: xcode8.3
+    install:
+      - bundle install
+    script: bundle exec fastlane beta ios
+    on:
+      branch: master

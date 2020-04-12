@@ -1,0 +1,1 @@
+test_instrumentation_runner('org.bubblesapp.bubbles.test.CustomTestRunner')

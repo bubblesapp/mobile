@@ -1,0 +1,6 @@
+module Pods_Bubbles_Dev {
+  umbrella header "Pods-Bubbles Dev-umbrella.h"
+
+  export *
+  module * { export * }
+}

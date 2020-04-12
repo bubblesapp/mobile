@@ -1,0 +1,97 @@
+import * as firebase from '@firebase/testing';
+import {Invite} from '../../../src/models/Invite';
+import {Auth, clientApp, projectId, rules} from '../index';
+
+describe('Invites security ruleset', () => {
+  let auth, other: Auth;
+  let client: firebase.firestore.Firestore;
+
+  beforeAll(async () => {
+    await firebase.loadFirestoreRules({projectId, rules});
+  });
+
+  beforeEach(async () => {
+    // Clear the database between tests
+    await firebase.clearFirestoreData({projectId});
+    auth = {
+      uid: chance.guid(),
+      email: chance.email(),
+    };
+
+    other = {
+      uid: chance.guid(),
+      email: chance.email(),
+    };
+
+    client = clientApp(auth);
+  });
+
+  it('forbids a user to inviting on behalf of someone else', async () => {
+    const invite: Invite = {
+      from: other.uid,
+      to: other.email,
+      createdAt: new Date().getTime(),
+      accepted: false,
+    };
+    const ref = client.collection('emailInvites').doc();
+    await firebase.assertFails(ref.set(invite));
+  });
+
+  it('allows a user to invite on his own behalf', async () => {
+    const invite: Invite = {
+      from: auth.uid,
+      to: other.email,
+      createdAt: new Date().getTime(),
+      accepted: false,
+    };
+    const ref = client.collection('emailInvites').doc();
+    await firebase.assertSucceeds(ref.set(invite));
+  });
+
+  it('forbids a user to create an accepted invite', async () => {
+    const acceptedInvite: Invite = {
+      from: auth.uid,
+      to: other.email,
+      createdAt: new Date().getTime(),
+      accepted: true,
+    };
+    const ref = client.collection('emailInvites').doc();
+    await firebase.assertFails(ref.set(acceptedInvite));
+  });
+
+  it('forbids a user to create invalid invites', async () => {
+    const ref = client.collection('emailInvites').doc();
+
+    const missingFrom = {
+      to: other.email,
+      createdAt: new Date().getTime(),
+      accepted: false,
+    };
+    await firebase.assertFails(ref.set(missingFrom));
+
+    const missingTo = {
+      from: auth.uid,
+      createdAt: new Date().getTime(),
+      accepted: false,
+    };
+    await firebase.assertFails(ref.set(missingTo));
+
+    const missingCreatedAt = {
+      from: auth.uid,
+      to: other.email,
+      accepted: false,
+    };
+    await firebase.assertFails(ref.set(missingCreatedAt));
+
+    const missingAccepted = {
+      from: auth.uid,
+      to: other.email,
+      createdAt: new Date().getTime(),
+    };
+    await firebase.assertFails(ref.set(missingAccepted));
+  });
+
+  after(async () => {
+    await Promise.all(firebase.apps().map((app) => app.delete()));
+  });
+});
