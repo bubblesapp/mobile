@@ -22,16 +22,10 @@ const validationSchema = yup.object().shape({
   password: yup.string().required(),
 });
 type FormValues = yup.InferType<typeof validationSchema>;
-const initialValues: FormValues =
-  Platform.OS === 'ios' || 'android'
-    ? {
-        email: 'edouard.goossens@gmail.com',
-        password: 'buksibuksi',
-      }
-    : {
-        email: 'edouard@tastyelectrons.com',
-        password: 'buksibuksi',
-      };
+const initialValues: FormValues = {
+  email: '',
+  password: '',
+};
 type SignInNavigationProp = CompositeNavigationProp<
   StackNavigationProp<AuthStackParamList, Routes.SignIn>,
   RootNavigationProp

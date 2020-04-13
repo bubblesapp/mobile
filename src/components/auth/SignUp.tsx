@@ -33,20 +33,12 @@ const validationSchema = yup.object().shape({
     .label('Password confirmation'),
 });
 type FormValues = yup.InferType<typeof validationSchema> & {general?: string};
-const initialValues: FormValues =
-  Platform.OS === 'ios'
-    ? {
-        name: 'Edouard',
-        email: 'edouard.goossens@gmail.com',
-        password: 'buksibuksi',
-        passwordConfirmation: 'buksibuksi',
-      }
-    : {
-        name: 'Edouard',
-        email: 'edouard@tastyelectrons.com',
-        password: 'buksibuksi',
-        passwordConfirmation: 'buksibuksi',
-      };
+const initialValues: FormValues = {
+  name: '',
+  email: '',
+  password: '',
+  passwordConfirmation: '',
+};
 type SignUpNavigationProp = CompositeNavigationProp<
   StackNavigationProp<AuthStackParamList, Routes.SignUp>,
   RootNavigationProp
