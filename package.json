@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@bubblesapp/api": "git://github.com/bubblesapp/api.git",
     "@react-native-community/datetimepicker": "^2.3.0",
     "@react-native-community/masked-view": "^0.1.7",
     "@react-native-community/netinfo": "^5.6.2",
@@ -21,6 +22,8 @@
     "@react-navigation/bottom-tabs": "^5.2.4",
     "@react-navigation/native": "^5.1.3",
     "@react-navigation/stack": "^5.2.8",
+    "expo": "^37.0.7",
+    "firebase": "^7.14.1",
     "firebase-admin": "^8.10.0",
     "firebase-functions": "^3.5.0",
     "formik": "^2.1.4",
@@ -29,6 +32,7 @@
     "native-base": "2.13.8",
     "query-string": "^6.12.0",
     "react": "16.11.0",
+    "react-dom": "^16.13.1",
     "react-native": "0.62.0",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-modal-datetime-picker": "^8.5.2",
@@ -36,6 +40,7 @@
     "react-native-screens": "^2.4.0",
     "react-native-swipe-list-view": "^2.5.0",
     "react-native-vector-icons": "^6.6.0",
+    "react-native-web": "^0.12.2",
     "rxjs": "^6.5.4",
     "url": "^0.11.0",
     "yup": "^0.28.3"
@@ -55,6 +60,7 @@
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
     "babel-jest": "^24.9.0",
+    "babel-preset-expo": "^8.1.0",
     "chance": "^1.1.4",
     "eslint": "^6.5.1",
     "jest": "^24.9.0",

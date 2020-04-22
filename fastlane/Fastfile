@@ -32,7 +32,11 @@ platform :ios do
         	workspace: './ios/bubbles.xcworkspace',
 			output_directory: './ios/ipas/beta'
       	)
-      	upload_to_testflight # See Appfile
+      	#upload_to_testflight # See Appfile
+      	firebase_app_distribution(
+    		app: '1:544781286086:ios:ba09115b6be35c210035c7',
+    		firebase_cli_path: ENV['firebase_token']
+		)
     end
 
     lane :release do
@@ -135,11 +139,15 @@ platform :android do
 				'android.injected.signing.key.password' => ENV['ANDROID_KEY_PASSWORD'],
 			}
 		)
-		upload_to_play_store(
-			release_status: 'draft',
-			skip_upload_apk: true,
-			track: 'beta',
-			aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
+		#upload_to_play_store(
+		#	release_status: 'draft',
+		#	skip_upload_apk: true,
+		#	track: 'beta',
+		#	aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
+		#)
+		firebase_app_distribution(
+    		app: '1:544781286086:android:af569d83249325770035c7',
+    		firebase_cli_path: ENV['firebase_token']
 		)
 	end
 end

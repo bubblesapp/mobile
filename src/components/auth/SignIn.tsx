@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {Platform, View} from 'react-native';
+import React from 'react';
+import {View} from 'react-native';
 import I18n from '../../i18n';
 import {Routes} from '../../nav/Routes';
 import {ExtraText} from './common/ExtraText';

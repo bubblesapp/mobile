@@ -130,10 +130,10 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-android_versioning (0.5.3)
     fastlane-plugin-appicon (0.14.1)
       json
       mini_magick (>= 4.9.4, < 5.0.0)
+    fastlane-plugin-firebase_app_distribution (0.1.4)
     fastlane-plugin-increment_version_code (0.4.3)
     fastlane-plugin-load_json (0.0.1)
     ffi (1.12.2)
@@ -245,8 +245,8 @@ PLATFORMS
 DEPENDENCIES
   cocoapods
   fastlane
-  fastlane-plugin-android_versioning
   fastlane-plugin-appicon
+  fastlane-plugin-firebase_app_distribution
   fastlane-plugin-increment_version_code
   fastlane-plugin-load_json
 

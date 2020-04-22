@@ -8,12 +8,12 @@ import React, {
 } from 'react';
 import {authInitialState, AuthState} from './state/state';
 import {authReducer, AuthReducer} from './state/reducer';
-import firebaseAuth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {AuthStateChangedAction, SetVerifyingEmailAction} from './state/actions';
 import {API} from '../api/API';
 import {useAPI} from '../api/useAPI';
-import Toast from '../components/common/Toast';
 import {Platform} from 'react-native';
+// @ts-ignore
+import {firebaseAuth} from './FirebaseAuth';
 
 class Auth {
   constructor(
@@ -75,7 +75,7 @@ class Auth {
   };
 
   sendVerificationEmail = async () => {
-    const settings: FirebaseAuthTypes.ActionCodeSettings = {
+    const settings = {
       url: `https://bubblesapp.link/email-verification/?email=${
         firebaseAuth().currentUser!!.email
       }`,
@@ -100,7 +100,6 @@ class Auth {
       await firebaseAuth().applyActionCode(code);
     } catch (err) {
       console.log(err);
-      Toast.danger(err.message);
     } finally {
       this.dispatch(new SetVerifyingEmailAction(true));
     }
