@@ -1,0 +1,38 @@
+import React from 'react';
+import {NavContext} from './useNav';
+import {useHistory} from 'react-router';
+
+export enum Routes {
+  AuthNavigator = '/auth',
+  SignUp = '/auth/sign-up',
+  ConfirmSignUp = '/auth/confirm-sign-up',
+  SignIn = '/auth/sign-in',
+  ResetPassword = '/auth/reset-password',
+  ConfirmResetPassword = '/auth/confirm-reset-password',
+
+  MainNavigator = '/main',
+
+  BubbleNavigator = '/main/bubble',
+  Bubble = '/main/bubble',
+
+  //InvitesNavigator = 'InvitesNavigator',
+  Invites = '/main/bubble/invites',
+
+  ProfileNavigator = '/main/profile',
+  Profile = '/main/profile',
+  ChangeEmail = '/main/profile/change-email',
+  ChangePassword = '/main/profile/change-password',
+  ChangePersonalInfo = '/main/profile/change-personal-info',
+  DeleteAccount = '/main/profile/delete-account',
+}
+
+export const NavProvider: React.FC = (props): JSX.Element => {
+  const history = useHistory();
+  const nav = {
+    navigate: (to: string) => {
+      history.push(to);
+    },
+    goBack: () => history.goBack(),
+  };
+  return <NavContext.Provider value={nav} {...props} />;
+};

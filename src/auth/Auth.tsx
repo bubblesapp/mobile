@@ -8,12 +8,12 @@ import React, {
 } from 'react';
 import {authInitialState, AuthState} from './state/state';
 import {authReducer, AuthReducer} from './state/reducer';
-import firebaseAuth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {AuthStateChangedAction, SetVerifyingEmailAction} from './state/actions';
-import {API} from '../api/API';
 import {useAPI} from '../api/useAPI';
-import Toast from '../components/common/Toast';
 import {Platform} from 'react-native';
+// @ts-ignore
+import {firebaseAuth} from './FirebaseAuth';
+import {API, Device} from '@bubblesapp/api';
 
 class Auth {
   constructor(
@@ -62,20 +62,20 @@ class Auth {
     await firebaseAuth().currentUser?.updateProfile({
       displayName: name,
     });
-    await this.api.setProfile({
+    await this.api.profiles.set({
       uid,
       email,
       name,
       pushNotificationsEnabled: Platform.OS === 'android',
       emailNotificationsEnabled: true,
     });
-    this.refreshState();
-    await this.sendVerificationEmail();
+    this.refreshState().catch((err) => console.log(err));
+    //await this.sendVerificationEmail();
     return uid;
   };
 
   sendVerificationEmail = async () => {
-    const settings: FirebaseAuthTypes.ActionCodeSettings = {
+    const settings = {
       url: `https://bubblesapp.link/email-verification/?email=${
         firebaseAuth().currentUser!!.email
       }`,
@@ -87,7 +87,7 @@ class Auth {
         installApp: true,
       },
       handleCodeInApp: true,
-      dynamicLinkDomain: 'bubblesapp.page.link',
+      dynamicLinkDomain: 'bubblesdev.page.link',
     };
     console.log(settings);
     await firebaseAuth().currentUser?.sendEmailVerification(settings);
@@ -100,7 +100,6 @@ class Auth {
       await firebaseAuth().applyActionCode(code);
     } catch (err) {
       console.log(err);
-      Toast.danger(err.message);
     } finally {
       this.dispatch(new SetVerifyingEmailAction(true));
     }
@@ -148,7 +147,7 @@ class Auth {
     const credential = this.getCredential(password);
     await firebaseAuth().currentUser?.reauthenticateWithCredential(credential);
     await firebaseAuth().currentUser?.updateEmail(email);
-    await this.api.setEmail(email);
+    await this.api.profiles.update({email});
     await firebaseAuth().currentUser?.reload();
     await this.refreshState();
   };
@@ -157,14 +156,14 @@ class Auth {
     await firebaseAuth().currentUser?.updateProfile({
       displayName: name,
     });
-    await this.api.setName(name);
+    await this.api.profiles.update({name});
     await firebaseAuth().currentUser?.reload();
     await this.refreshState();
   };
 
   deleteUser = async (password: string): Promise<void> => {
     await this.reauthenticate(password);
-    await this.api.removeProfile();
+    await this.api.profiles.delete();
     await firebaseAuth().currentUser?.delete();
     await firebaseAuth().signOut();
   };
@@ -188,8 +187,15 @@ export const AuthProvider: React.FC = (props): JSX.Element => {
   useEffect(() => {
     return firebaseAuth().onAuthStateChanged(async (user) => {
       console.log('Auth state changed', user);
-      if (user?.uid) {
-        await api.setDevice(user?.uid);
+      if (user?.uid && Platform.OS !== 'web') {
+        const messaging = await import('@react-native-firebase/messaging');
+        const token = await messaging.default().getToken();
+        const device: Device = {
+          platform: Platform.OS === 'ios' ? 'ios' : 'android',
+          id: token,
+          token,
+        };
+        await api.devices.set(device, user?.uid);
       }
       await auth.refreshState();
     });

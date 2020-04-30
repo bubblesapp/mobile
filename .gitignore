@@ -6,6 +6,7 @@
 # React Native Stack Base
 
 .expo
+web-build
 __generated__
 
 ### ReactNative.Buck Stack ###

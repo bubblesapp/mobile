@@ -1,4 +1,3 @@
-import {Toast} from "native-base";
 import I18n from "../../i18n";
 
 type ToastType =  "success" | "warning" | "danger"

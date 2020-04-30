@@ -1,23 +1,20 @@
 import React from 'react';
-import {Platform, View} from 'react-native';
+import {View} from 'react-native';
 import I18n from '../../i18n/';
 import {authStyleSheet as styles} from './Styles';
-import {Routes} from '../../nav/Routes';
-import {ExtraText} from './common/ExtraText';
 import * as yup from 'yup';
-import {CompositeNavigationProp, useNavigation} from '@react-navigation/core';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {AuthStackParamList} from './AuthNavigator';
-import {RootNavigationProp} from '../../../App';
 import {Formik} from 'formik';
-import {ExtraButton} from '../common/ExtraButton';
-import {SubmitButton} from '../common/SubmitButton';
 import {Title} from './common/Title';
-import {FieldError} from '../common/FieldError';
-import {InfoText} from './common/InfoText';
 import {useAuth} from '../../auth/Auth';
-import Toast from '../common/Toast';
-import {Container, Content, Form, Input, Item, Label} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
+import {Routes} from '../../nav/NavProvider';
+import {Input} from 'react-native-elements';
+import {InfoText} from './common/InfoText';
+import {SubmitButton} from '../common/SubmitButton';
+import {ExtraText} from './common/ExtraText';
+import {ExtraButton} from '../common/ExtraButton';
+import _ from 'lodash';
+import {useToast} from '../Toast';
 
 const validationSchema = yup.object().shape({
   name: yup.string().required(),
@@ -39,14 +36,11 @@ const initialValues: FormValues = {
   password: '',
   passwordConfirmation: '',
 };
-type SignUpNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<AuthStackParamList, Routes.SignUp>,
-  RootNavigationProp
->;
 
 export const SignUp: React.FC = (): JSX.Element => {
-  const navigation = useNavigation<SignUpNavigationProp>();
+  const nav = useNavigation();
   const auth = useAuth();
+  const Toast = useToast();
 
   const signUp = async (
     {name, email, password}: FormValues,
@@ -54,7 +48,7 @@ export const SignUp: React.FC = (): JSX.Element => {
   ) => {
     try {
       await auth.signUp(name, email, password);
-      navigation.navigate(Routes.ConfirmSignUp);
+      nav.navigate(Routes.ConfirmSignUp);
     } catch (e) {
       console.log(e);
       Toast.danger(e);
@@ -62,120 +56,87 @@ export const SignUp: React.FC = (): JSX.Element => {
     }
   };
   return (
-    <Container>
-      <Content
-        padder
-        contentContainerStyle={{flex: 1, justifyContent: 'center'}}>
-        <Title />
-        <Form>
-          <Formik
-            initialValues={initialValues}
-            validateOnMount={true}
-            validationSchema={validationSchema}
-            onSubmit={signUp}>
-            {({
-              handleSubmit,
-              handleBlur,
-              handleChange,
-              values,
-              errors,
-              touched,
-              isValid,
-              isSubmitting,
-            }) => (
-              <View style={styles.formContainer}>
-                <Item
-                  stackedLabel
-                  last
-                  success={!errors.name}
-                  error={touched.name && !!errors.name}>
-                  <Label>{I18n.t('auth.signUpNamePlaceholder')}</Label>
-                  <Input
-                    autoCapitalize={'none'}
-                    autoCorrect={false}
-                    onChangeText={handleChange('name')}
-                    onBlur={handleBlur('name')}
-                    value={values.name}
-                  />
-                </Item>
-                <FieldError message={touched.name && errors?.name} />
-
-                <Item
-                  stackedLabel
-                  last
-                  success={!errors.email}
-                  error={touched.email && !!errors.email}>
-                  <Label>{I18n.t('auth.signUpEmailPlaceholder')}</Label>
-                  <Input
-                    autoCapitalize={'none'}
-                    autoCorrect={false}
-                    textContentType={'emailAddress'}
-                    keyboardType={'email-address'}
-                    onChangeText={handleChange('email')}
-                    onBlur={handleBlur('email')}
-                    value={values.email}
-                  />
-                </Item>
-                <FieldError message={touched.email && errors?.email} />
-
-                <Item
-                  stackedLabel
-                  last
-                  success={!errors.password}
-                  error={touched.password && !!errors.password}>
-                  <Label>{I18n.t('auth.signUpPasswordPlaceholder')}</Label>
-                  <Input
-                    autoCapitalize={'none'}
-                    secureTextEntry
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
-                    value={values.password}
-                  />
-                </Item>
-                <FieldError message={touched.password && errors?.password} />
-
-                <Item
-                  stackedLabel
-                  last
-                  success={!errors.passwordConfirmation}
-                  error={
-                    touched.passwordConfirmation &&
-                    !!errors.passwordConfirmation
-                  }>
-                  <Label>
-                    {I18n.t('auth.signUpPasswordConfirmationPlaceholder')}
-                  </Label>
-                  <Input
-                    autoCapitalize={'none'}
-                    secureTextEntry
-                    onChangeText={handleChange('passwordConfirmation')}
-                    onBlur={handleBlur('passwordConfirmation')}
-                    value={values.passwordConfirmation}
-                  />
-                </Item>
-                <FieldError
-                  message={
-                    touched.passwordConfirmation && errors?.passwordConfirmation
-                  }
-                />
-                <InfoText>{I18n.t('auth.signUpLegal')}</InfoText>
-                <SubmitButton
-                  onPress={() => handleSubmit()}
-                  disabled={!isValid}
-                  isSubmitting={isSubmitting}
-                  label={I18n.t('auth.signUpButtonTitle')}
-                />
-              </View>
-            )}
-          </Formik>
-
-          <ExtraText>{I18n.t('auth.alreadyHaveAccount')}</ExtraText>
-          <ExtraButton
-            to={Routes.SignIn}
-            label={I18n.t('auth.backToLoginButtonTitle')}
-          />
-        </Form>
-      </Content>
-    </Container>
+    <View style={{flex: 1, justifyContent: 'center', backgroundColor: '#fff'}}>
+      <Title />
+      <Formik
+        initialValues={initialValues}
+        validateOnMount={true}
+        validationSchema={validationSchema}
+        onSubmit={signUp}>
+        {({
+          handleSubmit,
+          handleBlur,
+          handleChange,
+          values,
+          errors,
+          touched,
+          isValid,
+          isSubmitting,
+        }) => (
+          <View style={styles.formContainer}>
+            <Input
+              autoCapitalize={'none'}
+              autoCorrect={false}
+              onChangeText={handleChange('name')}
+              onBlur={handleBlur('name')}
+              value={values.name}
+              placeholder={I18n.t('auth.signUpNamePlaceholder')}
+              errorMessage={
+                touched.name ? _.upperFirst(errors?.name) : undefined
+              }
+            />
+            <Input
+              autoCapitalize={'none'}
+              autoCorrect={false}
+              textContentType={'emailAddress'}
+              keyboardType={'email-address'}
+              onChangeText={handleChange('email')}
+              onBlur={handleBlur('email')}
+              value={values.email}
+              placeholder={I18n.t('auth.signUpEmailPlaceholder')}
+              errorMessage={
+                touched.email ? _.upperFirst(errors?.email) : undefined
+              }
+            />
+            <Input
+              autoCapitalize={'none'}
+              secureTextEntry
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.password}
+              placeholder={I18n.t('auth.signUpPasswordPlaceholder')}
+              errorMessage={
+                touched.password ? _.upperFirst(errors?.password) : undefined
+              }
+            />
+            <Input
+              autoCapitalize={'none'}
+              secureTextEntry
+              onChangeText={handleChange('passwordConfirmation')}
+              onBlur={handleBlur('passwordConfirmation')}
+              value={values.passwordConfirmation}
+              placeholder={I18n.t('auth.signUpPasswordConfirmationPlaceholder')}
+              errorMessage={
+                touched.passwordConfirmation
+                  ? _.upperFirst(errors?.passwordConfirmation)
+                  : undefined
+              }
+            />
+            <InfoText>{I18n.t('auth.signUpLegal')}</InfoText>
+            <SubmitButton
+              onPress={() => handleSubmit()}
+              disabled={!isValid}
+              isSubmitting={isSubmitting}
+              label={I18n.t('auth.signUpButtonTitle')}
+            />
+          </View>
+        )}
+      </Formik>
+      <ExtraText>{I18n.t('auth.alreadyHaveAccount')}</ExtraText>
+      <ExtraButton
+        to={Routes.SignIn}
+        label={I18n.t('auth.backToLoginButtonTitle')}
+      />
+    </View>
   );
 };

@@ -1,17 +1,15 @@
 import React from 'react';
-import {Container, Content} from 'native-base';
 import {NewOutgoingInvite} from './NewOutgoingInvite';
 import {IncomingInviteList} from './IncomingInviteList';
 import {OutgoingInviteList} from './OutgoingInviteList';
+import {ScrollView} from 'react-native';
 
 export const Invites: React.FC = (): JSX.Element => {
   return (
-    <Container>
-      <Content padder>
-        <NewOutgoingInvite />
-        <IncomingInviteList />
-        <OutgoingInviteList />
-      </Content>
-    </Container>
+    <ScrollView>
+      <NewOutgoingInvite />
+      <IncomingInviteList />
+      <OutgoingInviteList />
+    </ScrollView>
   );
 };

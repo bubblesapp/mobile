@@ -30,6 +30,6 @@ export interface API {
   acceptInvite(fromUid: string): Promise<void>;
   declineInvite(fromUid: string): Promise<void>;
   popBubble(uid: string): Promise<void>;
-  resetBubble(uid: string): Promise<void>;
+  //resetBubble(uid: string): Promise<void>;
   setDevice(uid: string): Promise<void>;
 }

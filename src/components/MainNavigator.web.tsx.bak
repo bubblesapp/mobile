@@ -1,0 +1,17 @@
+import React from 'react';
+import {TabBar} from './TabBar';
+import {Route, Switch} from 'react-router';
+import {BubbleNavigator} from './bubble/BubbleNavigator.web';
+import {ProfileNavigator} from './profile/ProfileNavigator.web';
+
+export const MainNavigator: React.FC = () => {
+  return (
+    <>
+      <TabBar />
+      <Switch>
+        <Route path={'/main/bubble'} children={<BubbleNavigator />} />
+        <Route path={'/main/profile'} children={<ProfileNavigator />} />
+      </Switch>
+    </>
+  );
+};

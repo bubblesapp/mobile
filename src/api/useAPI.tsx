@@ -1,8 +1,7 @@
 import React, {useContext} from 'react';
-import {API} from './API';
-import {FirebaseAPI} from '../firebase-api/FirebaseAPI';
+import {API} from '@bubblesapp/api';
+import {api} from './FirebaseAPI';
 
-const api = new FirebaseAPI();
 export const APIContext = React.createContext<API>(api);
 
 export const APIProvider: React.FC = (props): JSX.Element => {

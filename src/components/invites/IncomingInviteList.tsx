@@ -1,12 +1,12 @@
-import {Invite} from '../../models/Invite';
+import {Invite} from '@bubblesapp/api';
 import React, {useEffect, useState} from 'react';
 import {useAPI} from '../../api/useAPI';
-import {ActionSheet, Card, CardItem, Text} from 'native-base';
 import I18n from '../../i18n';
 import {IncomingInviteItem} from './IncomingInviteItem';
-import Toast from '../common/Toast';
 import {FlatList} from 'react-native';
-import {useNetInfo} from '@react-native-community/netinfo';
+import {Card} from 'react-native-elements';
+import {useActionSheet} from '@expo/react-native-action-sheet';
+import {useToast} from '../Toast';
 
 const BUTTONS = [
   I18n.t('bubble.invites.accept'),
@@ -18,15 +18,17 @@ const CANCEL_INDEX = 2;
 
 export const IncomingInviteList: React.FC = (): JSX.Element | null => {
   const [invites, setInvites] = useState<Invite[]>([]);
-  const API = useAPI();
-  const netInfo = useNetInfo();
+  const api = useAPI();
+  const Toast = useToast();
+
+  const {showActionSheetWithOptions} = useActionSheet();
 
   useEffect(() => {
-    const invitesSubscription = API.observeIncomingInvites().subscribe(
-      setInvites,
-    );
+    const invitesSubscription = api.invites.incoming
+      .observeAll()
+      .subscribe(setInvites);
     return () => invitesSubscription.unsubscribe();
-  }, [API]);
+  }, [api]);
 
   if (invites.length === 0) {
     return null;
@@ -37,14 +39,7 @@ export const IncomingInviteList: React.FC = (): JSX.Element | null => {
     inviterName: string | undefined,
   ) => {
     try {
-      if (netInfo.isInternetReachable) {
-        await API.acceptInvite(fromUid);
-      } else {
-        API.acceptInvite(fromUid).catch(async (err) => {
-          console.log(err);
-          await API.removeFriend(fromUid);
-        });
-      }
+      await api.invites.incoming.accept(fromUid);
       if (inviterName) {
         Toast.success(
           I18n.t('bubble.invites.acceptSuccess').replace('$0', inviterName),
@@ -57,7 +52,7 @@ export const IncomingInviteList: React.FC = (): JSX.Element | null => {
 
   const declineInvite = async (fromUid: string) => {
     try {
-      await API.declineInvite(fromUid);
+      await api.invites.incoming.delete(fromUid);
     } catch (err) {
       Toast.danger(err.message);
     }
@@ -68,7 +63,7 @@ export const IncomingInviteList: React.FC = (): JSX.Element | null => {
     fromUid: string,
     onCancel?: () => void,
   ) => {
-    ActionSheet.show(
+    showActionSheetWithOptions(
       {
         options: BUTTONS,
         cancelButtonIndex: CANCEL_INDEX,
@@ -96,14 +91,9 @@ export const IncomingInviteList: React.FC = (): JSX.Element | null => {
   };
 
   return (
-    <Card>
+    <Card title={I18n.t('bubble.invites.incomingInvites')}>
       <FlatList<Invite>
         data={invites}
-        ListHeaderComponent={
-          <CardItem header={true}>
-            <Text>{I18n.t('bubble.invites.incomingInvites')}</Text>
-          </CardItem>
-        }
         renderItem={({item: invite}) => (
           <IncomingInviteItem
             invite={invite}

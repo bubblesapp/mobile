@@ -1,33 +1,13 @@
-import React, {useState} from 'react';
-import {
-  Badge,
-  Body,
-  Card,
-  CardItem,
-  Container,
-  Content,
-  Form,
-  Input,
-  Item,
-  Label,
-  Text,
-} from 'native-base';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 import I18n from '../../i18n/';
-import {View} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
 import {Formik, FormikProps} from 'formik';
 import * as yup from 'yup';
-import {FieldError} from '../common/FieldError';
 import {SubmitButton} from '../common/SubmitButton';
-import Toast from '../common/Toast';
-import {CompositeNavigationProp} from '@react-navigation/core';
-import {
-  ProfileNavigatorNavigationProp,
-  ProfileStackParamsList,
-} from './ProfileNavigator';
-import {Routes} from '../../nav/Routes';
 import {useAuth} from '../../auth/Auth';
+import {Card, Input, ListItem} from 'react-native-elements';
+import _ from 'lodash';
+import {useToast} from '../Toast';
 
 const emailChangeValidationSchema = yup.object().shape({
   newEmail: yup
@@ -46,19 +26,9 @@ const emailChangeInitialValues: EmailChangeFormValues = {
   password: '',
 };
 
-export type ChangeEmailNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<ProfileStackParamsList, Routes.ChangeEmail>,
-  ProfileNavigatorNavigationProp
->;
-
 export const ChangeEmail: React.FC = (): JSX.Element => {
-  const navigation = useNavigation<ChangeEmailNavigationProp>();
-
-  navigation.setOptions({
-    title: I18n.t('profile.changeEmail.title'),
-  });
-
   const auth = useAuth();
+  const Toast = useToast();
 
   /* const verifyEmail = async (
     {code},
@@ -105,102 +75,66 @@ export const ChangeEmail: React.FC = (): JSX.Element => {
 
   const {email} = auth.state;
   return (
-    <Container>
-      <Content padder>
-        <Card>
-          <CardItem header>
-            <Text>Email address </Text>
-            {/*emailVerified ? (
-              <Badge success>
-                <Text>Verified</Text>
-              </Badge>
-            ) : (
-              <Badge warning>
-                <Text>Unverified</Text>
-              </Badge>
-            )*/}
-          </CardItem>
-          <CardItem>
-            <Text>{email}</Text>
-          </CardItem>
-        </Card>
-        <Card>
-          <CardItem header>
-            <Text>{I18n.t('profile.changeEmail.changeEmail')}</Text>
-          </CardItem>
-          <Form>
-            <CardItem>
-              <Body style={{alignItems: 'stretch'}}>
-                <Formik
-                  initialValues={emailChangeInitialValues}
-                  validationSchema={emailChangeValidationSchema}
-                  validateOnMount={true}
-                  onSubmit={changeEmail}>
-                  {({
-                    handleSubmit,
-                    handleBlur,
-                    handleChange,
-                    values,
-                    errors,
-                    touched,
-                    isValid,
-                    isSubmitting,
-                  }) => (
-                    <View>
-                      <Item
-                        stackedLabel
-                        success={!errors.newEmail}
-                        error={touched.newEmail && !!errors.newEmail}>
-                        <Label>{I18n.t('profile.changeEmail.newEmail')}</Label>
-                        <Input
-                          autoCapitalize={'none'}
-                          autoCorrect={false}
-                          textContentType={'emailAddress'}
-                          keyboardType={'email-address'}
-                          onChangeText={handleChange('newEmail')}
-                          onBlur={handleBlur('newEmail')}
-                          value={values.newEmail}
-                          editable={!isSubmitting}
-                        />
-                      </Item>
-                      <FieldError
-                        message={touched.newEmail && errors?.newEmail}
-                      />
-                      <Item
-                        stackedLabel
-                        last
-                        success={!errors.password}
-                        error={touched.password && !!errors.password}>
-                        <Label>{I18n.t('profile.changeEmail.password')}</Label>
-                        <Input
-                          autoCapitalize={'none'}
-                          secureTextEntry
-                          onChangeText={handleChange('password')}
-                          onBlur={handleBlur('password')}
-                          value={values.password}
-                          editable={!isSubmitting}
-                        />
-                      </Item>
-                      <FieldError
-                        message={touched.password && errors?.password}
-                      />
-                      <Text note>
-                        {I18n.t('profile.changeEmail.passwordNote')}
-                      </Text>
-                      <SubmitButton
-                        onPress={() => handleSubmit()}
-                        disabled={!isValid}
-                        isSubmitting={isSubmitting}
-                        label={I18n.t('profile.changeEmail.changeEmail')}
-                      />
-                    </View>
-                  )}
-                </Formik>
-              </Body>
-            </CardItem>
-          </Form>
-        </Card>
-      </Content>
-    </Container>
+    <ScrollView>
+      <Card title={'Email address'}>
+        <ListItem
+          title={email}
+        />
+      </Card>
+      <Card title={I18n.t('profile.changeEmail.changeEmail')}>
+        <Formik
+          initialValues={emailChangeInitialValues}
+          validationSchema={emailChangeValidationSchema}
+          validateOnMount={true}
+          onSubmit={changeEmail}>
+          {({
+            handleSubmit,
+            handleBlur,
+            handleChange,
+            values,
+            errors,
+            touched,
+            isValid,
+            isSubmitting,
+          }) => (
+            <View>
+              <Input
+                autoCapitalize={'none'}
+                autoCorrect={false}
+                textContentType={'emailAddress'}
+                keyboardType={'email-address'}
+                onChangeText={handleChange('newEmail')}
+                onBlur={handleBlur('newEmail')}
+                value={values.newEmail}
+                editable={!isSubmitting}
+                placeholder={I18n.t('profile.changeEmail.newEmail')}
+                errorMessage={
+                  touched.newEmail ? _.upperFirst(errors?.newEmail) : undefined
+                }
+              />
+              <Input
+                autoCapitalize={'none'}
+                secureTextEntry
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+                editable={!isSubmitting}
+                placeholder={I18n.t('profile.changeEmail.password')}
+                errorMessage={
+                  touched.password ? _.upperFirst(errors?.password) : undefined
+                }
+              />
+              <Text>{I18n.t('profile.changeEmail.passwordNote')}</Text>
+              <SubmitButton
+                onPress={() => handleSubmit()}
+                disabled={!isValid}
+                isSubmitting={isSubmitting}
+                label={I18n.t('profile.changeEmail.changeEmail')}
+              />
+            </View>
+          )}
+        </Formik>
+      </Card>
+    </ScrollView>
   );
 };

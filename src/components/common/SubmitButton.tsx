@@ -1,10 +1,9 @@
-import {Button, NativeBase} from 'native-base';
+import {Button, ButtonProps} from 'react-native-elements';
 import React from 'react';
 import {SmallSpinner} from './Spinner';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
-import {Text} from 'native-base';
 
-interface Props extends NativeBase.Button {
+interface Props extends ButtonProps {
   label: string;
   isSubmitting?: boolean;
 }
@@ -17,11 +16,13 @@ interface Styles {
 const styles = StyleSheet.create<Styles>({
   submitButton: {
     marginTop: 16,
+    backgroundColor: '#007AFF',
   },
   text: {
     fontWeight: 'bold',
     textTransform: 'uppercase',
     fontSize: 14,
+    color: '#fff',
   },
 });
 
@@ -32,10 +33,10 @@ export const SubmitButton: React.FC<Props> = (props): JSX.Element => {
   ) : (
     <Button
       {...props}
-      style={styles.submitButton}
-      block
-      disabled={disabled || isSubmitting}>
-      <Text style={styles.text}>{label}</Text>
-    </Button>
+      buttonStyle={styles.submitButton}
+      type={'solid'}
+      title={label}
+      titleStyle={styles.text}
+      disabled={disabled || isSubmitting} />
   );
 };

@@ -1,52 +1,48 @@
 import React from 'react';
-import {Badge, Button, Footer, FooterTab, Icon, Text} from 'native-base';
-import {BottomTabBarProps, createBottomTabNavigator,} from '@react-navigation/bottom-tabs';
-import {OfflineButton} from './common/OfflineButton';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {ProfileNavigator} from './profile/ProfileNavigator';
-import I18n from '../i18n';
 import {BubbleNavigator} from './bubble/BubbleNavigator';
-import {Routes} from '../nav/Routes';
+import {Routes} from '../nav/NavProvider';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import I18n from '../i18n';
 
 const BottomTabs = createBottomTabNavigator();
 
 export type MainTabsParamList = {
-  //InvitesNavigator: undefined;
   BubbleNavigator: undefined;
   ProfileNavigator: undefined;
 };
 
 export const MainNavigator = () => {
   return (
-    <BottomTabs.Navigator tabBar={TabBar} initialRouteName={Routes.Bubble}>
-      <BottomTabs.Screen name="Bubble" component={BubbleNavigator} />
-      <BottomTabs.Screen name="Profile" component={ProfileNavigator} />
-    </BottomTabs.Navigator>
-  );
-};
+    <BottomTabs.Navigator
+      initialRouteName={Routes.Bubble}
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
+          let iconName = '';
 
-const TabBar: React.FC<BottomTabBarProps> = (props): JSX.Element => {
-  const {state, navigation} = props;
-  return (
-    <Footer>
-      <FooterTab style={{justifyContent: 'center', alignItems: 'center'}}>
-        <Button
-          vertical
-          active={state.index === 0}
-          onPress={() => navigation.navigate(state.routeNames[0])}>
-          <Icon type="FontAwesome5" name="users" />
-          <Text>{I18n.t('bubble.title')}</Text>
-        </Button>
-        <OfflineButton />
-        <Button
-          testID={'profileTab'}
-          accessibilityLabel={'Profile Tab'}
-          vertical
-          active={state.index === 1}
-          onPress={() => navigation.navigate(state.routeNames[1])}>
-          <Icon type="FontAwesome5" name="user-cog" />
-          <Text>{I18n.t('profile.title')}</Text>
-        </Button>
-      </FooterTab>
-    </Footer>
+          if (route.name === I18n.t('bubble.title')) {
+            iconName = 'users';
+          } else if (route.name === I18n.t('profile.title')) {
+            iconName = 'user-cog';
+          }
+
+          // You can return any component that you like here!
+          return <FontAwesome5 name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: '#007AFF',
+        inactiveTintColor: 'gray',
+      }}>
+      <BottomTabs.Screen
+        name={I18n.t('bubble.title')}
+        component={BubbleNavigator}
+      />
+      <BottomTabs.Screen
+        name={I18n.t('profile.title')}
+        component={ProfileNavigator}
+      />
+    </BottomTabs.Navigator>
   );
 };

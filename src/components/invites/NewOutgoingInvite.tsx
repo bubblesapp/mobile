@@ -2,22 +2,12 @@ import React from 'react';
 import {View} from 'react-native';
 import * as yup from 'yup';
 import I18n from '../../i18n';
-import {
-  Body,
-  Card,
-  CardItem,
-  Form,
-  Input,
-  Item,
-  Label,
-  Text,
-} from 'native-base';
 import {Formik} from 'formik';
-import {FieldError} from '../common/FieldError';
 import {SubmitButton} from '../common/SubmitButton';
 import {useAPI} from '../../api/useAPI';
 import Toast from '../common/Toast';
-import {useNetInfo} from '@react-native-community/netinfo';
+import {Card, Input} from 'react-native-elements';
+import _ from 'lodash';
 
 const newInviteValidationSchema = yup.object().shape({
   email: yup
@@ -33,21 +23,11 @@ const newInviteInitialValues: NewInviteFormValues = {
 
 export const NewOutgoingInvite: React.FC = () => {
   const API = useAPI();
-  const netInfo = useNetInfo();
 
-  const invite = async ({email}, {setSubmitting}) => {
+  const invite = async ({email}: NewInviteFormValues, {setSubmitting}) => {
     try {
       setSubmitting(true);
-      if (netInfo.isInternetReachable) {
-        await API.invite(email);
-      } else {
-        API.invite(email).catch(async (err) => {
-          if (err) {
-            // Rollback
-            await API.cancelInvite(email);
-          }
-        });
-      }
+      await API.invites.invite(email);
       Toast.success(I18n.t('bubble.newInvite.inviteSent'));
       setSubmitting(false);
     } catch (err) {
@@ -57,57 +37,46 @@ export const NewOutgoingInvite: React.FC = () => {
   };
 
   return (
-    <Card>
-      <CardItem header>
-        <Text>{I18n.t('bubble.newInvite.title')}</Text>
-      </CardItem>
-      <Form>
-        <CardItem>
-          <Body style={{alignItems: 'stretch'}}>
-            <Formik
-              initialValues={newInviteInitialValues}
-              validationSchema={newInviteValidationSchema}
-              validateOnMount={false}
-              onSubmit={invite}>
-              {({
-                handleSubmit,
-                handleBlur,
-                handleChange,
-                values,
-                errors,
-                touched,
-                isValid,
-                isSubmitting,
-              }) => (
-                <View>
-                  <Item
-                    stackedLabel
-                    success={!errors.email}
-                    error={touched.email && !!errors.email}>
-                    <Label>{I18n.t('bubble.newInvite.emailLabel')}</Label>
-                    <Input
-                      autoCapitalize={'none'}
-                      autoCorrect={false}
-                      textContentType={'emailAddress'}
-                      keyboardType={'email-address'}
-                      onChangeText={handleChange('email')}
-                      onBlur={handleBlur('email')}
-                      value={values.email}
-                      editable={!isSubmitting}
-                    />
-                  </Item>
-                  <FieldError message={touched.email && errors?.email} />
-                  <SubmitButton
-                    onPress={() => handleSubmit()}
-                    disabled={!isValid}
-                    isSubmitting={isSubmitting}
-                    label={I18n.t('bubble.newInvite.buttonLabel')} />
-                </View>
-              )}
-            </Formik>
-          </Body>
-        </CardItem>
-      </Form>
+    <Card title={I18n.t('bubble.newInvite.title')}>
+      <Formik
+        initialValues={newInviteInitialValues}
+        validationSchema={newInviteValidationSchema}
+        validateOnMount={false}
+        onSubmit={invite}>
+        {({
+          handleSubmit,
+          handleBlur,
+          handleChange,
+          values,
+          errors,
+          touched,
+          isValid,
+          isSubmitting,
+        }) => (
+          <View>
+            <Input
+              autoCapitalize={'none'}
+              autoCorrect={false}
+              textContentType={'emailAddress'}
+              keyboardType={'email-address'}
+              onChangeText={handleChange('email')}
+              onBlur={handleBlur('email')}
+              value={values.email}
+              editable={!isSubmitting}
+              placeholder={I18n.t('bubble.newInvite.emailLabel')}
+              errorMessage={
+                touched.email ? _.upperFirst(errors?.email) : undefined
+              }
+            />
+            <SubmitButton
+              onPress={() => handleSubmit()}
+              disabled={!isValid}
+              isSubmitting={isSubmitting}
+              label={I18n.t('bubble.newInvite.buttonLabel')}
+            />
+          </View>
+        )}
+      </Formik>
     </Card>
   );
 };

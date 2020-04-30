@@ -1,48 +1,47 @@
 import React from 'react';
-import {Root as NativeBaseRoot, StyleProvider, Text} from 'native-base';
-import {NavigationContainer} from '@react-navigation/native';
-import {MainNavigator} from './src/components/MainNavigator';
-import {AuthProvider, useAuth} from './src/auth/Auth';
-import {
-  createStackNavigator,
-  StackNavigationProp,
-} from '@react-navigation/stack';
-import {AuthNavigator} from './src/components/auth/AuthNavigator';
-import {StatusBar} from 'react-native';
-import {DynamicLinkHandler} from './src/nav/DynamicLinkHandler';
-import {NotificationsManager} from './src/notifications/NotificationsManager';
+import {Root} from './src/components/Root';
 import {APIProvider} from './src/api/useAPI';
-import getTheme from './src/native-base-theme/components';
-import commonColor from './src/native-base-theme/variables/commonColor';
+import {AuthProvider} from './src/auth/Auth';
+import {View, StyleSheet, ViewStyle, Platform, SafeAreaView} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 
 console.disableYellowBox = true;
 
-export type RootStackParamList = {
-  AuthNavigator: undefined;
-  MainNavigator: undefined;
-};
-
-export type RootNavigationProp = StackNavigationProp<RootStackParamList>;
-
-const RootStack = createStackNavigator<RootStackParamList>();
-
-const Root: React.FC = () => {
-  const auth = useAuth();
-  return (
-    <RootStack.Navigator
-      headerMode={'none'}
-      screenOptions={{animationEnabled: false}}>
-      {auth.state?.uid && auth.state?.emailVerified ? (
-        <RootStack.Screen name="MainNavigator" component={MainNavigator} />
-      ) : (
-        <RootStack.Screen name="AuthNavigator" component={AuthNavigator} />
-      )}
-    </RootStack.Navigator>
-  );
-};
-
 export type AppProps = {
   isHeadless: boolean;
+};
+type Styles = {
+  containerStyle: ViewStyle;
+  wrapperStyle: ViewStyle;
+};
+
+const webContainerStyle: ViewStyle = {
+  flex: 1,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  maxWidth: 500,
+  padding: 32,
+};
+
+const nativeContainerStyle: ViewStyle = {
+  flex: 1,
+  flexDirection: 'row',
+  justifyContent: 'center',
+};
+
+const styles = StyleSheet.create<Styles>({
+  containerStyle:
+    Platform.OS === 'web' ? webContainerStyle : nativeContainerStyle,
+  wrapperStyle: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+});
+
+const Container: React.FC = ({children}) => {
+  return <View style={styles.containerStyle}>{children}</View>;
 };
 
 const App: React.FC<AppProps> = ({isHeadless}) => {
@@ -50,20 +49,19 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
     return null;
   }
   return (
-    <NativeBaseRoot>
-      <StyleProvider style={getTheme(commonColor)}>
-        <NavigationContainer>
-          <APIProvider>
-            <AuthProvider>
-              <NotificationsManager />
-              <DynamicLinkHandler />
-              <StatusBar barStyle={'dark-content'} translucent={false} />
-              <Root />
-            </AuthProvider>
-          </APIProvider>
-        </NavigationContainer>
-      </StyleProvider>
-    </NativeBaseRoot>
+    <SafeAreaView style={styles.wrapperStyle}>
+      <Container>
+        <APIProvider>
+          <AuthProvider>
+            <NavigationContainer>
+              <ActionSheetProvider>
+                <Root />
+              </ActionSheetProvider>
+            </NavigationContainer>
+          </AuthProvider>
+        </APIProvider>
+      </Container>
+    </SafeAreaView>
   );
 };
 

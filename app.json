@@ -1,4 +1,9 @@
 {
   "name": "bubbles",
-  "displayName": "Bubbles"
+  "displayName": "Bubbles",
+  "expo": {
+    "name": "Bubbles",
+    "slug": "bubbles",
+    "platforms": ["web"]
+  }
 }
