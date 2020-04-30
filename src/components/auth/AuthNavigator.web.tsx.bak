@@ -1,0 +1,24 @@
+import React from 'react';
+import {Switch} from 'react-router';
+import {Redirect, Route} from 'react-router-dom';
+import {SignIn} from './SignIn';
+import {SignUp} from './SignUp';
+import {ConfirmSignUp} from './ConfirmSignUp';
+import {ResetPassword} from './ResetPassword';
+import {ConfirmResetPassword} from './ConfirmResetPassword';
+
+export const AuthNavigator: React.FC = () => {
+  return (
+    <Switch>
+      <Redirect exact from="/auth" to="/auth/sign-in" />
+      <Route path="/auth/sign-in" children={<SignIn />} />
+      <Route path="/auth/sign-up" children={<SignUp />} />
+      <Route path="/auth/confirm-sign-up" children={<ConfirmSignUp />} />
+      <Route path="/auth/reset-password" children={<ResetPassword />} />
+      <Route
+        path="/auth/confirm-reset-password"
+        children={<ConfirmResetPassword />}
+      />
+    </Switch>
+  );
+};

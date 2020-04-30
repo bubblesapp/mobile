@@ -125,9 +125,9 @@ platform :android do
 			task: 'clean'
 		)
 		gradle(
-			task: 'bundle',
+			task: 'build', # bundle
 			build_type: 'Release',
-			flavor: 'prod',
+			flavor: 'dev', # prod
 			print_command: false,
 			project_dir: './android/',
 			gradle_path: './gradlew',

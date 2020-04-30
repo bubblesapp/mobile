@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleProp, StyleSheet, Text, TextStyle, ViewStyle} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Button} from 'native-base';
+import {Button} from 'react-native-elements';
 
 export type Props = {
   onPress?: () => void;
@@ -20,33 +20,34 @@ interface Styles {
 const styles = StyleSheet.create<Styles>({
   button: {
     marginTop: 16,
-    backgroundColor: '#e4e4e4'
+    backgroundColor: '#bbb',
   },
   text: {
-    textTransform: 'uppercase',
     fontSize: 13,
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
   },
 });
 
 export const ExtraButton: React.FC<Props> = ({
   onPress,
   to,
-  params,
   label,
 }): JSX.Element => {
-  const navigation = useNavigation();
+  const nav = useNavigation();
   return (
     <Button
-      style={styles.button}
-      block
+      buttonStyle={styles.button}
+      type={'solid'}
+      titleStyle={styles.text}
+      title={label}
       onPress={() => {
         if (onPress) {
           onPress();
         } else if (to) {
-          navigation.navigate(to, params);
+          nav.navigate(to);
         }
-      }}>
-      <Text style={styles.text}>{label}</Text>
-    </Button>
+      }}
+    />
   );
 };

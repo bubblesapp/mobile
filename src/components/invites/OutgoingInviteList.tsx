@@ -2,11 +2,11 @@ import {Invite} from '../../models/Invite';
 import {FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useAPI} from '../../api/useAPI';
-import {ActionSheet, Card, CardItem, Text} from 'native-base';
 import I18n from '../../i18n';
 import {OutgoingInviteItem} from './OutgoingInviteItem';
-import Toast from '../common/Toast';
-import {useNetInfo} from '@react-native-community/netinfo';
+import {Card} from 'react-native-elements';
+import {useToast} from '../Toast';
+import {useActionSheet} from '@expo/react-native-action-sheet';
 
 const BUTTONS = [
   I18n.t('bubble.invites.deleteOutgoing'),
@@ -17,17 +17,18 @@ const CANCEL_INDEX = 1;
 
 export const OutgoingInviteList: React.FC = (): JSX.Element | null => {
   const [invites, setInvites] = useState<Invite[]>([]);
-  const API = useAPI();
-  const netInfo = useNetInfo();
+  const api = useAPI();
+  const Toast = useToast();
+  const {showActionSheetWithOptions} = useActionSheet();
 
   console.log(invites);
 
   useEffect(() => {
-    const invitesSubscription = API.observeOutgoingInvites().subscribe(
-      setInvites,
-    );
+    const invitesSubscription = api.invites.outgoing
+      .observeAll()
+      .subscribe(setInvites);
     return () => invitesSubscription.unsubscribe();
-  }, [API]);
+  }, [api]);
 
   if (invites.length === 0) {
     return null;
@@ -35,20 +36,14 @@ export const OutgoingInviteList: React.FC = (): JSX.Element | null => {
 
   const deleteOutgoingInvite = async (toEmail: string) => {
     try {
-      if (netInfo.isInternetReachable) {
-        await API.cancelInvite(toEmail);
-      } else {
-        API.cancelInvite(toEmail).catch((err) => {
-          console.log(err);
-        });
-      }
+      await api.invites.outgoing.delete(toEmail);
     } catch (err) {
       Toast.danger(err.message);
     }
   };
 
   const showActionSheet = (toEmail: string) => {
-    ActionSheet.show(
+    showActionSheetWithOptions(
       {
         options: BUTTONS,
         destructiveButtonIndex: DESTRUCTIVE_INDEX,
@@ -64,14 +59,9 @@ export const OutgoingInviteList: React.FC = (): JSX.Element | null => {
   };
 
   return (
-    <Card>
+    <Card title={I18n.t('bubble.invites.outgoingInvites')}>
       <FlatList<Invite>
         data={invites}
-        ListHeaderComponent={
-          <CardItem header={true}>
-            <Text>{I18n.t('bubble.invites.outgoingInvites')}</Text>
-          </CardItem>
-        }
         renderItem={({item: invite}) => (
           <OutgoingInviteItem
             invite={invite}

@@ -8,6 +8,8 @@ import {ChangeEmail} from './ChangeEmail';
 import {ChangePassword} from './ChangePassword';
 import {ChangePersonalInfo} from './ChangePersonalInfo';
 import {DeleteAccount} from './DeleteAccount';
+import I18n from '../../i18n';
+import {BackButton} from './BackButton';
 
 export type ProfileStackParamsList = {
   [Routes.Profile]: undefined;
@@ -27,19 +29,43 @@ export type ProfileNavigatorNavigationProp = BottomTabNavigationProp<
 export const ProfileNavigator: React.FC = (): JSX.Element => {
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen name={Routes.Profile} component={Profile} />
-      <ProfileStack.Screen name={Routes.ChangeEmail} component={ChangeEmail} />
+      <ProfileStack.Screen
+        name={Routes.Profile}
+        component={Profile}
+        options={{
+          title: I18n.t('profile.title'),
+        }}
+      />
+      <ProfileStack.Screen
+        name={Routes.ChangeEmail}
+        component={ChangeEmail}
+        options={{
+          title: I18n.t('profile.changeEmail.title'),
+        }}
+      />
       <ProfileStack.Screen
         name={Routes.ChangePassword}
         component={ChangePassword}
+        options={{
+          title: I18n.t('profile.changePassword.title'),
+          headerLeft: () => <BackButton />,
+        }}
       />
       <ProfileStack.Screen
         name={Routes.ChangePersonalInfo}
         component={ChangePersonalInfo}
+        options={{
+          title: I18n.t('profile.changePersonalInfo.title'),
+          headerLeft: () => <BackButton />,
+        }}
       />
       <ProfileStack.Screen
         name={Routes.DeleteAccount}
         component={DeleteAccount}
+        options={{
+          title: I18n.t('profile.deleteAccount.title'),
+          headerLeft: () => <BackButton />,
+        }}
       />
     </ProfileStack.Navigator>
   );

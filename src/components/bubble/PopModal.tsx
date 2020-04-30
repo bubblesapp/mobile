@@ -1,12 +1,19 @@
 import React, {useState} from 'react';
-import {Modal, StyleSheet, View, ViewStyle,} from 'react-native';
-import {Button, Icon, Text} from 'native-base';
+import {
+  Modal as ModalNative,
+  StyleSheet,
+  View,
+  ViewStyle,
+  Text,
+  Platform,
+} from 'react-native';
+import ModalWeb from 'modal-react-native-web';
 import I18n from '../../i18n';
-import {boolean} from 'yup';
-import {useAuth} from '../../auth/Auth';
 import {useAPI} from '../../api/useAPI';
-import Toast from '../common/Toast';
 import {SubmitButton} from '../common/SubmitButton';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {Button} from 'react-native-elements';
+import {useToast} from '../Toast';
 
 export type Props = {
   visible: boolean;
@@ -14,16 +21,20 @@ export type Props = {
   proceed: () => void;
 };
 
-export const PopModal: React.FC<Props> = ({visible, close, proceed}): JSX.Element => {
+const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
+
+export const PopModal: React.FC<Props> = ({
+  visible,
+  close,
+  proceed,
+}): JSX.Element => {
   const [isPoppingBubble, setIsPoppingBubble] = useState<boolean>(false);
-  const auth = useAuth();
   const api = useAPI();
+  const Toast = useToast();
   const pop = async () => {
     setIsPoppingBubble(true);
     try {
-      if (auth?.state.uid) {
-        await api.popBubble(auth.state.uid);
-      }
+      await api.bubble.pop();
     } catch (err) {
       Toast.danger(err.messaging);
     } finally {
@@ -46,17 +57,26 @@ export const PopModal: React.FC<Props> = ({visible, close, proceed}): JSX.Elemen
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <View style={{flex: 0.33, alignItems: 'center', justifyContent: 'center'}}>
-              <Icon
+            <View
+              style={{
+                flex: 0.33,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FontAwesome5
                 name={'exclamation-triangle'}
-                type={'FontAwesome5'}
                 style={{color: '#d9534f', fontSize: 55}}
               />
               <Text style={{marginVertical: 20, fontWeight: 'bold'}}>
                 Confirmation
               </Text>
             </View>
-            <View style={{flex: 0.33, alignItems: 'center', justifyContent: 'center'}}>
+            <View
+              style={{
+                flex: 0.33,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
               <Text
                 style={{
                   marginVertical: 5,
@@ -87,18 +107,13 @@ export const PopModal: React.FC<Props> = ({visible, close, proceed}): JSX.Elemen
                 testID={'confirmPopButton'}
                 accessibilityLabel={'Proceed'}
                 label={I18n.t('bubble.popModal.proceed')}
-                danger={true}
-                block={true}
                 onPress={() => pop()}
               />
               <Button
+                title={I18n.t('bubble.popModal.cancel')}
                 style={{marginTop: 20}}
-                primary={true}
-                transparent={true}
-                block={true}
-                onPress={() => close()}>
-                <Text>{I18n.t('bubble.popModal.cancel')}</Text>
-              </Button>
+                onPress={() => close()}
+              />
             </View>
           </View>
         </View>

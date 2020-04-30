@@ -1,0 +1,32 @@
+import React from 'react';
+import {Route, Switch} from 'react-router';
+import {Profile} from './Profile';
+import {Redirect} from 'react-router-dom';
+import {ChangeEmail} from './ChangeEmail';
+import {ChangePassword} from './ChangePassword';
+import {ChangePersonalInfo} from './ChangePersonalInfo';
+import {DeleteAccount} from './DeleteAccount';
+
+export const ProfileNavigator: React.FC = () => {
+  return (
+    <>
+      <Switch>
+        <Redirect exact from="/main/profile" to="/main/profile/profile" />
+        <Route path={'/main/profile/profile'} children={<Profile />} />
+        <Route path={'/main/profile/change-email'} children={<ChangeEmail />} />
+        <Route
+          path={'/main/profile/change-password'}
+          children={<ChangePassword />}
+        />
+        <Route
+          path={'/main/profile/change-personal-info'}
+          children={<ChangePersonalInfo />}
+        />
+        <Route
+          path={'/main/profile/delete-account'}
+          children={<DeleteAccount />}
+        />
+      </Switch>
+    </>
+  );
+};

@@ -1,5 +1,4 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
 import {SignIn} from './SignIn';
 import {ResetPassword} from './ResetPassword';
 import {SignUp} from './SignUp';
@@ -7,7 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Routes} from '../../nav/Routes';
 import {ConfirmSignUp} from './ConfirmSignUp';
 import {ConfirmResetPassword} from './ConfirmResetPassword';
-import {authStyleSheet as styles} from './Styles';
+import {ScrollView, ViewStyle, StyleSheet} from 'react-native';
 
 export type AuthStackParamList = {
   SignIn: {
@@ -47,14 +46,8 @@ export const AuthNavigator: React.FC = (): JSX.Element => {
         screenOptions={screenOptions}>
         <AuthStack.Screen name={Routes.SignIn} component={SignIn} />
         <AuthStack.Screen name={Routes.SignUp} component={SignUp} />
-        <AuthStack.Screen
-          name={Routes.ConfirmSignUp}
-          component={ConfirmSignUp}
-        />
-        <AuthStack.Screen
-          name={Routes.ResetPassword}
-          component={ResetPassword}
-        />
+        <AuthStack.Screen name={Routes.ConfirmSignUp} component={ConfirmSignUp} />
+        <AuthStack.Screen name={Routes.ResetPassword} component={ResetPassword} />
         <AuthStack.Screen
           name={Routes.ConfirmResetPassword}
           component={ConfirmResetPassword}
@@ -63,3 +56,17 @@ export const AuthNavigator: React.FC = (): JSX.Element => {
     </ScrollView>
   );
 };
+
+type Styles = {
+  contentContainer: ViewStyle;
+};
+
+const styles = StyleSheet.create<Styles>({
+  contentContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+  },
+});

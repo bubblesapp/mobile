@@ -1,6 +1,5 @@
-//import {API} from './API';
-//import {FirebaseAPI} from '../firebase-api/FirebaseAPI';
-import {FirebaseAPI as FBAPI} from '@bubblesapp/api';
+import {FirebaseAPI} from '@bubblesapp/api';
 import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/firestore';
 
-export const api = new FBAPI(firebase.app());
+export const api = new FirebaseAPI(firebase.app());

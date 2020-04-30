@@ -1,0 +1,38 @@
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from 'react-router-dom';
+import {useAuth} from '../auth/Auth';
+import {MainNavigator} from './MainNavigator';
+import {AuthNavigator} from './auth/AuthNavigator';
+import {ThemeProvider} from 'react-native-elements';
+import {NavProvider} from '../nav/NavProvider';
+
+export const Root: React.FC = () => {
+  const auth = useAuth();
+  console.log('Auth', auth.state);
+  return (
+    <ThemeProvider>
+      <Router>
+        <NavProvider>
+          <Switch>
+            {auth.state?.uid && auth.state?.emailVerified ? (
+              <>
+                <Redirect exact from="/" to="/main" />
+                <Route path="/main" children={<MainNavigator />} />
+              </>
+            ) : (
+              <>
+                <Redirect exact from="/" to="/auth" />
+                <Route path="/auth" children={<AuthNavigator />} />
+              </>
+            )}
+          </Switch>
+        </NavProvider>
+      </Router>
+    </ThemeProvider>
+  );
+};

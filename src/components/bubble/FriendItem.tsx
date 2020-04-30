@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
-import {Friend} from '../../models/Friend';
+import {Text, View} from 'react-native';
 import moment from 'moment';
-import {Icon, Text} from 'native-base';
 import I18n from '../../i18n';
-import {Profile} from '../../models/Profile';
+import {Friend, Profile} from '@bubblesapp/api';
+import {useAPI} from '../../api/useAPI';
+import {ListItem} from 'react-native-elements';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 type Props = {
   friend: Friend;
+  onPress: (friend: Friend) => void;
 };
 
 const daysAgoString = (timestamp: number | undefined): string => {
@@ -25,42 +27,56 @@ const daysAgoString = (timestamp: number | undefined): string => {
   }
 };
 
-export const FriendItem: React.FC<Props> = ({friend}) => {
+export const FriendItem: React.FC<Props> = ({friend, onPress}) => {
   const [profile, setProfile] = useState<Profile | null>(null);
 
+  const api = useAPI();
+
   useEffect(() => {
-    const profileSubscription = friend.profile.subscribe(setProfile);
+    const profileSubscription = api.profiles
+      .observe(friend.uid)
+      .subscribe(setProfile);
     return () => profileSubscription.unsubscribe();
-  }, [friend.profile]);
+  }, [api, friend]);
 
   return (
-    <View style={{flexDirection: 'row', backgroundColor: '#fff'}}>
-      <View
-        style={{
-          width: 64,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#007aff',
-          borderRadius: 32,
-        }}>
-        <Icon
-          name={'user-alt'}
-          type={'FontAwesome5'}
-          style={{color: '#fff', textAlign: 'center'}}
-        />
-      </View>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'space-evenly',
-          alignItems: 'flex-start',
-          height: 64,
-          marginLeft: 16,
-        }}>
-        <Text style={{fontWeight: '500'}} numberOfLines={1}>{profile?.name}</Text>
-        <Text style={{color: '#a0a0a0', fontSize: 14}} numberOfLines={1}>{profile?.email}</Text>
-        <Text style={{fontSize: 14}} numberOfLines={1}>{daysAgoString(friend.lastMet)}</Text>
-      </View>
-    </View>
+    <ListItem
+      onPress={() => onPress(friend)}
+      title={
+        <View style={{flexDirection: 'row', backgroundColor: '#fff'}}>
+          <View
+            style={{
+              width: 64,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#007aff',
+              borderRadius: 32,
+            }}>
+            <FontAwesome5
+              name={'user-alt'}
+              style={{color: '#fff', textAlign: 'center', fontSize: 24}}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'space-evenly',
+              alignItems: 'flex-start',
+              height: 64,
+              marginLeft: 16,
+            }}>
+            <Text style={{fontWeight: '500'}} numberOfLines={1}>
+              {profile?.name}
+            </Text>
+            <Text style={{color: '#a0a0a0', fontSize: 14}} numberOfLines={1}>
+              {profile?.email}
+            </Text>
+            <Text style={{fontSize: 14}} numberOfLines={1}>
+              {daysAgoString(friend.lastMet)}
+            </Text>
+          </View>
+        </View>
+      }
+    />
   );
 };
