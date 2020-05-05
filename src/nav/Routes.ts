@@ -1,9 +1,11 @@
 export enum Routes {
   AuthNavigator = 'AuthNavigator',
   SignUp = 'SignUp',
+  SignUpNext = 'SignUpNext',
   ConfirmSignUp = 'ConfirmSignUp',
   SignIn = 'SignIn',
-  ResetPassword = 'ResetPassword',
+  ForgotPassword = 'ForgotPassword',
+  ResetPasswordEmailSent = 'ResetPasswordEmailSent',
   ConfirmResetPassword = 'ConfirmResetPassword',
 
   MainNavigator = 'MainNavigator',

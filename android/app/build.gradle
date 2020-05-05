@@ -121,6 +121,8 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  */
 def enableHermes = project.ext.react.get("enableHermes", false);
 
+apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -204,6 +206,7 @@ android {
 }
 
 dependencies {
+    addUnimodulesDependencies()
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules

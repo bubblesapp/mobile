@@ -1,18 +1,11 @@
-import React, {
-  Dispatch,
-  ReducerAction,
-  useContext,
-  useEffect,
-  useMemo,
-  useReducer,
-} from 'react';
+import React, {Dispatch, ReducerAction, useContext, useEffect, useMemo, useReducer,} from 'react';
 import {authInitialState, AuthState} from './state/state';
 import {authReducer, AuthReducer} from './state/reducer';
-import {AuthStateChangedAction, SetVerifyingEmailAction} from './state/actions';
+import {AuthStateChangedAction} from './state/actions';
 import {useAPI} from '../api/useAPI';
 import {Platform} from 'react-native';
 // @ts-ignore
-import {firebaseAuth} from './FirebaseAuth';
+import {firebaseAuth, setPersistence} from './FirebaseAuth';
 import {API, Device} from '@bubblesapp/api';
 
 class Auth {
@@ -21,6 +14,18 @@ class Auth {
     private dispatch: Dispatch<ReducerAction<AuthReducer>>,
     private api: API,
   ) {}
+
+  static actionCodeSettings = {
+    iOS: {
+      bundleId: 'org.bubblesapp.bubbles',
+    },
+    android: {
+      packageName: 'org.bubblesapp.bubbles',
+      installApp: true,
+    },
+    handleCodeInApp: true,
+    dynamicLinkDomain: 'bubblesdev.page.link',
+  };
 
   changeState = (authState: AuthState) =>
     this.dispatch(new AuthStateChangedAction(authState));
@@ -44,13 +49,20 @@ class Auth {
     }
   };
 
-  signIn = async (email: string, password: string): Promise<string> =>
-    firebaseAuth()
+  signIn = async (
+    email: string,
+    password: string,
+    remember: boolean = false,
+  ): Promise<string> => {
+    if (Platform.OS === 'web') {
+      await setPersistence(remember);
+    }
+    return await firebaseAuth()
       .signInWithEmailAndPassword(email, password)
       .then((credentials) => credentials.user.uid);
+  };
 
   signUp = async (
-    name: string,
     email: string,
     password: string,
   ): Promise<string> => {
@@ -59,51 +71,33 @@ class Auth {
       password,
     );
     const {uid} = credentials.user;
-    await firebaseAuth().currentUser?.updateProfile({
-      displayName: name,
-    });
     await this.api.profiles.set({
       uid,
       email,
-      name,
       pushNotificationsEnabled: Platform.OS === 'android',
       emailNotificationsEnabled: true,
     });
     this.refreshState().catch((err) => console.log(err));
-    //await this.sendVerificationEmail();
+    await this.sendVerificationEmail();
     return uid;
   };
 
   sendVerificationEmail = async () => {
-    const settings = {
-      url: `https://bubblesapp.link/email-verification/?email=${
-        firebaseAuth().currentUser!!.email
-      }`,
-      iOS: {
-        bundleId: 'org.bubblesapp.bubbles',
-      },
-      android: {
-        packageName: 'org.bubblesapp.bubbles',
-        installApp: true,
-      },
-      handleCodeInApp: true,
-      dynamicLinkDomain: 'bubblesdev.page.link',
-    };
-    console.log(settings);
-    await firebaseAuth().currentUser?.sendEmailVerification(settings);
+    await firebaseAuth().currentUser?.sendEmailVerification(
+      Auth.actionCodeSettings,
+    );
   };
 
   verifyEmail = async (code: string): Promise<void> => {
-    this.dispatch(new SetVerifyingEmailAction(true));
-    try {
-      console.log('Verifying email', code);
-      await firebaseAuth().applyActionCode(code);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      this.dispatch(new SetVerifyingEmailAction(true));
-    }
-    console.log('Done verifying email');
+    await firebaseAuth().applyActionCode(code);
+    await firebaseAuth().currentUser?.reload();
+    await this.refreshState();
+  };
+
+  restoreEmail = async (code: string): Promise<void> => {
+    console.log('Restoring email', code);
+    await firebaseAuth().applyActionCode(code);
+    console.log('Done restoring email');
     await firebaseAuth().currentUser?.reload();
     await this.refreshState();
   };
@@ -111,11 +105,13 @@ class Auth {
   signOut = async (): Promise<void> => await firebaseAuth().signOut();
 
   resetPassword = async (email: string): Promise<void> => {
-    await firebaseAuth().sendPasswordResetEmail(email);
+    await firebaseAuth().sendPasswordResetEmail(email, Auth.actionCodeSettings);
   };
 
+  verifyPasswordResetCode = async (oobCode: string): Promise<string> =>
+    await firebaseAuth().verifyPasswordResetCode(oobCode);
+
   confirmResetPassword = async (
-    email: string,
     code: string,
     password: string,
   ): Promise<void> => await firebaseAuth().confirmPasswordReset(code, password);
@@ -161,8 +157,10 @@ class Auth {
     await this.refreshState();
   };
 
-  deleteUser = async (password: string): Promise<void> => {
-    await this.reauthenticate(password);
+  deleteUser = async (password?: string): Promise<void> => {
+    if (password) {
+      await this.reauthenticate(password);
+    }
     await this.api.profiles.delete();
     await firebaseAuth().currentUser?.delete();
     await firebaseAuth().signOut();

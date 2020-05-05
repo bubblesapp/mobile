@@ -1,85 +1,144 @@
-import React from 'react';
-import {View} from 'react-native';
-import I18n from '../../i18n/';
-import {authStyleSheet as styles} from './Styles';
-import {Routes} from '../../nav/NavProvider';
+import {
+  Modal as ModalNative,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useAuth} from '../../auth/Auth';
+import {useToast} from '../Toast';
+import I18n from '../../i18n';
+import {Overlay} from 'react-native-elements';
+import {SmallSpinner} from '../common/Spinner';
+import ModalWeb from 'modal-react-native-web';
+import {authStyleSheet as styles, authStyleSheet} from './Styles';
+import {Input} from './common/Input';
+import _ from 'lodash';
+import {SubmitButton} from '../common/SubmitButton';
+import {Routes} from '../../nav/Routes';
 import {Formik} from 'formik';
 import * as yup from 'yup';
-import {ExtraButton} from '../common/ExtraButton';
-import {SubmitButton} from '../common/SubmitButton';
-import {Title} from './common/Title';
-import {useAuth} from '../../auth/Auth';
-import {useNavigation} from '@react-navigation/native';
-import {Input} from 'react-native-elements';
-import _ from 'lodash';
 
 const validationSchema = yup.object().shape({
-  email: yup.string().email().required(),
+  password: yup.string().required().label(I18n.t('auth.resetPasswordNewPasswordLabel')),
 });
 type FormValues = yup.InferType<typeof validationSchema>;
 const initialValues: FormValues = {
-  email: '',
+  password: '',
 };
 
-export const ResetPassword: React.FC = (): JSX.Element => {
-  const nav = useNavigation();
+const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
+
+type Props = {
+  oobCode: string;
+};
+
+export const ResetPassword: React.FC<Props> = (props) => {
+  const [isVisible, setIsVisible] = useState(true);
+  const [isActionCodeVerified, setIsActionCodeVerified] = useState(false);
+  const [email, setEmail] = useState<string>();
   const auth = useAuth();
-  const resetPassword = async ({email}: FormValues, {setSubmitting}) => {
+  const Toast = useToast();
+
+  if (!props.oobCode) {
+    setIsVisible(false);
+  }
+
+  useEffect(() => {
+    auth
+      .verifyPasswordResetCode(props.oobCode)
+      .then((e) => {
+        setEmail(e);
+        setIsActionCodeVerified(true);
+      })
+      .catch((err) => {
+        setIsVisible(false);
+        Toast.danger(err.message);
+      });
+  }, []);
+
+  const confirmResetPassword = async (
+    {password}: FormValues,
+    {setSubmitting},
+  ) => {
     try {
-      await auth.resetPassword(email);
+      if (email) {
+        await auth.confirmResetPassword(props.oobCode, password);
+        Toast.success(I18n.t('auth.resetPasswordSuccess'));
+        await auth.signIn(email, password);
+        if (Platform.OS === 'web') {
+          window.location.search = '';
+        }
+        setIsVisible(false);
+        setSubmitting(false);
+      }
     } catch (e) {
       console.log(e);
-    } finally {
+      Toast.danger(e.message);
       setSubmitting(false);
-      nav.navigate(Routes.ConfirmResetPassword);
     }
   };
+
   return (
-    <View style={{flex: 1, justifyContent: 'center', backgroundColor: '#fff'}}>
-      <Title />
-      <Formik
-        initialValues={initialValues}
-        validateOnMount={true}
-        validationSchema={validationSchema}
-        onSubmit={resetPassword}>
-        {({
-          handleSubmit,
-          handleBlur,
-          handleChange,
-          values,
-          errors,
-          touched,
-          isSubmitting,
-          isValid,
-        }) => (
-          <View style={styles.formContainer}>
-            <Input
-              autoCapitalize={'none'}
-              autoCorrect={false}
-              textContentType={'emailAddress'}
-              keyboardType={'email-address'}
-              onChangeText={handleChange('email')}
-              onBlur={handleBlur('email')}
-              value={values.email}
-              editable={!isSubmitting}
-              placeholder={I18n.t('auth.resetPasswordEmailPlaceholder')}
-              errorMessage={
-                touched.email ? _.upperFirst(errors?.email) : undefined
-              }
-            />
-            <SubmitButton
-              onPress={() => handleSubmit()}
-              disabled={!isValid}
-              isSubmitting={isSubmitting}
-              label={I18n.t('auth.resetPasswordSubmitButtonTitle')}
-            />
-            <ExtraButton
-              to={Routes.SignIn}
-              label={I18n.t('auth.backToLoginButtonTitle')}
-            />
-          </View>
-        )}
-      </Formik>
-    </View>
+    <Overlay
+      overlayStyle={authStyleSheet.overlay}
+      isVisible={isVisible}
+      ModalComponent={Modal}>
+      {!isActionCodeVerified ? (
+        <SmallSpinner />
+      ) : (
+        <Formik
+          initialValues={initialValues}
+          validateOnMount={true}
+          validationSchema={validationSchema}
+          isInitialValid={false}
+          onSubmit={confirmResetPassword}>
+          {({
+            handleSubmit,
+            handleBlur,
+            handleChange,
+            values,
+            errors,
+            touched,
+            isSubmitting,
+            isValid,
+          }) => (
+            <View style={{padding: 8}}>
+              <Input
+                autoCapitalize={'none'}
+                secure={true}
+                onChangeText={handleChange('password')}
+                doOnBlur={handleBlur('password')}
+                value={values.password}
+                editable={!isSubmitting}
+                label={I18n.t('auth.resetPasswordNewPasswordLabel')}
+                placeholder={I18n.t(
+                  'auth.resetPasswordNewPasswordPlaceholder',
+                )}
+                errorMessage={
+                  touched.password
+                    ? _.upperFirst(errors?.password || ' ')
+                    : ' '
+                }
+              />
+              <SubmitButton
+                onPress={() => handleSubmit()}
+                disabled={!isValid}
+                loading={isSubmitting}
+                title={I18n.t('auth.resetPasswordSubmitButtonTitle')}
+              />
+              <View style={[authStyleSheet.noAccountContainer, {marginTop: 24}]}>
+                <TouchableOpacity onPress={() => setIsVisible(false)}>
+                  <Text style={authStyleSheet.extraLink}>
+                    {I18n.t('auth.cancel')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </Formik>
+      )}
+    </Overlay>
   );
 };

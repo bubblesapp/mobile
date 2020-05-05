@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
 import I18n from '../../i18n';
-import {Routes} from '../../nav/NavProvider';
-import {ExtraText} from './common/ExtraText';
-import {ExtraButton} from '../common/ExtraButton';
+import {Routes} from '../../nav/Routes';
 import {SubmitButton} from '../common/SubmitButton';
 import {Title} from './common/Title';
 import {InfoText} from './common/InfoText';
 import {useAuth} from '../../auth/Auth';
 import {SmallSpinner} from '../common/Spinner';
 import {useNavigation} from '@react-navigation/native';
-import {View} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useToast} from '../Toast';
+import {Template} from '../common/Template';
+import {authStyleSheet} from './Styles';
 
 /* const validationSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -31,7 +31,14 @@ export const ConfirmSignUp: React.FC = (): JSX.Element => {
 
   if (!auth.state?.uid) {
     nav.navigate(Routes.SignIn);
+  } else if (auth.state?.uid && !auth.state?.name) {
+    nav.navigate(Routes.SignUpNext);
   }
+
+  const startOver = async () => {
+    await auth.deleteUser();
+    nav.navigate(Routes.SignUp);
+  };
 
   /* const confirmSignUp = async ({email, code}: FormValues, {setSubmitting}) => {
     try {
@@ -64,49 +71,68 @@ export const ConfirmSignUp: React.FC = (): JSX.Element => {
     }
   };
   return (
-    <View style={{flex: 1, justifyContent: 'center', backgroundColor: '#fff'}}>
-      <Title />
-      {auth.state?.verifyingEmail ? (
+    <Template
+      title={<Title />}
+      headerStyle={{
+        height: 250,
+      }}
+      content={
         <>
-          <InfoText>
-            {I18n.t('auth.welcomeText').replace(
-              ' $0',
-              ` ${auth.state?.name ?? ''}`,
-            )}
-            {'\n'}
-            {'\n'}
-            {I18n.t('auth.verifyingEmailText')}
-          </InfoText>
-          <SmallSpinner />
-        </>
-      ) : (
-        <>
-          <InfoText>
-            {I18n.t('auth.welcomeText').replace(
-              ' $0',
-              ` ${auth.state?.name ?? ''}`,
-            )}
-            {'\n'}
-            {'\n'}
-            {I18n.t('auth.confirmAccountText')}
-            {'\n'}
-            {auth.state?.email}
-            {'\n'}
-            {'\n'}
-            {I18n.t('auth.confirmAccountText2')}
-          </InfoText>
-          <ExtraText>{I18n.t('auth.codeNotReceived')}</ExtraText>
-          <SubmitButton
-            onPress={() => resendEmail()}
-            isSubmitting={isResendingEmail}
-            label={I18n.t('auth.confirmSignUpResendCodeButtonTitle')}
+          <Image
+            source={require('../../../assets/images/Bubble.png')}
+            style={{
+              width: 155,
+              height: 139,
+              position: 'absolute',
+              zIndex: 4,
+              top: -100,
+            }}
           />
-          <ExtraButton
-            onPress={() => auth.signOut()}
-            label={I18n.t('auth.backToLoginButtonTitle')}
-          />
+          <View style={authStyleSheet.formContainer}>
+            <Text style={[authStyleSheet.heading1, {marginTop: 40}]}>
+              {I18n.t('auth.welcomeText').replace(
+                ' $0',
+                auth.state?.name ? ` ${auth.state.name}` : '',
+              )}
+            </Text>
+            <Text style={[authStyleSheet.heading2, {marginTop: 16}]}>
+              {I18n.t('auth.confirmAccountText')}
+            </Text>
+            <Text
+              style={[
+                authStyleSheet.heading2,
+                {marginTop: 16, fontWeight: 'bold'},
+              ]}>
+              {auth.state?.email}
+            </Text>
+            <Text style={[authStyleSheet.heading2, {marginTop: 16}]}>
+              {I18n.t('auth.confirmAccountText2')}
+            </Text>
+            <Text
+              style={[
+                authStyleSheet.extraText,
+                {marginTop: 32, marginBottom: 16},
+              ]}>
+              {I18n.t('auth.codeNotReceived')}
+            </Text>
+            <SubmitButton
+              onPress={() => resendEmail()}
+              loading={isResendingEmail}
+              title={I18n.t('auth.confirmSignUpResendCodeButtonTitle')}
+            />
+            <View style={[authStyleSheet.noAccountContainer, {marginTop: 32}]}>
+              <Text style={[authStyleSheet.extraText, {marginRight: 8}]}>
+                {I18n.t('auth.confirmSignUpSomethingWrong')}
+              </Text>
+              <TouchableOpacity onPress={() => startOver()}>
+                <Text style={authStyleSheet.extraLink}>
+                  {I18n.t('auth.confirmSignUpStartOver')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </>
-      )}
-    </View>
+      }
+    />
   );
 };

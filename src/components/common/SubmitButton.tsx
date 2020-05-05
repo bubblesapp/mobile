@@ -1,42 +1,44 @@
 import {Button, ButtonProps} from 'react-native-elements';
 import React from 'react';
-import {SmallSpinner} from './Spinner';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
-
-interface Props extends ButtonProps {
-  label: string;
-  isSubmitting?: boolean;
-}
+import {customTheme} from '../../theme/theme';
 
 interface Styles {
-  submitButton: ViewStyle;
+  container: ViewStyle;
+  button: ViewStyle;
   text: TextStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
-  submitButton: {
-    marginTop: 16,
-    backgroundColor: '#007AFF',
+  container: {
+    alignSelf: 'stretch',
+    height: 50,
+  },
+  button: {
+    marginHorizontal: 8,
+    padding: 8,
+    height: 50,
+    backgroundColor: customTheme.colors.ctaBackground,
+    borderRadius: 25,
   },
   text: {
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    fontSize: 14,
-    color: '#fff',
+    fontSize: 16,
+    fontFamily: 'Nunito-Bold',
+    color: customTheme.colors.ctaText,
   },
 });
 
-export const SubmitButton: React.FC<Props> = (props): JSX.Element => {
-  const {disabled, label, isSubmitting} = props;
-  return isSubmitting ? (
-    <SmallSpinner />
-  ) : (
+export const SubmitButton: React.FC<ButtonProps> = (props): JSX.Element => {
+  //const {disabled, label, isSubmitting} = props;
+  return (
     <Button
       {...props}
-      buttonStyle={styles.submitButton}
+      containerStyle={[styles.container, props.containerStyle]}
+      buttonStyle={[styles.button, props.buttonStyle]}
+      disabledStyle={[styles.button, {opacity: 0.2}]}
       type={'solid'}
-      title={label}
-      titleStyle={styles.text}
-      disabled={disabled || isSubmitting} />
+      titleStyle={[styles.text, props.titleStyle]}
+      disabledTitleStyle={[styles.text, props.disabledTitleStyle]}
+    />
   );
 };

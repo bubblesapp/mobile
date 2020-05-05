@@ -13,7 +13,7 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
   },
   spinnerContainer: {
-    height: 44,
+    height: 50,
     marginTop: 10,
   },
 });

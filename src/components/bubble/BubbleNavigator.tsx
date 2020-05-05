@@ -23,9 +23,10 @@ export type BubbleNavigatorNavigationProp = BottomTabNavigationProp<
 
 export const BubbleNavigator: React.FC = (): JSX.Element => {
   return (
-    <BubbleStack.Navigator screenOptions={{
-
-    }}>
+    <BubbleStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
       <BubbleStack.Screen
         name={Routes.Bubble}
         component={Bubble}

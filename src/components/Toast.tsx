@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import I18n from '../i18n';
+import {customTheme} from '../theme/theme';
 
 interface ToastAPI {
   success: (message: string, duration?: number) => Promise<void>;
@@ -18,7 +19,7 @@ interface ToastAPI {
 
 export const ToastContext = React.createContext<ToastAPI>(null);
 
-const SUCCESS_COLOR = '#5cb85c';
+const SUCCESS_COLOR = customTheme.colors.success;
 const DANGER_COLOR = '#d9534f';
 const WARNING_COLOR = '#f0ad4e';
 const INFO_COLOR = '#f4f4f4';
@@ -30,14 +31,14 @@ export const ToastProvider: React.FC = (props): JSX.Element => {
   const show = async (
     message: string,
     backgroundColor: string,
-    duration: number = 2000,
+    duration: number = 3000,
   ): Promise<void> =>
     new Promise((res) => {
       setToastMessage(message);
       setToastBackgroundColor(backgroundColor);
       setVisible(true);
       setTimeout(() => {
-        //setVisible(false);
+        setVisible(false);
         res();
       }, duration);
     });
@@ -95,11 +96,11 @@ const styles = StyleSheet.create<Styles>({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: 64,
-    height: 50,
+    bottom: 24,
+    //height: 50,
     flex: 1,
-    zIndex: 100,
-    opacity: 0.9,
+    zIndex: 100000,
+    opacity: 0.98,
     width: '100%',
   },
   container: {
@@ -126,6 +127,7 @@ const styles = StyleSheet.create<Styles>({
     borderLeftWidth: 1,
     borderLeftColor: '#fff',
     marginVertical: 8,
+    marginLeft: 8,
     paddingHorizontal: 16,
   },
   closeButtonText: {

@@ -8,6 +8,7 @@
 	<array>
 		<string>applinks:bubblesapp.link</string>
 		<string>applinks:bubblesapp.page.link</string>
+		<string>applinks:bubblesdev.page.link</string>
 	</array>
 </dict>
 </plist>

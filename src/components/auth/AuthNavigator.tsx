@@ -1,27 +1,32 @@
 import React from 'react';
 import {SignIn} from './SignIn';
-import {ResetPassword} from './ResetPassword';
+import {ForgotPassword} from './ForgotPassword';
 import {SignUp} from './SignUp';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Routes} from '../../nav/Routes';
 import {ConfirmSignUp} from './ConfirmSignUp';
-import {ConfirmResetPassword} from './ConfirmResetPassword';
+import {ResetPasswordEmailSent} from './ResetPasswordEmailSent';
 import {ScrollView, ViewStyle, StyleSheet} from 'react-native';
+import {Onboarding} from '../../onboarding/Onboarding';
+import {SignUpNext} from './SignUpNext';
+import {DynamicLinkHandler} from '../../nav/DynamicLinkHandler';
 
 export type AuthStackParamList = {
+  Onboarding: undefined;
   SignIn: {
     email?: string;
     signUpConfirmed?: boolean;
   };
   SignUp: undefined;
+  SignUpNext: undefined;
   ConfirmSignUp: {
     email?: string;
     password?: string;
   };
-  ResetPassword: {
+  ForgotPassword: {
     email?: string;
   };
-  ConfirmResetPassword: {
+  ResetPasswordEmailSent: {
     email?: string;
   };
 };
@@ -40,17 +45,26 @@ export const AuthNavigator: React.FC = (): JSX.Element => {
     <ScrollView
       alwaysBounceVertical={false}
       contentContainerStyle={styles.contentContainer}>
+      <DynamicLinkHandler />
       <AuthStack.Navigator
         headerMode={'none'}
-        initialRouteName={Routes.SignIn}
+        initialRouteName={'Onboarding'}
         screenOptions={screenOptions}>
+        <AuthStack.Screen name="Onboarding" component={Onboarding} />
         <AuthStack.Screen name={Routes.SignIn} component={SignIn} />
         <AuthStack.Screen name={Routes.SignUp} component={SignUp} />
-        <AuthStack.Screen name={Routes.ConfirmSignUp} component={ConfirmSignUp} />
-        <AuthStack.Screen name={Routes.ResetPassword} component={ResetPassword} />
+        <AuthStack.Screen name={Routes.SignUpNext} component={SignUpNext} />
         <AuthStack.Screen
-          name={Routes.ConfirmResetPassword}
-          component={ConfirmResetPassword}
+          name={Routes.ConfirmSignUp}
+          component={ConfirmSignUp}
+        />
+        <AuthStack.Screen
+          name={Routes.ForgotPassword}
+          component={ForgotPassword}
+        />
+        <AuthStack.Screen
+          name={Routes.ResetPasswordEmailSent}
+          component={ResetPasswordEmailSent}
         />
       </AuthStack.Navigator>
     </ScrollView>
@@ -66,7 +80,6 @@ const styles = StyleSheet.create<Styles>({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingHorizontal: 16,
     backgroundColor: '#fff',
   },
 });

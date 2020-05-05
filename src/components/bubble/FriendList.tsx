@@ -4,14 +4,11 @@ import React, {useEffect, useState} from 'react';
 import {useAPI} from '../../api/useAPI';
 import I18n from '../../i18n';
 import {DatePicker} from './DatePicker';
-import {Routes} from '../../nav/NavProvider';
-import {FlatList, Text, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {Button, Card, ListItem} from 'react-native-elements';
+import {FlatList, View} from 'react-native';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import {useAuth} from '../../auth/Auth';
 import {useToast} from '../Toast';
-import {SubmitButton} from '../common/SubmitButton';
+import {FriendListEmpty} from './FriendListEmpty';
 
 export const FriendList: React.FC = () => {
   const [friends, setFriends] = useState<Friend[]>([]);
@@ -28,8 +25,6 @@ export const FriendList: React.FC = () => {
     const friendsSubscription = api.friends.observeAll().subscribe(setFriends);
     return () => friendsSubscription.unsubscribe();
   }, [api]);
-
-  const nav = useNavigation();
 
   const removeFriend = async (friendUid: string) => {
     try {
@@ -97,7 +92,7 @@ export const FriendList: React.FC = () => {
   };
 
   return (
-    <Card title={I18n.t('bubble.friends.listHeader')}>
+    <View style={{flex: 1}}>
       <DatePicker
         visible={datePickerVisible}
         onDatePicked={async (date: Date) => {
@@ -112,34 +107,15 @@ export const FriendList: React.FC = () => {
         onCancel={() => setDatePickerVisible(false)}
       />
       <FlatList<Friend>
+        scrollEnabled={false}
+        contentContainerStyle={{flex: 1}}
         data={friends}
-        ListEmptyComponent={
-          <ListItem
-            onPress={() => nav.navigate(Routes.Invites)}
-            title={
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}>
-                <Text style={{fontSize: 14, color: '#aaa', textAlign: 'center'}}>
-                  {I18n.t('bubble.friends.emptyText')}
-                </Text>
-                <SubmitButton
-                  style={{marginTop: 24}}
-                  label={I18n.t('bubble.friends.emptyButtonTitle')}
-                  onPress={() => nav.navigate(Routes.Invites)}
-                />
-              </View>
-            }
-          />
-        }
+        ListEmptyComponent={<FriendListEmpty />}
         renderItem={({item: friend}) => (
           <FriendItem friend={friend} onPress={() => onFriendPress(friend)} />
         )}
         keyExtractor={(friend, index) => friend.uid + index}
       />
-    </Card>
+    </View>
   );
 };
