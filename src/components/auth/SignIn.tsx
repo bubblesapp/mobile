@@ -64,7 +64,7 @@ export const SignIn: React.FC = (): JSX.Element => {
         height: 250,
       }}
       content={
-        <>
+        <View style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
           <Image
             source={require('../../../assets/images/Man.png')}
             style={{
@@ -162,7 +162,7 @@ export const SignIn: React.FC = (): JSX.Element => {
               </View>
             )}
           </Formik>
-        </>
+        </View>
       }
     />
   );

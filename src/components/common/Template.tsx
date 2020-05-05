@@ -43,6 +43,7 @@ const styles = StyleSheet.create<Styles>({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
+    overflow: 'scroll',
     backgroundColor: customTheme.colors.pink,
   },
   titleContainer: {
@@ -58,7 +59,7 @@ const styles = StyleSheet.create<Styles>({
   },
   headerContent: {},
   content: {
-    flex: 1,
+    flexGrow: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     alignSelf: 'stretch',

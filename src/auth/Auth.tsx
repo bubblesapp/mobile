@@ -25,6 +25,7 @@ class Auth {
     },
     handleCodeInApp: true,
     dynamicLinkDomain: 'bubblesdev.page.link',
+    url: 'https://dev.app.bubblesapp.org',
   };
 
   changeState = (authState: AuthState) =>
