@@ -23,18 +23,8 @@ export type BubbleNavigatorNavigationProp = BottomTabNavigationProp<
 
 export const BubbleNavigator: React.FC = (): JSX.Element => {
   return (
-    <BubbleStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}>
-      <BubbleStack.Screen
-        name={Routes.Bubble}
-        component={Bubble}
-        options={{
-          title: I18n.t('bubble.title'),
-          headerRight: () => <InviteButton />,
-        }}
-      />
+    <BubbleStack.Navigator headerMode={'none'}>
+      <BubbleStack.Screen name={Routes.Bubble} component={Bubble} />
       <BubbleStack.Screen name={Routes.Invites} component={Invites} />
     </BubbleStack.Navigator>
   );

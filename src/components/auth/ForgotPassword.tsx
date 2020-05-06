@@ -11,7 +11,7 @@ import {useAuth} from '../../auth/Auth';
 import {useNavigation} from '@react-navigation/native';
 import _ from 'lodash';
 import {Template} from '../common/Template';
-import {Input} from './common/Input';
+import {Input} from '../common/Input';
 
 const validationSchema = yup.object().shape({
   email: yup.string().email().required(),

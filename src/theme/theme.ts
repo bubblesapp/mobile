@@ -17,6 +17,7 @@ export const customTheme: CustomTheme = {
   },
   colors: {
     lightGray: '#eee',
+    mediumGray: '#aaa',
     gray: '#3C3A39',
     ctaBackground: '#314DCB',
     ctaBackgroundLight: 'rgba(72, 101, 233, 0.2)',
@@ -27,7 +28,8 @@ export const customTheme: CustomTheme = {
     success: '#5cb85c',
     green: '#7AE0A6',
     orange: '#FF824E',
-    shadow: '#ddd',
+    red: '#FB6054',
+    shadow: 'rgba(0,0,0,0.1)',
   },
   fontFamily: 'Nunito',
   boldFontFamily: 'Nunito-Bold',

@@ -4,10 +4,14 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import {SubmitButton} from '../common/SubmitButton';
 import {useAuth} from '../../auth/Auth';
-import {Card, Input} from 'react-native-elements';
 import _ from 'lodash';
-import {ScrollView} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import {useToast} from '../Toast';
+import {Wrapper} from '../common/Wrapper';
+import {profileStyles as styles} from './Styles';
+import {Header} from './Header';
+import {Input} from '../common/Input';
+import {customTheme} from '../../theme/theme';
 
 const validationSchema = yup.object().shape({
   password: yup.string().required().min(6),
@@ -31,8 +35,18 @@ export const DeleteAccount: React.FC = (): JSX.Element => {
   };
 
   return (
-    <ScrollView>
-      <Card title={I18n.t('profile.deleteAccount.title')}>
+    <Wrapper topColor={customTheme.colors.red} bottomColor={'#fff'}>
+      <View style={[styles.header, {backgroundColor: customTheme.colors.red}]}>
+        <Header title={I18n.t('profile.deleteAccount.title')} color={'#fff'} />
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.heading1}>
+          {I18n.t('profile.deleteAccount.heading1')}
+        </Text>
+        <Image
+          source={require('../../../assets/images/profile/BubbleSad.png')}
+          style={{width: 108, height: 108, alignSelf: 'center', marginTop: 24}}
+        />
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -48,29 +62,33 @@ export const DeleteAccount: React.FC = (): JSX.Element => {
             isValid,
             isSubmitting,
           }) => (
-            <>
+            <View style={styles.formContainer}>
               <Input
                 autoCapitalize={'none'}
-                secureTextEntry
+                secure={true}
                 onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
+                doOnBlur={handleBlur('password')}
                 value={values.password}
                 editable={!isSubmitting}
-                placeholder={I18n.t('profile.deleteAccount.password')}
+                label={I18n.t('profile.deleteAccount.passwordLabel')}
+                placeholder={I18n.t(
+                  'profile.deleteAccount.passwordPlaceholder',
+                )}
                 errorMessage={
-                  touched.password ? _.upperFirst(errors?.password) : undefined
+                  touched.password ? _.upperFirst(errors?.password ?? ' ') : ' '
                 }
               />
               <SubmitButton
                 onPress={() => handleSubmit()}
                 disabled={!isValid}
-                isSubmitting={isSubmitting}
-                label={I18n.t('profile.deleteAccount.deleteAccount')}
+                loading={isSubmitting}
+                buttonStyle={{backgroundColor: customTheme.colors.red}}
+                title={I18n.t('profile.deleteAccount.button')}
               />
-            </>
+            </View>
           )}
         </Formik>
-      </Card>
-    </ScrollView>
+      </View>
+    </Wrapper>
   );
 };

@@ -16,7 +16,7 @@ export type MainTabsParamList = {
 export const MainNavigator = () => {
   return (
     <BottomTabs.Navigator
-      initialRouteName={Routes.Bubble}
+      initialRouteName={Routes.Profile}
       tabBar={(props) => <TabBar {...props} />}>
       <BottomTabs.Screen
         name={I18n.t('bubble.title')}

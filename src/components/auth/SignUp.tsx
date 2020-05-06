@@ -12,7 +12,7 @@ import {SubmitButton} from '../common/SubmitButton';
 import _ from 'lodash';
 import {useToast} from '../Toast';
 import {Template} from '../common/Template';
-import {Input} from './common/Input';
+import {Input} from '../common/Input';
 import {CheckBox} from 'react-native-elements';
 import {customTheme} from '../../theme/theme';
 

@@ -126,10 +126,7 @@ export const TabBar: React.FC<BottomTabBarProps> = ({
   //console.log(insets.bottom, styles.tabBar.height, (styles.tabBar.height as number));
   return (
     <SafeAreaView
-      style={[
-        styles.tabBar,
-        {height: insets.bottom + tabBarHeight},
-      ]}>
+      style={[styles.tabBar, {height: insets.bottom + tabBarHeight}]}>
       <TouchableWithoutFeedback
         onPress={() => {
           if (state.index !== 0) {
@@ -163,7 +160,12 @@ export const TabBar: React.FC<BottomTabBarProps> = ({
       <TouchableOpacity onPress={() => {}} style={styles.buttonContainer}>
         <View style={styles.outerCircle}>
           <View style={styles.innerCircle}>
-            <FontAwesome5 name={'plus'} color={'#fff'} size={24} />
+            <FontAwesome5
+              name={'plus'}
+              color={'#fff'}
+              size={22}
+              style={{lineHeight: 44}}
+            />
           </View>
         </View>
       </TouchableOpacity>

@@ -1,26 +1,31 @@
 import React from 'react';
 import I18n from '../../i18n/';
-import {ScrollView, View} from 'react-native';
+import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import {SubmitButton} from '../common/SubmitButton';
 import {useAuth} from '../../auth/Auth';
-import {Card, Input} from 'react-native-elements';
 import _ from 'lodash';
 import {useToast} from '../Toast';
+import {customTheme} from '../../theme/theme';
+import {profileStyles as styles} from './Styles';
+import {Header} from './Header';
+import {Input} from '../common/Input';
+import {PasswordNote} from './PasswordNote';
+import {Wrapper} from '../common/Wrapper';
 
 const validationSchema = yup.object().shape({
   currentPassword: yup
     .string()
     .required()
     .min(6)
-    .label(I18n.t('profile.changePassword.currentPassword')),
+    .label(I18n.t('profile.changePassword.currentPasswordLabel')),
   newPassword: yup
     .string()
     .required()
     .min(6)
-    .label(I18n.t('profile.changePassword.newPassword')),
-  newPasswordConfirmation: yup
+    .label(I18n.t('profile.changePassword.newPasswordLabel')),
+  /* newPasswordConfirmation: yup
     .string()
     .required()
     .min(6)
@@ -28,13 +33,13 @@ const validationSchema = yup.object().shape({
       [yup.ref('newPassword')],
       I18n.t('auth.error.auth/confirmation-mismatch'),
     )
-    .label(I18n.t('profile.changePassword.newPasswordConfirmation')),
+    .label(I18n.t('profile.changePassword.newPasswordConfirmation')), */
 });
 type FormValues = yup.InferType<typeof validationSchema> & {general?: string};
 const initialValues: FormValues = {
   currentPassword: '',
   newPassword: '',
-  newPasswordConfirmation: '',
+  //newPasswordConfirmation: '',
 };
 
 export const ChangePassword: React.FC = (): JSX.Element => {
@@ -47,7 +52,7 @@ export const ChangePassword: React.FC = (): JSX.Element => {
   ) => {
     try {
       await auth.changePassword(currentPassword, newPassword);
-      await Toast.success('Password changed.');
+      await Toast.success(I18n.t('profile.changePassword.success'));
     } catch (e) {
       await Toast.danger(e.message);
     } finally {
@@ -56,8 +61,14 @@ export const ChangePassword: React.FC = (): JSX.Element => {
   };
 
   return (
-    <ScrollView>
-      <Card title={I18n.t('profile.changePassword.title')}>
+    <Wrapper topColor={customTheme.colors.lightBlue} bottomColor={'#fff'}>
+      <View style={styles.header}>
+        <Header title={I18n.t('profile.changePassword.title')} />
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.heading1}>
+          {I18n.t('profile.changePassword.heading1')}
+        </Text>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -73,61 +84,51 @@ export const ChangePassword: React.FC = (): JSX.Element => {
             isValid,
             isSubmitting,
           }) => (
-            <View>
+            <View style={styles.formContainer}>
               <Input
                 autoCapitalize={'none'}
-                secureTextEntry
+                secure={true}
                 onChangeText={handleChange('currentPassword')}
-                onBlur={handleBlur('currentPassword')}
+                doOnBlur={handleBlur('currentPassword')}
                 value={values.currentPassword}
                 editable={!isSubmitting}
-                placeholder={I18n.t('profile.changePassword.currentPassword')}
-                errorMessage={
-                  touched.currentPassword
-                    ? _.upperFirst(errors?.currentPassword)
-                    : undefined
-                }
-              />
-              <Input
-                autoCapitalize={'none'}
-                secureTextEntry
-                onChangeText={handleChange('newPassword')}
-                onBlur={handleBlur('newPassword')}
-                value={values.newPassword}
-                editable={!isSubmitting}
-                placeholder={I18n.t('profile.changePassword.newPassword')}
-                errorMessage={
-                  touched.newPassword
-                    ? _.upperFirst(errors?.newPassword)
-                    : undefined
-                }
-              />
-              <Input
-                autoCapitalize={'none'}
-                secureTextEntry
-                onChangeText={handleChange('newPasswordConfirmation')}
-                onBlur={handleBlur('newPasswordConfirmation')}
-                value={values.newPasswordConfirmation}
-                editable={!isSubmitting}
+                label={I18n.t('profile.changePassword.currentPasswordLabel')}
                 placeholder={I18n.t(
-                  'profile.changePassword.newPasswordConfirmation',
+                  'profile.changePassword.currentPasswordPlaceholder',
                 )}
                 errorMessage={
-                  touched.newPasswordConfirmation
-                    ? _.upperFirst(errors?.newPasswordConfirmation)
-                    : undefined
+                  touched.currentPassword
+                    ? _.upperFirst(errors?.currentPassword ?? ' ')
+                    : ' '
+                }
+              />
+              <Input
+                autoCapitalize={'none'}
+                secure={true}
+                onChangeText={handleChange('newPassword')}
+                doOnBlur={handleBlur('newPassword')}
+                value={values.newPassword}
+                editable={!isSubmitting}
+                label={I18n.t('profile.changePassword.newPasswordLabel')}
+                placeholder={I18n.t(
+                  'profile.changePassword.newPasswordPlaceholder',
+                )}
+                errorMessage={
+                  touched.newPassword
+                    ? _.upperFirst(errors?.newPassword ?? ' ')
+                    : ' '
                 }
               />
               <SubmitButton
                 onPress={() => handleSubmit()}
                 disabled={!isValid}
-                isSubmitting={isSubmitting}
-                label={I18n.t('profile.changePassword.changePassword')}
+                loading={isSubmitting}
+                title={I18n.t('profile.changePassword.button')}
               />
             </View>
           )}
         </Formik>
-      </Card>
-    </ScrollView>
+      </View>
+    </Wrapper>
   );
 };

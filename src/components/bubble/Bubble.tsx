@@ -19,7 +19,10 @@ export const Bubble: React.FC = () => {
   }, [api]);
 
   return (
-    <ScrollView accessible={false} style={{backgroundColor: '#fff'}} contentContainerStyle={{flexGrow: 1}}>
+    <ScrollView
+      accessible={false}
+      style={{backgroundColor: '#fff'}}
+      contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.wrapper}>
         <View style={styles.header}>
           <Text style={styles.title}>Laura's Bubble</Text>
@@ -69,13 +72,13 @@ const styles = StyleSheet.create<Styles>({
   header: {
     flexDirection: 'column',
     alignItems: 'center',
-    paddingTop: 50,
+    paddingTop: 35,
     backgroundColor: customTheme.colors.green,
     height: 250,
   },
   title: {
     fontFamily: 'Nunito-Bold',
-    fontSize: 20,
+    fontSize: 24,
     color: customTheme.colors.gray,
     marginVertical: 16,
   },

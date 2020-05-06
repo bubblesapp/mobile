@@ -45,7 +45,7 @@ const styles = StyleSheet.create<Styles>({
     backgroundColor: '#fff',
     borderTopStartRadius: 40,
     borderTopEndRadius: 40,
-    shadowRadius: 8,
+    shadowRadius: 45,
     shadowColor: customTheme.colors.shadow,
   },
   handle: {

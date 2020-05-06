@@ -124,9 +124,9 @@ export const ConfirmSignUp: React.FC = (): JSX.Element => {
               <Text style={[authStyleSheet.extraText, {marginRight: 8}]}>
                 {I18n.t('auth.confirmSignUpSomethingWrong')}
               </Text>
-              <TouchableOpacity onPress={() => startOver()}>
+              <TouchableOpacity onPress={() => nav.navigate(Routes.SignIn)}>
                 <Text style={authStyleSheet.extraLink}>
-                  {I18n.t('auth.confirmSignUpStartOver')}
+                  {I18n.t('auth.backToLogin')}
                 </Text>
               </TouchableOpacity>
             </View>

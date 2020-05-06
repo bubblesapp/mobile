@@ -35,7 +35,7 @@ export const SubmitButton: React.FC<ButtonProps> = (props): JSX.Element => {
       {...props}
       containerStyle={[styles.container, props.containerStyle]}
       buttonStyle={[styles.button, props.buttonStyle]}
-      disabledStyle={[styles.button, {opacity: 0.2}]}
+      disabledStyle={[styles.button, props.buttonStyle, {opacity: 0.2}]}
       type={'solid'}
       titleStyle={[styles.text, props.titleStyle]}
       disabledTitleStyle={[styles.text, props.disabledTitleStyle]}

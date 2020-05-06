@@ -21,5 +21,6 @@ export enum Routes {
   ChangeEmail = 'ChangeEmail',
   ChangePassword = 'ChangePassword',
   ChangePersonalInfo = 'ChangePersonalInfo',
+  LegalInfo = 'LegalInfo',
   DeleteAccount = 'DeleteAccount',
 }

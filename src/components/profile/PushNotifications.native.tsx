@@ -5,6 +5,8 @@ import {AppState, Linking, Platform} from 'react-native';
 import firebase from '@react-native-firebase/app';
 import {Profile} from '@bubblesapp/api';
 import {ListItem} from 'react-native-elements';
+import {profileStyles, profileStyles as styles} from './Styles';
+import {ItemIcon} from './ItemIcon';
 
 type Props = {
   profile: Profile;
@@ -76,10 +78,15 @@ export const PushNotifications: React.FC<Props> = ({profile}) => {
 
   return (
     <ListItem
+      containerStyle={styles.itemContainer}
+      leftIcon={<ItemIcon name={'notification'} type={'entypo'} />}
+      titleStyle={styles.itemTitleDark}
       title={I18n.t('profile.pushNotifications')}
+      bottomDivider={true}
       switch={{
         value: profile?.pushNotificationsEnabled,
-        onValueChange: async (enabled) => await switchPushNotifications(enabled),
+        onValueChange: async (enabled) =>
+          await switchPushNotifications(enabled),
       }}
     />
   );

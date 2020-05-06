@@ -13,11 +13,6 @@ interface Styles {
   heading2: TextStyle;
   rememberContainer: ViewStyle;
   noAccountContainer: ViewStyle;
-  error: TextStyle;
-  label: TextStyle;
-  inputContainer: ViewStyle;
-  input: ViewStyle;
-  inputRightIcon: ViewStyle;
   checkboxLabel: TextStyle;
   checkboxContainer: ViewStyle;
   extraText: TextStyle;
@@ -87,12 +82,6 @@ export const authStyleSheet = StyleSheet.create<Styles>({
     fontSize: 16,
     textAlign: 'center',
   },
-  error: {
-    fontFamily: 'Nunito-Bold',
-    margin: 0,
-    marginBottom: 8,
-    padding: 0,
-  },
   rememberContainer: {
     flexDirection: 'row',
     alignSelf: 'stretch',
@@ -125,31 +114,6 @@ export const authStyleSheet = StyleSheet.create<Styles>({
   extraLink: {
     fontFamily: 'Nunito-Bold',
     color: customTheme.colors.ctaBackground,
-  },
-  label: {
-    fontFamily: 'Nunito',
-    fontSize: 14,
-    fontWeight: 'normal',
-    color: customTheme.colors.gray,
-  },
-  inputContainer: {
-    marginVertical: 8,
-    backgroundColor: '#fff',
-    alignSelf: 'stretch',
-    height: 50,
-    borderRadius: 5,
-    borderColor: '#fff',
-  },
-  inputRightIcon: {
-    paddingRight: 16,
-  },
-  input: {
-    borderRadius: 5,
-    paddingHorizontal: 16,
-    fontSize: 14,
-    height: 50,
-    backgroundColor: '#fff',
-    fontFamily: 'Nunito-Bold',
   },
   overlay: {
     width: '85%',

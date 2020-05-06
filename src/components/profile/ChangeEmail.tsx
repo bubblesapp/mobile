@@ -1,24 +1,37 @@
 import React from 'react';
 import I18n from '../../i18n/';
-import {View, Text, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  SafeAreaView,
+  StatusBar,
+} from 'react-native';
 import {Formik, FormikProps} from 'formik';
 import * as yup from 'yup';
 import {SubmitButton} from '../common/SubmitButton';
 import {useAuth} from '../../auth/Auth';
-import {Card, Input, ListItem} from 'react-native-elements';
 import _ from 'lodash';
 import {useToast} from '../Toast';
+import {customTheme} from '../../theme/theme';
+import {profileStyles as styles} from './Styles';
+import {Input} from '../common/Input';
+import {BackButton} from '../common/BackButton';
+import {Header} from './Header';
+import {PasswordNote} from './PasswordNote';
+import {Wrapper} from '../common/Wrapper';
 
 const emailChangeValidationSchema = yup.object().shape({
   newEmail: yup
     .string()
     .required()
     .email()
-    .label(I18n.t('profile.changeEmail.newEmail')),
+    .label(I18n.t('profile.changeEmail.newEmailLabel')),
   password: yup
     .string()
     .required()
-    .label(I18n.t('profile.changeEmail.password')),
+    .label(I18n.t('profile.changeEmail.passwordLabel')),
 });
 type EmailChangeFormValues = yup.InferType<typeof emailChangeValidationSchema>;
 const emailChangeInitialValues: EmailChangeFormValues = {
@@ -63,7 +76,7 @@ export const ChangeEmail: React.FC = (): JSX.Element => {
   ) => {
     try {
       await auth.changeEmail(newEmail, password);
-      Toast.info(I18n.t('profile.verifyEmail.codeEmailed'));
+      Toast.success(I18n.t('profile.verifyEmail.codeEmailed'));
       resetForm();
     } catch (e) {
       console.log(e);
@@ -75,13 +88,17 @@ export const ChangeEmail: React.FC = (): JSX.Element => {
 
   const {email} = auth.state;
   return (
-    <ScrollView>
-      <Card title={'Email address'}>
-        <ListItem
-          title={email}
-        />
-      </Card>
-      <Card title={I18n.t('profile.changeEmail.changeEmail')}>
+    <Wrapper topColor={customTheme.colors.lightBlue} bottomColor={'#fff'}>
+      <View style={styles.header}>
+        <Header title={I18n.t('profile.changeEmail.title')} />
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.heading1}>
+          {I18n.t('profile.changeEmail.heading1')}
+        </Text>
+        <Text style={styles.heading2}>
+          {I18n.t('profile.changeEmail.heading2')}
+        </Text>
         <Formik
           initialValues={emailChangeInitialValues}
           validationSchema={emailChangeValidationSchema}
@@ -97,44 +114,45 @@ export const ChangeEmail: React.FC = (): JSX.Element => {
             isValid,
             isSubmitting,
           }) => (
-            <View>
+            <View style={styles.formContainer}>
               <Input
                 autoCapitalize={'none'}
                 autoCorrect={false}
                 textContentType={'emailAddress'}
                 keyboardType={'email-address'}
                 onChangeText={handleChange('newEmail')}
-                onBlur={handleBlur('newEmail')}
+                doOnBlur={handleBlur('newEmail')}
                 value={values.newEmail}
                 editable={!isSubmitting}
-                placeholder={I18n.t('profile.changeEmail.newEmail')}
+                label={I18n.t('profile.changeEmail.newEmailLabel')}
+                placeholder={I18n.t('profile.changeEmail.newEmailPlaceholder')}
                 errorMessage={
-                  touched.newEmail ? _.upperFirst(errors?.newEmail) : undefined
+                  touched.newEmail ? _.upperFirst(errors?.newEmail ?? ' ') : ' '
                 }
               />
               <Input
                 autoCapitalize={'none'}
-                secureTextEntry
                 onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
+                doOnBlur={handleBlur('password')}
                 value={values.password}
                 editable={!isSubmitting}
-                placeholder={I18n.t('profile.changeEmail.password')}
+                label={I18n.t('profile.changeEmail.passwordLabel')}
+                placeholder={I18n.t('profile.changeEmail.passwordPlaceholder')}
+                secure={true}
                 errorMessage={
-                  touched.password ? _.upperFirst(errors?.password) : undefined
+                  touched.password ? _.upperFirst(errors?.password ?? ' ') : ' '
                 }
               />
-              <Text>{I18n.t('profile.changeEmail.passwordNote')}</Text>
               <SubmitButton
                 onPress={() => handleSubmit()}
                 disabled={!isValid}
-                isSubmitting={isSubmitting}
-                label={I18n.t('profile.changeEmail.changeEmail')}
+                loading={isSubmitting}
+                title={I18n.t('profile.changeEmail.button')}
               />
             </View>
           )}
         </Formik>
-      </Card>
-    </ScrollView>
+      </View>
+    </Wrapper>
   );
 };

@@ -146,6 +146,7 @@ class Auth {
     await firebaseAuth().currentUser?.updateEmail(email);
     await this.api.profiles.update({email});
     await firebaseAuth().currentUser?.reload();
+    await this.sendVerificationEmail();
     await this.refreshState();
   };
 

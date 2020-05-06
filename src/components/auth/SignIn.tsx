@@ -14,7 +14,7 @@ import {useToast} from '../Toast';
 import {Template} from '../common/Template';
 import {authStyleSheet} from './Styles';
 import {customTheme} from '../../theme/theme';
-import {Input} from './common/Input';
+import {Input} from '../common/Input';
 
 const validationSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -64,7 +64,7 @@ export const SignIn: React.FC = (): JSX.Element => {
         height: 250,
       }}
       content={
-        <View style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+        <>
           <Image
             source={require('../../../assets/images/Man.png')}
             style={{
@@ -162,7 +162,7 @@ export const SignIn: React.FC = (): JSX.Element => {
               </View>
             )}
           </Formik>
-        </View>
+        </>
       }
     />
   );

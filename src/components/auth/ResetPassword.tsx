@@ -13,7 +13,7 @@ import {Overlay} from 'react-native-elements';
 import {SmallSpinner} from '../common/Spinner';
 import ModalWeb from 'modal-react-native-web';
 import {authStyleSheet as styles, authStyleSheet} from './Styles';
-import {Input} from './common/Input';
+import {Input} from '../common/Input';
 import _ from 'lodash';
 import {SubmitButton} from '../common/SubmitButton';
 import {Routes} from '../../nav/Routes';
