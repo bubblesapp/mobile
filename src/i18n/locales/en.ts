@@ -105,6 +105,8 @@ export const en = {
     title: 'Bubble',
     pop: 'Pop',
     headerInvitesButton: 'Invites',
+    takeCare: 'Take care of your Bubble',
+    recommendationsButton: 'View recommendations',
     popButton: {
       title: 'Pop Bubble',
       note:
@@ -133,6 +135,7 @@ export const en = {
       deleteOutgoing: 'Cancel Invite',
     },
     friends: {
+      title: 'People',
       whenDidYouLastMeet: 'When did you last meet?',
       listHeader: 'Friends',
       notMetYet: 'Tap to indicate when you last met',
@@ -149,9 +152,14 @@ export const en = {
       confirmDeleteConfirm: 'Confirm',
       confirmDeleteCancel: 'Cancel',
       deleteFriendSuccess: 'Friend removed.',
+      today: 'Today',
+      yesterday: 'Yesterday',
+      xDaysAgo: '$0 days ago',
+      dayPickerFormat: 'dddd, MMM D',
     },
     alerts: {
       emptyText: 'All good',
+      title: 'Alerts',
     },
     popModal: {
       proceed: 'I understand, pop my bubble',

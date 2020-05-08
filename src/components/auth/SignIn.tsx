@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 import I18n from '../../i18n';
 import {Routes} from '../../nav/Routes';
 import * as yup from 'yup';
@@ -15,6 +15,7 @@ import {Template} from '../common/Template';
 import {authStyleSheet} from './Styles';
 import {customTheme} from '../../theme/theme';
 import {Input} from '../common/Input';
+import assets from '../../assets';
 
 const validationSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -66,7 +67,7 @@ export const SignIn: React.FC = (): JSX.Element => {
       content={
         <>
           <Image
-            source={require('../../../assets/images/Man.png')}
+            source={assets.images.auth.man}
             style={{
               width: 106,
               height: 121,
@@ -166,73 +167,4 @@ export const SignIn: React.FC = (): JSX.Element => {
       }
     />
   );
-  {
-    /*<View style={{flex: 1, justifyContent: 'center', backgroundColor: '#fff'}}>
-      <Title />
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        validateOnMount={true}
-        onSubmit={signIn}>
-        {({
-          handleSubmit,
-          handleBlur,
-          handleChange,
-          values,
-          errors,
-          touched,
-          isValid,
-          isSubmitting,
-        }) => (
-          <View>
-            <Input
-              autoCapitalize={'none'}
-              autoCorrect={false}
-              textContentType={'emailAddress'}
-              keyboardType={'email-address'}
-              onChangeText={handleChange('email')}
-              onBlur={handleBlur('email')}
-              value={values.email}
-              editable={!isSubmitting}
-              placeholder={I18n.t('auth.loginEmailPlaceholder')}
-              errorStyle={{}}
-              errorMessage={
-                touched.email ? _.upperFirst(errors?.email) : undefined
-              }
-            />
-            <Input
-              autoCapitalize={'none'}
-              secureTextEntry
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              value={values.password}
-              editable={!isSubmitting}
-              placeholder={I18n.t('auth.loginPasswordPlaceholder')}
-              errorMessage={
-                touched.password ? _.upperFirst(errors?.password) : undefined
-              }
-            />
-            <SubmitButton
-              testID={'signIn'}
-              accessibilityLabel={'Sign In'}
-              onPress={() => handleSubmit()}
-              disabled={!isValid}
-              isSubmitting={isSubmitting}
-              label={I18n.t('auth.loginButtonTitle')}
-            />
-          </View>
-        )}
-      </Formik>
-      <ExtraText>{I18n.t('auth.noAccountYet')}</ExtraText>
-      <ExtraButton
-        to={Routes.SignUp}
-        label={I18n.t('auth.signUpButtonTitle')}
-      />
-      <ExtraText>{I18n.t('auth.forgotPassword')}</ExtraText>
-      <ExtraButton
-        to={Routes.ForgotPassword}
-        label={I18n.t('auth.resetPasswordButtonTitle')}
-      />
-    </View>*/
-  }
 };

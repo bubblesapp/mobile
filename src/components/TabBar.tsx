@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   Image,
-  ImageStyle, SafeAreaView,
+  ImageStyle,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextStyle,
@@ -18,6 +19,7 @@ import {Routes} from '../nav/Routes';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Oval from '../../assets/images/Oval.png';
 import User from '../../assets/images/User.png';
+import Dimensions from './common/Dimensions';
 
 type TabBarLabelProps = {
   focused: boolean;
@@ -42,12 +44,7 @@ type TabBarIconProps = {
 };
 
 const TabBarIcon: React.FC<TabBarIconProps> = (props) => {
-  return (
-    <Image
-      source={props.imageSource}
-      style={styles.iconImage}
-    />
-  );
+  return <Image source={props.imageSource} style={styles.iconImage} />;
 };
 
 type Styles = {
@@ -61,12 +58,10 @@ type Styles = {
   innerCircle: ViewStyle;
 };
 
-const tabBarHeight = 72;
-
 const styles = StyleSheet.create<Styles>({
   tabBar: {
     flexDirection: 'row',
-    height: tabBarHeight,
+    height: Dimensions.TAB_BAR_HEIGHT,
     backgroundColor: '#fff',
     borderTopColor: customTheme.colors.lightGray,
     borderTopWidth: 1,
@@ -126,7 +121,10 @@ export const TabBar: React.FC<BottomTabBarProps> = ({
   //console.log(insets.bottom, styles.tabBar.height, (styles.tabBar.height as number));
   return (
     <SafeAreaView
-      style={[styles.tabBar, {height: insets.bottom + tabBarHeight}]}>
+      style={[
+        styles.tabBar,
+        {height: insets.bottom + Dimensions.TAB_BAR_HEIGHT},
+      ]}>
       <TouchableWithoutFeedback
         onPress={() => {
           if (state.index !== 0) {

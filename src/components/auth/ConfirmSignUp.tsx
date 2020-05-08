@@ -11,6 +11,7 @@ import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useToast} from '../Toast';
 import {Template} from '../common/Template';
 import {authStyleSheet} from './Styles';
+import assets from '../../assets';
 
 /* const validationSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -79,7 +80,7 @@ export const ConfirmSignUp: React.FC = (): JSX.Element => {
       content={
         <>
           <Image
-            source={require('../../../assets/images/Bubble.png')}
+            source={assets.images.bubble.bubble}
             style={{
               width: 155,
               height: 139,

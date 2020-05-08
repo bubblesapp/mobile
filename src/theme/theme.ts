@@ -17,6 +17,7 @@ export const customTheme: CustomTheme = {
   },
   colors: {
     lightGray: '#eee',
+    lightGrayer: '#e4e4e4',
     mediumGray: '#aaa',
     gray: '#3C3A39',
     ctaBackground: '#314DCB',

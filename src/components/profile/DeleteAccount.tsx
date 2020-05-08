@@ -12,6 +12,7 @@ import {profileStyles as styles} from './Styles';
 import {Header} from './Header';
 import {Input} from '../common/Input';
 import {customTheme} from '../../theme/theme';
+import assets from '../../assets';
 
 const validationSchema = yup.object().shape({
   password: yup.string().required().min(6),
@@ -44,7 +45,7 @@ export const DeleteAccount: React.FC = (): JSX.Element => {
           {I18n.t('profile.deleteAccount.heading1')}
         </Text>
         <Image
-          source={require('../../../assets/images/profile/BubbleSad.png')}
+          source={assets.images.profile.avatarSad}
           style={{width: 108, height: 108, alignSelf: 'center', marginTop: 24}}
         />
         <Formik

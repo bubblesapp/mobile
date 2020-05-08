@@ -29,7 +29,11 @@ export const Input: React.FC<Props> = (props) => {
     <RNEInput
       autoCorrect={false}
       errorStyle={[styles.error, props.errorStyle]}
-      inputContainerStyle={[styles.inputContainer, props.inputContainerStyle]}
+      inputContainerStyle={[
+        styles.inputContainer,
+        props.inputContainerStyle,
+        focused && onFocusBorder,
+      ]}
       inputStyle={[styles.input, props.inputStyle, {outline: 'none'}]}
       labelStyle={[styles.label, props.labelStyle]}
       onFocus={() => setFocused(true)}
@@ -107,4 +111,4 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: 'Nunito-Bold',
     borderWidth: 0,
   },
-})
+});

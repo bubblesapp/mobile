@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import _ from 'lodash';
 import {Template} from '../common/Template';
 import {Input} from '../common/Input';
+import assets from '../../assets';
 
 const validationSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -43,7 +44,7 @@ export const ForgotPassword: React.FC = (): JSX.Element => {
       content={
         <>
           <Image
-            source={require('../../../assets/images/Man.png')}
+            source={assets.images.auth.man}
             style={{
               width: 106,
               height: 121,

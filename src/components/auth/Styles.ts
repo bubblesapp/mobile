@@ -121,6 +121,6 @@ export const authStyleSheet = StyleSheet.create<Styles>({
     borderRadius: 10,
     //borderWidth: 5,
     //borderColor: customTheme.colors.darkBlue,
-    backgroundColor: customTheme.colors.lightBlue,
+    backgroundColor: '#fff',
   },
 });

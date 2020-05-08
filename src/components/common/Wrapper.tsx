@@ -5,16 +5,17 @@ import {profileStyles as styles} from '../profile/Styles';
 type Props = {
   topColor?: string;
   bottomColor?: string;
+  scrollEnabled?: boolean;
 };
 
 export const Wrapper: React.FC<Props> = (props) => {
   return (
     <>
+      <SafeAreaView style={{flex: 0, backgroundColor: props.topColor}} />
       <SafeAreaView
-        style={{flex: 0, backgroundColor: props.topColor}}
-      />
-      <SafeAreaView style={[styles.wrapper, {backgroundColor: props.bottomColor}]}>
+        style={[styles.wrapper, {backgroundColor: props.bottomColor}]}>
         <ScrollView
+          scrollEnabled={props.scrollEnabled}
           accessible={false}
           style={{backgroundColor: props.bottomColor}}
           contentContainerStyle={{flexGrow: 1}}>
@@ -35,4 +36,8 @@ export const Wrapper: React.FC<Props> = (props) => {
       </SafeAreaView>
     </>
   );
+};
+
+Wrapper.defaultProps = {
+  scrollEnabled: true,
 };

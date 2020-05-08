@@ -9,6 +9,7 @@ import I18n from '../../i18n'
 import {authStyleSheet} from './Styles';
 import {commonStyles} from '../common/Styles';
 import {SubmitButton} from '../common/SubmitButton';
+import assets from '../../assets';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -54,7 +55,7 @@ export const VerifyEmail: React.FC<Props> = (props) => {
       <View style={commonStyles.popupWrapper}>
         <View style={commonStyles.popupHeader}>
           <Image
-            source={require('../../../assets/images/EmailVerification.png')}
+            source={assets.images.auth.emailVerification}
             style={{
               width: 75,
               height: 75,

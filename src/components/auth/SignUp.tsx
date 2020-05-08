@@ -15,6 +15,7 @@ import {Template} from '../common/Template';
 import {Input} from '../common/Input';
 import {CheckBox} from 'react-native-elements';
 import {customTheme} from '../../theme/theme';
+import assets from '../../assets';
 
 const validationSchema = yup.object().shape({
   //name: yup.string().required(),
@@ -66,7 +67,7 @@ export const SignUp: React.FC = (): JSX.Element => {
       content={
         <>
           <Image
-            source={require('../../../assets/images/Woman.png')}
+            source={assets.images.auth.woman}
             style={{
               width: 104,
               height: 149,

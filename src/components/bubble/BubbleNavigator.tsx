@@ -8,6 +8,7 @@ import {Bubble} from './Bubble';
 import {InviteButton} from './InviteButton';
 import I18n from '../../i18n';
 import {ScrollView} from 'react-native';
+import {Host} from 'react-native-portalize';
 
 export type BubbleStackParamsList = {
   [Routes.Bubble]: undefined;
@@ -23,9 +24,11 @@ export type BubbleNavigatorNavigationProp = BottomTabNavigationProp<
 
 export const BubbleNavigator: React.FC = (): JSX.Element => {
   return (
-    <BubbleStack.Navigator headerMode={'none'}>
-      <BubbleStack.Screen name={Routes.Bubble} component={Bubble} />
-      <BubbleStack.Screen name={Routes.Invites} component={Invites} />
-    </BubbleStack.Navigator>
+    <Host>
+      <BubbleStack.Navigator headerMode={'none'}>
+        <BubbleStack.Screen name={Routes.Bubble} component={Bubble} />
+        <BubbleStack.Screen name={Routes.Invites} component={Invites} />
+      </BubbleStack.Navigator>
+    </Host>
   );
 };

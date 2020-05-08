@@ -17,6 +17,7 @@ import {useToast} from '../Toast';
 import {SmallSpinner} from '../common/Spinner';
 import {Template} from '../common/Template';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import assets from '../../assets';
 
 /*const validationSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -72,7 +73,7 @@ export const ResetPasswordEmailSent: React.FC = (): JSX.Element => {
       content={
         <>
           <Image
-            source={require('../../../assets/images/Man.png')}
+            source={assets.images.auth.man}
             style={{
               width: 106,
               height: 121,

@@ -1,6 +1,11 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
-import {Text, View} from 'native-base';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+  Text,
+} from 'react-native';
 
 export type Props = {
   title: string;

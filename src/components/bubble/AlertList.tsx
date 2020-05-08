@@ -93,19 +93,15 @@ export const AlertList: React.FC = () => {
 
   return (
     <View style={{flex: 1}}>
-      <FlatList<Friend>
-        data={friends}
-        contentContainerStyle={{
-          flexGrow: 1,
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-        ListEmptyComponent={<AlertListEmpty />}
-        renderItem={({item: friend}) => (
-          <FriendItem friend={friend} onPress={() => onFriendPress(friend)} />
-        )}
-        keyExtractor={(friend, index) => friend.uid + index}
-      />
+      {friends.length > 0 ? (
+        friends.map((friend) => {
+          return (
+            <FriendItem friend={friend} onLogPress={() => onLogPress(friend)} />
+          );
+        })
+      ) : (
+        <AlertListEmpty />
+      )}
     </View>
   );
 };

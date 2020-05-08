@@ -13,14 +13,8 @@ import {useToast} from '../Toast';
 import {profileStyles as styles} from './Styles';
 import {ItemIcon} from './ItemIcon';
 import {customTheme} from '../../theme/theme';
-import Bin from '../../../assets/images/profile/Bin.png';
-import Circle from '../../../assets/images/profile/Circle.png';
-import ChatBubble from '../../../assets/images/profile/ChatBubble.png';
-import Envelope from '../../../assets/images/profile/Envelope.png';
-import Exit from '../../../assets/images/profile/Exit.png';
-import Lock from '../../../assets/images/profile/Lock.png';
-import Paper from '../../../assets/images/profile/Paper.png';
 import {Wrapper} from '../common/Wrapper';
+import assets from '../../assets';
 
 const chevronProps = {size: 24, marginEnd: 8};
 
@@ -50,7 +44,7 @@ export const Profile: React.FC = (): JSX.Element => {
         <Text style={styles.title}>{I18n.t('profile.title')}</Text>
         <View style={styles.headerContent}>
           <Image
-            source={require('../../../assets/images/Avatar_big.png')}
+            source={assets.images.profile.avatar}
             style={styles.avatarImage}
           />
           <Text style={styles.subtitle}>{profile?.name}</Text>
@@ -60,7 +54,7 @@ export const Profile: React.FC = (): JSX.Element => {
         <ListItem
           containerStyle={styles.itemContainer}
           onPress={() => nav.navigate(Routes.ChangeEmail)}
-          leftIcon={<ItemIcon imageSource={Envelope} />}
+          leftIcon={<ItemIcon imageSource={assets.images.profile.envelope} />}
           title={I18n.t('profile.email')}
           titleStyle={styles.itemTitle}
           subtitle={auth.state?.email}
@@ -71,7 +65,7 @@ export const Profile: React.FC = (): JSX.Element => {
         <ListItem
           containerStyle={styles.itemContainer}
           onPress={() => nav.navigate(Routes.ChangePassword)}
-          leftIcon={<ItemIcon imageSource={Lock} />}
+          leftIcon={<ItemIcon imageSource={assets.images.profile.lock} />}
           title={I18n.t('profile.password')}
           titleStyle={styles.itemTitle}
           subtitle={'••••••••'}
@@ -82,7 +76,7 @@ export const Profile: React.FC = (): JSX.Element => {
         <ListItem
           containerStyle={styles.itemContainer}
           onPress={() => nav.navigate(Routes.ChangePersonalInfo)}
-          leftIcon={<ItemIcon imageSource={Circle} />}
+          leftIcon={<ItemIcon imageSource={assets.images.profile.circle} />}
           title={I18n.t('profile.username')}
           titleStyle={styles.itemTitle}
           subtitle={auth.state?.name}
@@ -94,7 +88,7 @@ export const Profile: React.FC = (): JSX.Element => {
         <ListItem
           containerStyle={styles.itemContainer}
           onPress={() => Linking.openURL('mailto:hello@bubblesapp.org') }
-          leftIcon={<ItemIcon imageSource={ChatBubble} />}
+          leftIcon={<ItemIcon imageSource={assets.images.profile.chatBubble} />}
           title={I18n.t('profile.helpTitle')}
           titleStyle={styles.itemTitle}
           subtitle={I18n.t('profile.helpSubtitle')}
@@ -104,7 +98,7 @@ export const Profile: React.FC = (): JSX.Element => {
         <ListItem
           containerStyle={styles.itemContainer}
           onPress={() => nav.navigate(Routes.LegalInfo)}
-          leftIcon={<ItemIcon imageSource={Paper} />}
+          leftIcon={<ItemIcon imageSource={assets.images.profile.paper} />}
           title={I18n.t('profile.legalInfo.title')}
           titleStyle={styles.itemTitleDark}
           chevron={chevronProps}
@@ -115,7 +109,7 @@ export const Profile: React.FC = (): JSX.Element => {
           onPress={() => signOut()}
           testID={'signOut'}
           accessibilityLabel={'Sign Out'}
-          leftIcon={<ItemIcon imageSource={Exit} />}
+          leftIcon={<ItemIcon imageSource={assets.images.profile.exit} />}
           title={I18n.t('profile.logout')}
           titleStyle={styles.itemTitleDanger}
           bottomDivider={true}
@@ -123,7 +117,7 @@ export const Profile: React.FC = (): JSX.Element => {
         <ListItem
           containerStyle={[styles.itemContainer, {borderBottomColor: '#fff'}]}
           onPress={() => nav.navigate(Routes.DeleteAccount)}
-          leftIcon={<ItemIcon imageSource={Bin} />}
+          leftIcon={<ItemIcon imageSource={assets.images.profile.bin} />}
           title={I18n.t('profile.delete')}
           titleStyle={styles.itemTitleDanger}
           chevron={chevronProps}

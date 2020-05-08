@@ -5,6 +5,7 @@ import {BubbleNavigator} from './bubble/BubbleNavigator';
 import {Routes} from '../nav/NavProvider';
 import I18n from '../i18n';
 import {TabBar} from './TabBar';
+import {Host} from 'react-native-portalize';
 
 const BottomTabs = createBottomTabNavigator();
 
@@ -16,7 +17,7 @@ export type MainTabsParamList = {
 export const MainNavigator = () => {
   return (
     <BottomTabs.Navigator
-      initialRouteName={Routes.Profile}
+      initialRouteName={Routes.Bubble}
       tabBar={(props) => <TabBar {...props} />}>
       <BottomTabs.Screen
         name={I18n.t('bubble.title')}

@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import _ from 'lodash';
 import {Template} from '../common/Template';
 import {Input} from '../common/Input';
+import assets from '../../assets';
 
 const validationSchema = yup.object().shape({
   name: yup.string().label(I18n.t('auth.signUpNameLabel')).required(),
@@ -43,7 +44,7 @@ export const SignUpNext: React.FC = (): JSX.Element => {
       content={
         <>
           <Image
-            source={require('../../../assets/images/Bubble.png')}
+            source={assets.images.bubble.bubble}
             style={{
               width: 155,
               height: 139,
