@@ -9,6 +9,8 @@ export default {
       bubble: require('../assets/images/bubble/Bubble.png'),
       alert: require('../assets/images/bubble/BubbleAlert.png'),
       avatar: require('../assets/images/bubble/Avatar_small.png'),
+      avatarMask: require('../assets/images/bubble/Avatar_mask.png'),
+      avatarMulti: require('../assets/images/bubble/Avatar_multi.png'),
       notepad: require('../assets/images/bubble/Notepad.png'),
       notepadBig: require('../assets/images/bubble/Notepad_big.png'),
     },

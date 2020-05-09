@@ -10,27 +10,34 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import moment from 'moment';
-import I18n from '../../i18n';
 import {Friend, Profile} from '@bubblesapp/api';
 import {useAPI} from '../../api/useAPI';
-import {ListItem} from 'react-native-elements';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {Icon, ListItem} from 'react-native-elements';
 import {customTheme} from '../../theme/theme';
 import assets from '../../assets';
 import {daysAgoString} from './utils';
 
 type Props = {
   friend: Friend;
-  onLogPress: (friend: Friend) => void;
+  selected?: boolean;
+  disabled?: boolean;
+  onSelected?: (friend: Friend) => void;
+  onDeselected?: (friend: Friend) => void;
 };
 
-export const FriendItem: React.FC<Props> = ({friend, onLogPress}) => {
+export const FriendSelectedItem: React.FC<Props> = ({
+  friend,
+  selected,
+  disabled,
+  onSelected,
+  onDeselected,
+}) => {
   const [profile, setProfile] = useState<Profile | null>({
     name: 'Edouard',
     email: 'edouard@bubblesapp.org',
     uid: 'dbdobf',
   });
+  //const [selected, setSelected] = useState(false);
 
   const api = useAPI();
 
@@ -43,6 +50,9 @@ export const FriendItem: React.FC<Props> = ({friend, onLogPress}) => {
 
   return (
     <ListItem
+      disabled={disabled}
+      disabledStyle={{opacity: 0.4}}
+      topDivider={true}
       containerStyle={styles.container}
       leftIcon={
         <View style={styles.avatar}>
@@ -53,10 +63,12 @@ export const FriendItem: React.FC<Props> = ({friend, onLogPress}) => {
         </View>
       }
       title={
-        <View style={{flexDirection: 'row'}}>
-          <Text style={styles.friendTitle}>{profile?.name}</Text>
-          <Text style={styles.friendSubtitle}>
-            {` (${profile?.email.split('@')[0]})`}
+        <View style={{flexDirection: 'row', overflow: 'hidden'}}>
+          <Text numberOfLines={1} style={styles.friendTitle}>
+            {profile?.name}
+            <Text style={styles.friendSubtitle}>
+              {` (${profile?.email.split('@')[0]})`}
+            </Text>
           </Text>
         </View>
       }
@@ -70,11 +82,19 @@ export const FriendItem: React.FC<Props> = ({friend, onLogPress}) => {
       }
       rightElement={
         <TouchableOpacity
-          onPress={() => onLogPress(friend)}
-          style={styles.rightIcon}>
-          <Image
-            source={assets.images.bubble.notepad}
-            style={styles.rightIconImage}
+          onPress={() => {
+            selected
+              ? onSelected && onSelected(friend)
+              : onDeselected && onDeselected(friend);
+          }}>
+          <Icon
+            name={selected ? 'check-circle' : 'circle-thin'}
+            type={'font-awesome'}
+            color={
+              selected
+                ? customTheme.colors.success
+                : customTheme.colors.mediumGray
+            }
           />
         </TouchableOpacity>
       }
@@ -82,14 +102,25 @@ export const FriendItem: React.FC<Props> = ({friend, onLogPress}) => {
   );
 };
 
+/*
+<CheckBox
+          containerStyle={{width: 24, backgroundColor: '#f00', margin: 0, padding: 0}}
+          checkedIcon={'check-circle'}
+          uncheckedIcon={'circle-thin'}
+          textStyle={{display: 'none'}}
+          checkedColor={customTheme.colors.success}
+          onPress={() => setSelected(!selected)}
+          checked={selected}
+          right={true}
+        />
+ */
+
 type Styles = {
   container: ViewStyle;
   avatar: ViewStyle;
   avatarImage: ImageStyle;
   friendTitle: TextStyle;
   friendSubtitle: TextStyle;
-  rightIcon: ViewStyle;
-  rightIconImage: ImageStyle;
 };
 
 const styles = StyleSheet.create<Styles>({
@@ -115,21 +146,5 @@ const styles = StyleSheet.create<Styles>({
   friendSubtitle: {
     fontFamily: customTheme.fontFamily,
     color: customTheme.colors.gray,
-  },
-  rightIcon: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: customTheme.colors.lightGray,
-    borderRadius: 15,
-    width: 50,
-    height: 30,
-    marginLeft: 16,
-  },
-  rightIconImage: {
-    width: 20,
-    height: 20,
-    marginLeft: 4,
   },
 });

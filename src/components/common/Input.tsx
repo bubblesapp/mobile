@@ -1,19 +1,12 @@
-import {authStyleSheet} from '../auth/Styles';
-import {
-  Icon,
-  Input as RNEInput,
-  InputProps,
-  Overlay,
-  Tooltip,
-} from 'react-native-elements';
-import React, {useRef, useState} from 'react';
+import {Input as RNEInput, InputProps,} from 'react-native-elements';
+import React, {useState} from 'react';
 import {customTheme} from '../../theme/theme';
 import {DataInfo} from './DataInfo';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 
 interface Props extends InputProps {
   borderOnFocus?: boolean;
-  doOnBlur: (e: any) => void;
+  doOnBlur?: (e: any) => void;
   secure?: boolean;
   tooltip?: string;
 }

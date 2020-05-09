@@ -12,6 +12,7 @@
   "dependencies": {
     "@bubblesapp/api": "github:bubblesapp/api",
     "@expo/react-native-action-sheet": "^3.6.0",
+    "@react-native-community/clipboard": "^1.2.2",
     "@react-native-community/datetimepicker": "^2.3.0",
     "@react-native-community/masked-view": "^0.1.7",
     "@react-native-community/netinfo": "^5.6.2",

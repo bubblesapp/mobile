@@ -99,7 +99,7 @@ const styles = StyleSheet.create<Styles>({
     bottom: 24,
     //height: 50,
     flex: 1,
-    zIndex: 100000,
+    zIndex: 1000000,
     opacity: 0.98,
     width: '100%',
   },

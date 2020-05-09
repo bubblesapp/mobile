@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   ImageStyle,
@@ -20,6 +20,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Oval from '../../assets/images/Oval.png';
 import User from '../../assets/images/User.png';
 import Dimensions from './common/Dimensions';
+import {InviteButton} from './common/InviteButton';
+import {LogModal} from './bubble/LogModal';
+import {InviteModal} from './bubble/InviteModal';
 
 type TabBarLabelProps = {
   focused: boolean;
@@ -54,8 +57,6 @@ type Styles = {
   labelContainer: ViewStyle;
   labelContainerFocused: ViewStyle;
   labelText: TextStyle;
-  outerCircle: ViewStyle;
-  innerCircle: ViewStyle;
 };
 
 const styles = StyleSheet.create<Styles>({
@@ -92,24 +93,6 @@ const styles = StyleSheet.create<Styles>({
     fontSize: 12,
     textAlign: 'center',
   },
-  outerCircle: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 52,
-    height: 52,
-    backgroundColor: customTheme.colors.ctaBackgroundLight,
-    borderRadius: 26,
-  },
-  innerCircle: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 44,
-    height: 44,
-    backgroundColor: customTheme.colors.ctaBackground,
-    borderRadius: 22,
-  },
 });
 
 export const TabBar: React.FC<BottomTabBarProps> = ({
@@ -119,6 +102,7 @@ export const TabBar: React.FC<BottomTabBarProps> = ({
 }): JSX.Element => {
   const insets = useSafeArea();
   //console.log(insets.bottom, styles.tabBar.height, (styles.tabBar.height as number));
+  const [inviteModalVisible, setInviteModalVisible] = useState(false);
   return (
     <SafeAreaView
       style={[
@@ -155,18 +139,15 @@ export const TabBar: React.FC<BottomTabBarProps> = ({
           />
         </View>
       </TouchableWithoutFeedback>
-      <TouchableOpacity onPress={() => {}} style={styles.buttonContainer}>
-        <View style={styles.outerCircle}>
-          <View style={styles.innerCircle}>
-            <FontAwesome5
-              name={'plus'}
-              color={'#fff'}
-              size={22}
-              style={{lineHeight: 44}}
-            />
-          </View>
-        </View>
+      <TouchableOpacity
+        onPress={() => setInviteModalVisible(true)}
+        style={styles.buttonContainer}>
+        <InviteButton />
       </TouchableOpacity>
+      <InviteModal
+        visible={inviteModalVisible}
+        onCancel={() => setInviteModalVisible(false)}
+      />
     </SafeAreaView>
   );
 };

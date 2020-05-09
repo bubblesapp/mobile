@@ -8,7 +8,8 @@ import {
   FlatList,
   Modal as ModalNative,
   Platform,
-  ScrollView, SwipeableListView,
+  ScrollView,
+  SwipeableListView,
   View,
 } from 'react-native';
 import {useActionSheet} from '@expo/react-native-action-sheet';
@@ -54,7 +55,7 @@ export const FriendList: React.FC = () => {
       lastMet: 2532632762,
     },
   ]);
-  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
+  const [selectedFriend, setSelectedFriend] = useState<Friend>();
   const [datePickerVisible, setDatePickerVisible] = useState(false);
 
   const auth = useAuth();
@@ -149,6 +150,7 @@ export const FriendList: React.FC = () => {
         }}
         visible={datePickerVisible}
         onCancel={() => setDatePickerVisible(false)}
+        friend={selectedFriend}
       />
       {/*friends.length > 0 ? (
         friends.map((friend) => {
@@ -160,16 +162,18 @@ export const FriendList: React.FC = () => {
         <FriendListEmpty />
       )*/}
       <SwipeListView<Friend>
-        contentContainerStyle={{flex: 1}}
         data={friends}
-        scrollEnabled={false}
+        scrollEnabled={true}
         ListEmptyComponent={<FriendListEmpty />}
-        renderItem={({item: friend}, rowMap) => (
+        renderItem={({item: friend}) => (
           <FriendItem friend={friend} onLogPress={() => onLogPress(friend)} />
         )}
         keyExtractor={(friend, index) => friend.uid + index}
-        renderHiddenItem={ ({item}, rowMap) => <DestructiveButton title={} />}
-        rightOpenValue={-75}
+        renderHiddenItem={({item}, rowMap) => (
+          <DestructiveButton title={I18n.t('bubble.friends.removeFriend')} />
+        )}
+        disableRightSwipe={true}
+        rightOpenValue={-85}
       />
     </View>
   );

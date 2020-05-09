@@ -1,53 +1,35 @@
 import React from 'react';
-import {StyleProp, StyleSheet, Text, TextStyle, ViewStyle} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {Button} from 'react-native-elements';
+import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
+import {Button, ButtonProps} from 'react-native-elements';
+import {customTheme} from '../../theme/theme';
 
-export type Props = {
-  onPress?: () => void;
-  to?: string;
-  params?: any;
-  style?: StyleProp<ViewStyle>;
-  disabled?: boolean;
-  label?: string;
-};
-
-interface Styles {
-  button: ViewStyle;
-  text: TextStyle;
-}
-
-const styles = StyleSheet.create<Styles>({
-  button: {
-    marginTop: 16,
-    backgroundColor: '#bbb',
-  },
-  text: {
-    fontSize: 13,
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-  },
-});
-
-export const ExtraButton: React.FC<Props> = ({
-  onPress,
-  to,
-  label,
-}): JSX.Element => {
-  const nav = useNavigation();
+export const ExtraButton: React.FC<ButtonProps> = (props): JSX.Element => {
   return (
     <Button
-      buttonStyle={styles.button}
-      type={'solid'}
-      titleStyle={styles.text}
-      title={label}
-      onPress={() => {
-        if (onPress) {
-          onPress();
-        } else if (to) {
-          nav.navigate(to);
-        }
-      }}
+      {...props}
+      buttonStyle={[styles.ctaLight, props.buttonStyle]}
+      titleStyle={[styles.ctaLightText, props.titleStyle]}
     />
   );
 };
+
+type Styles = {
+  ctaLight: ViewStyle;
+  ctaLightText: TextStyle;
+};
+
+const styles = StyleSheet.create<Styles>({
+  ctaLight: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    borderWidth: 1,
+    borderColor: customTheme.colors.ctaBackground,
+    borderRadius: 25,
+    height: 50,
+    paddingHorizontal: 16,
+  },
+  ctaLightText: {
+    color: customTheme.colors.ctaBackground,
+    fontSize: 16,
+    fontFamily: customTheme.boldFontFamily,
+  },
+});

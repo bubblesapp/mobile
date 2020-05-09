@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   StyleSheet,
@@ -16,6 +16,9 @@ import {Overlay} from 'react-native-elements';
 import {DayPicker} from './DayPicker';
 import {SubmitButton} from '../common/SubmitButton';
 import {CloseButton} from '../common/CloseButton';
+import {Friend, Profile} from '@bubblesapp/api';
+import {useAPI} from '../../api/useAPI';
+import I18n from '../../i18n';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -23,10 +26,26 @@ type Props = {
   onCancel: () => void;
   onDatePicked: (date: Date) => void;
   visible: boolean;
+  friend?: Friend;
 };
 
 export const LogModal: React.FC<Props> = (props) => {
   const [date, setDate] = useState(new Date());
+  const [profile, setProfile] = useState<Profile>({
+    name: 'Edouard',
+    email: 'edouard@bubblesapp.org',
+    uid: 'dbdobf',
+  });
+
+  const api = useAPI();
+
+  useEffect(() => {
+    /*const profileSubscription = api.profiles
+      .observe(friend.uid)
+      .subscribe(setProfile);
+    return () => profileSubscription.unsubscribe();*/
+  }, [api, props.friend]);
+
   return (
     <Overlay
       ModalComponent={Modal}
@@ -44,18 +63,22 @@ export const LogModal: React.FC<Props> = (props) => {
             source={assets.images.bubble.notepadBig}
             style={{width: 64, height: 64}}
           />
-          <Text style={styles.headerTitle}>{'Save a close contact'}</Text>
-          <Text style={styles.headerName}>{'Edouard'}</Text>
+          <Text style={styles.headerTitle}>
+            {I18n.t('bubble.friends.logTitle')}
+          </Text>
+          <Text style={styles.headerSubtitle}>{profile?.name}</Text>
         </View>
         <View style={styles.content}>
-          <Text style={styles.heading1}>{'When did you last meet?'}</Text>
+          <Text style={styles.heading1}>
+            {I18n.t('bubble.friends.logQuestion').replace('$0', profile?.name)}
+          </Text>
           <Text style={styles.heading2}>
-            {'It will help you warn the right people in case of risk'}
+            {I18n.t('bubble.friends.logExplanation')}
           </Text>
           <DayPicker onChange={(d) => setDate(d)} />
           <SubmitButton
             containerStyle={styles.buttonContainer}
-            title={'Save'}
+            title={I18n.t('bubble.friends.logButton')}
             onPress={() => props.onDatePicked(date)}
           />
         </View>
@@ -69,7 +92,7 @@ type Styles = {
   closeButton: ViewStyle;
   header: ViewStyle;
   headerTitle: ViewStyle;
-  headerName: ViewStyle;
+  headerSubtitle: ViewStyle;
   content: ViewStyle;
   heading1: TextStyle;
   heading2: TextStyle;
@@ -106,7 +129,7 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
     fontSize: 20,
   },
-  headerName: {
+  headerSubtitle: {
     color: '#fff',
     fontFamily: customTheme.boldFontFamily,
     fontSize: 24,
@@ -125,6 +148,7 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
     fontSize: 16,
     marginBottom: 24,
+    textAlign: 'center',
   },
   heading2: {
     fontFamily: customTheme.fontFamily,

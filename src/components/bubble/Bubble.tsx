@@ -11,6 +11,7 @@ import {
   View,
   ViewStyle,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import {customTheme} from '../../theme/theme';
 import {useAuth} from '../../auth/Auth';
@@ -19,6 +20,8 @@ import {Wrapper} from '../common/Wrapper';
 import assets from '../../assets';
 import I18n from '../../i18n';
 import {Button} from 'react-native-elements';
+import {ExtraButton} from '../common/ExtraButton';
+import {AlertModal} from './AlertModal';
 
 const openRecommendations = async () => {
   await Linking.openURL(
@@ -28,6 +31,7 @@ const openRecommendations = async () => {
 
 export const Bubble: React.FC = () => {
   const [bubble, setBubble] = useState<BubbleModel | undefined>();
+  const [alertModalVisible, setAlertModalVisible] = useState(false);
   const api = useAPI();
   const auth = useAuth();
 
@@ -53,20 +57,25 @@ export const Bubble: React.FC = () => {
         <View style={styles.middle}>
           <View style={[styles.bubbleTextContainer]}>
             <Image source={assets.images.bubble.bubble} style={styles.bubble} />
-            <View style={styles.bubbleAlertContainer}>
+            <TouchableOpacity
+              style={styles.bubbleAlertContainer}
+              onPress={() => setAlertModalVisible(true)}>
+              <AlertModal
+                onCancel={() => setAlertModalVisible(false)}
+                onAlertSent={() => {}}
+                visible={alertModalVisible}
+              />
               <Image
                 source={assets.images.bubble.alert}
                 style={styles.bubbleAlert}
               />
-            </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.recommendationsContainer}>
             <Text style={styles.takeCareText}>{I18n.t('bubble.takeCare')}</Text>
-            <Button
+            <ExtraButton
               onPress={() => openRecommendations()}
-              buttonStyle={styles.ctaLight}
               title={I18n.t('bubble.recommendationsButton')}
-              titleStyle={styles.ctaLightText}
             />
           </View>
         </View>
@@ -101,8 +110,6 @@ type Styles = {
   bubbleAlert: ImageStyle;
   takeCareText: TextStyle;
   recommendationsContainer: ViewStyle;
-  ctaLight: ViewStyle;
-  ctaLightText: TextStyle;
 };
 
 const styles = StyleSheet.create<Styles>({
@@ -202,17 +209,5 @@ const styles = StyleSheet.create<Styles>({
   bubbleAlert: {
     width: 75,
     height: 75,
-  },
-  ctaLight: {
-    backgroundColor: customTheme.colors.lightBlue,
-    borderWidth: 1,
-    borderColor: customTheme.colors.ctaBackground,
-    borderRadius: 25,
-    height: 50,
-    paddingHorizontal: 32,
-  },
-  ctaLightText: {
-    color: customTheme.colors.ctaBackground,
-    fontFamily: customTheme.boldFontFamily,
   },
 });

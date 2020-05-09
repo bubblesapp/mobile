@@ -15,15 +15,15 @@ const styles = StyleSheet.create<Styles>({
     height: 50,
   },
   button: {
-    marginHorizontal: 8,
-    padding: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     height: 50,
     backgroundColor: customTheme.colors.ctaBackground,
     borderRadius: 25,
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Nunito-Bold',
+    fontFamily: customTheme.boldFontFamily,
     color: customTheme.colors.ctaText,
   },
 });

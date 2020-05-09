@@ -21,11 +21,12 @@ export const BubbleLists: React.FC = () => {
         <View style={styles.listHeaderContent}>
           <View
             style={styles.handleContainer}
-            onPress={() =>
+            /*onPress={() =>
               languetteOpen
                 ? languette.current?.close('alwaysOpen')
                 : languette.current?.open('top')
-            }>
+            }*/
+          >
             <View style={styles.handle} />
           </View>
           <ButtonGroup

@@ -9,13 +9,15 @@ import {
 
 export type Props = {
   title: string;
-  onPress: () => void;
+  onPress?: () => void;
 };
 
 export const DestructiveButton: React.FC<Props> = ({title, onPress}) => {
   return (
     <View style={styles.deleteRow}>
-      <TouchableOpacity onPress={() => onPress()} style={styles.deleteButton}>
+      <TouchableOpacity
+        onPress={() => onPress && onPress()}
+        style={styles.deleteButton}>
         <Text style={styles.deleteText}>{title}</Text>
       </TouchableOpacity>
     </View>
@@ -38,6 +40,7 @@ const styles = StyleSheet.create<Styles>({
   },
   deleteButton: {
     width: 85,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
