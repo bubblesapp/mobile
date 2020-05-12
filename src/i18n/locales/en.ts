@@ -1,4 +1,6 @@
-export const en = {
+import {Locale} from './Locale';
+
+export const en: Locale = {
   title: 'Bubbles',
   dataInfo: 'Why do we need this?',
   responsiveContainer: {
@@ -6,7 +8,6 @@ export const en = {
     leftButton: 'Learn more',
     rightTip: 'Tip',
     rightInstall: 'Install Bubbles on your computer',
-    rightInstallExplain: 'Click the + button at the end of your address bar',
   },
   onboarding: {
     screen1: {
@@ -31,9 +32,7 @@ export const en = {
     loginButtonTitle: 'Log in to your Bubble',
     noAccountYet: 'No Bubble yet?',
     noAccountYetAction: 'Set it up',
-    signUpConfirmedText: 'Your account is confirmed.\nYou may now sign in.',
     backToLoginButtonTitle: 'Back to Login',
-    loginFailed: 'SignIn failed.',
     signUpButtonTitle: 'Setup your Bubble',
     signUpNameLabel: 'Username',
     signUpNamePlaceholder: 'John',
@@ -51,7 +50,6 @@ export const en = {
     signUpPasswordLabel: 'Password',
     signUpPasswordPlaceholder: '••••••••••••',
     signUpAgreeToTerms: 'I agree to Terms & Conditions',
-    signUpPasswordConfirmationPlaceholder: 'Password confirmation',
     signUpContinue: 'Continue',
     alreadyHaveAccount: 'Already have a Bubble?',
     alreadyHaveAccountAction: 'Log in',
