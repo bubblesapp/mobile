@@ -156,7 +156,7 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
     paddingTop: '5%',
     paddingBottom: '5%',
-    height: 0.35 * Dimensions.get('screen').height,
+    flex: 1,
   },
   title: {
     fontFamily: customTheme.boldFontFamily,
@@ -176,7 +176,7 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
   },
   content: {
-    flex: 1,
+    flex: 2,
     flexDirection: 'column',
     backgroundColor: customTheme.colors.lightBlue,
   },
