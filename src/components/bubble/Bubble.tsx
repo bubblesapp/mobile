@@ -38,6 +38,8 @@ export const Bubble: React.FC = () => {
   const auth = useAuth();
   const api = useAPI();
 
+  console.log(I18n.currentLocale());
+
   useEffect(() => {
     const friendsSubscription = api.friends.observeAll().subscribe((f) => {
       Analytics.set('people_count', f.length);

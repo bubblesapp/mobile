@@ -12,11 +12,10 @@ type Props = {
 };
 
 export const AlertItem: React.FC<Props> = ({alert, onPress}) => {
-  console.log(alert);
   return (
     <ListItem
       onPress={() => onPress && onPress(alert)}
-      topDivider={true}
+      bottomDivider={true}
       containerStyle={styles.container}
       leftElement={
         <Avatar

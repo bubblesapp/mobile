@@ -23,11 +23,11 @@ const Tabs: React.FC = () => {
       initialRouteName={Routes.Bubble}
       tabBar={(props) => <TabBar {...props} />}>
       <BottomTabs.Screen
-        name={I18n.t('bubble.title')}
+        name={Routes.Bubble}
         component={Bubble}
       />
       <BottomTabs.Screen
-        name={I18n.t('profile.title')}
+        name={Routes.Profile}
         component={ProfileNavigator}
       />
     </BottomTabs.Navigator>

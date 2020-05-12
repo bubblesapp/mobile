@@ -98,8 +98,6 @@ export const TabBar: React.FC<BottomTabBarProps> = ({
   navigation,
 }): JSX.Element => {
   const insets = useSafeArea();
-  //console.log(insets.bottom, styles.tabBar.height, (styles.tabBar.height as number));
-  const [inviteModalVisible, setInviteModalVisible] = useState(false);
   return (
     <SafeAreaView
       style={[

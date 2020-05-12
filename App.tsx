@@ -52,6 +52,7 @@ const Container: React.FC = ({children}) => {
   return <View style={styles.containerStyle}>{children}</View>;
 };
 
+
 const App: React.FC<AppProps> = ({isHeadless}) => {
   const [ready, setReady] = useState(false);
   const [device, setDevice] = useState<CurrentDevice>();

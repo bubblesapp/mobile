@@ -49,7 +49,7 @@ export const AlertList: React.FC<Props> = ({alerts}) => {
             data={alerts}
             contentContainerStyle={{backgroundColor: '#fff'}}
             scrollEnabled={true}
-            ListHeaderComponent={AlertsHeader}
+            ListFooterComponent={AlertsHeader}
             renderItem={({item}) => (
               <AlertItem
                 alert={item}
