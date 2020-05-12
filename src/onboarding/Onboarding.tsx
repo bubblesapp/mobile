@@ -168,7 +168,7 @@ export const Onboarding: React.FC<Props> = () => {
   if (onboarded === null) {
     return <Splash />;
   } else if (onboarded === true) {
-    nav.navigate(Routes.SignIn);
+    //nav.navigate(Routes.SignIn);
   }
 
   const contentHeight = height ? height - 128 : undefined;

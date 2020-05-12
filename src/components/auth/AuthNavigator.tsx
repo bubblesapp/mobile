@@ -10,6 +10,7 @@ import {ScrollView, ViewStyle, StyleSheet} from 'react-native';
 import {Onboarding} from '../../onboarding/Onboarding';
 import {SignUpNext} from './SignUpNext';
 import {DynamicLinkHandler} from '../../nav/DynamicLinkHandler';
+import {useAsyncStorage} from '../../api/useAsyncStorage';
 
 export type AuthStackParamList = {
   Onboarding: undefined;
@@ -41,15 +42,16 @@ export const AuthNavigator: React.FC = (): JSX.Element => {
     animationEnabled: false,
   };
 
+  const [onboarded] = useAsyncStorage('onboarded', false);
+
   return (
     <ScrollView
       alwaysBounceVertical={false}
       contentContainerStyle={styles.contentContainer}>
-      <AuthStack.Navigator
-        headerMode={'none'}
-        initialRouteName={'Onboarding'}
-        screenOptions={screenOptions}>
-        <AuthStack.Screen name="Onboarding" component={Onboarding} />
+      <AuthStack.Navigator headerMode={'none'} screenOptions={screenOptions}>
+        {!onboarded && (
+          <AuthStack.Screen name="Onboarding" component={Onboarding} />
+        )}
         <AuthStack.Screen name={Routes.SignIn} component={SignIn} />
         <AuthStack.Screen name={Routes.SignUp} component={SignUp} />
         <AuthStack.Screen name={Routes.SignUpNext} component={SignUpNext} />

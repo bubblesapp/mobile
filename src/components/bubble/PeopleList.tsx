@@ -54,30 +54,6 @@ export const PeopleList: React.FC<Props> = ({
     setDatePickerVisible(true);
   };
 
-  /* const onRemovePressed = async (friendUid: string) => {
-    const options = [
-      I18n.t('bubble.friends.confirmDeleteConfirm'),
-      I18n.t('bubble.friends.confirmDeleteCancel'),
-    ];
-    showActionSheetWithOptions(
-      {
-        options,
-        title: I18n.t('bubble.friends.confirmDeleteFriendTitle'),
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1,
-      },
-      async (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            await removeFriend(friendUid);
-            break;
-          case 1:
-            break;
-        }
-      },
-    );
-  }; */
-
   return (
     <View style={{backgroundColor: '#fff'}}>
       <LogModal
@@ -163,30 +139,3 @@ export const PeopleList: React.FC<Props> = ({
     </View>
   );
 };
-
-/*<FlatList<Friend>
-        contentContainerStyle={{flex: 1}}
-        data={friends}
-        scrollEnabled={false}
-        ListEmptyComponent={<FriendListEmpty />}
-        renderItem={({item: friend}) => (
-          <FriendItem friend={friend} onLogPress={() => onLogPress(friend)} />
-        )}
-        keyExtractor={(friend, index) => friend.uid + index}
-      />*/
-
-/*
-<DatePicker
-        visible={datePickerVisible}
-        onDatePicked={async (date: Date) => {
-          setDatePickerVisible(false);
-          if (typeof auth.getCurrentUser() !== 'undefined' && selectedFriend) {
-            const uid = auth.getCurrentUser() as string;
-            const lastMet = date.getTime();
-            await api.friends.update({lastMet}, selectedFriend?.uid, uid);
-            await api.friends.update({lastMet}, uid, selectedFriend?.uid);
-          }
-        }}
-        onCancel={() => setDatePickerVisible(false)}
-      />
-*/

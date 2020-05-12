@@ -46,17 +46,29 @@ export const SignUpNext: React.FC = (): JSX.Element => {
           <Image
             source={assets.images.bubble.bubble}
             style={{
-              width: 155,
-              height: 139,
+              width: 100,
+              height: 100,
               position: 'absolute',
               zIndex: 4,
-              top: -100,
+              top: -50,
+            }}
+          />
+          <Image
+            source={assets.images.bubble.avatarMultiBig}
+            style={{
+              width: 70,
+              height: 70,
+              position: 'absolute',
+              zIndex: 4,
+              top: -35,
             }}
           />
           <View style={authStyleSheet.columnText}>
-            <Text style={authStyleSheet.heading1}>We are setting it up...</Text>
+            <Text style={authStyleSheet.heading1}>
+              {I18n.t('auth.signUpNextTitle')}
+            </Text>
             <Text style={[authStyleSheet.heading2, {marginTop: 16}]}>
-              In the meantime, make yourself at home.
+              {I18n.t('auth.signUpNextSubtitle')}
             </Text>
           </View>
           <Formik

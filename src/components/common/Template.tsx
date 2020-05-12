@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, View, ViewStyle} from 'react-native';
+import {Image, KeyboardAvoidingView, Platform, StyleSheet, View, ViewStyle} from 'react-native';
 import {customTheme} from '../../theme/theme';
 
 export type Props = {
@@ -14,7 +14,9 @@ export type Props = {
 
 export const Template: React.FC<Props> = (props) => {
   return (
-    <View style={styles.wrapper}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.wrapper}>
       <View style={[styles.header, props.headerStyle]}>
         <View style={[styles.titleContainer, props.titleContainerStyle]}>
           {props.title}
@@ -26,7 +28,7 @@ export const Template: React.FC<Props> = (props) => {
       <View style={[styles.content, props.contentStyle]}>
         {props.content}
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -42,6 +44,7 @@ const styles = StyleSheet.create<Styles>({
   wrapper: {
     flex: 1,
     flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
     overflow: 'scroll',
     backgroundColor: customTheme.colors.pink,

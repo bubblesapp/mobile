@@ -136,7 +136,7 @@ export const SignIn: React.FC = (): JSX.Element => {
                   <TouchableOpacity
                     onPress={() => nav.navigate(Routes.ForgotPassword)}>
                     <Text style={authStyleSheet.extraLink}>
-                      Forgot password?
+                      {I18n.t('auth.forgotPassword')}
                     </Text>
                   </TouchableOpacity>
                 </View>
