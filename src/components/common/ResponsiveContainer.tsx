@@ -116,9 +116,8 @@ export const ResponsiveContainer: React.FC = ({children}) => {
                   </View>
                   <View
                     style={{
-                      borderColor: '#979797',
+                      marginTop: 8,
                       borderRadius: 14,
-                      borderWidth: 1,
                       backgroundColor: '#EBEBEB',
                       height: 28,
                       alignSelf: 'stretch',

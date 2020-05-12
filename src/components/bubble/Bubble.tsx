@@ -22,11 +22,11 @@ import {AlertModal} from './AlertModal';
 import {Alert, Friend, Invite} from '@bubblesapp/api';
 import {useAPI} from '../../api/useAPI';
 import {Analytics} from '../../analytics/Analytics';
+import {openURLInNewTab} from './utils';
+import Constants from '../../Constants';
 
 const openRecommendations = async () => {
-  await Linking.openURL(
-    'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public',
-  );
+  openURLInNewTab(Constants.RECOMMENDATIONS_LINK);
 };
 
 export const Bubble: React.FC = () => {
