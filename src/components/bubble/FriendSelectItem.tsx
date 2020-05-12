@@ -32,20 +32,16 @@ export const FriendSelectedItem: React.FC<Props> = ({
   onSelected,
   onDeselected,
 }) => {
-  const [profile, setProfile] = useState<Profile | null>({
-    name: 'Edouard',
-    email: 'edouard@bubblesapp.org',
-    uid: 'dbdobf',
-  });
+  const [profile, setProfile] = useState<Profile>();
   //const [selected, setSelected] = useState(false);
 
   const api = useAPI();
 
   useEffect(() => {
-    /*const profileSubscription = api.profiles
+    const profileSubscription = api.profiles
       .observe(friend.uid)
       .subscribe(setProfile);
-    return () => profileSubscription.unsubscribe();*/
+    return () => profileSubscription.unsubscribe();
   }, [api, friend]);
 
   return (

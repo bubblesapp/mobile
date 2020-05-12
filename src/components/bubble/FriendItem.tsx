@@ -10,15 +10,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import moment from 'moment';
-import I18n from '../../i18n';
 import {Friend, Profile} from '@bubblesapp/api';
 import {useAPI} from '../../api/useAPI';
 import {ListItem} from 'react-native-elements';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {customTheme} from '../../theme/theme';
 import assets from '../../assets';
 import {daysAgoString} from './utils';
+import {NameTitle} from './NameTitle';
 
 type Props = {
   friend: Friend;
@@ -26,23 +24,19 @@ type Props = {
 };
 
 export const FriendItem: React.FC<Props> = ({friend, onLogPress}) => {
-  const [profile, setProfile] = useState<Profile | null>({
-    name: 'Edouard',
-    email: 'edouard@bubblesapp.org',
-    uid: 'dbdobf',
-  });
-
+  const [profile, setProfile] = useState<Profile>();
   const api = useAPI();
 
   useEffect(() => {
-    /*const profileSubscription = api.profiles
+    const profileSubscription = api.profiles
       .observe(friend.uid)
       .subscribe(setProfile);
-    return () => profileSubscription.unsubscribe();*/
+    return () => profileSubscription.unsubscribe();
   }, [api, friend]);
 
   return (
     <ListItem
+      bottomDivider={true}
       containerStyle={styles.container}
       leftIcon={
         <View style={styles.avatar}>
@@ -52,22 +46,10 @@ export const FriendItem: React.FC<Props> = ({friend, onLogPress}) => {
           />
         </View>
       }
-      title={
-        <View style={{flexDirection: 'row'}}>
-          <Text style={styles.friendTitle}>{profile?.name}</Text>
-          <Text style={styles.friendSubtitle}>
-            {` (${profile?.email.split('@')[0]})`}
-          </Text>
-        </View>
-      }
-      titleStyle={styles.friendTitle}
-      subtitle={
-        <View>
-          <Text style={styles.friendSubtitle} numberOfLines={1}>
-            {daysAgoString(friend.lastMet)}
-          </Text>
-        </View>
-      }
+      title={profile && <NameTitle profile={profile} />}
+      subtitle={daysAgoString(friend.lastMet)}
+      subtitleStyle={styles.subtitle}
+      subtitleProps={{numberOfLines: 1}}
       rightElement={
         <TouchableOpacity
           onPress={() => onLogPress(friend)}
@@ -86,15 +68,14 @@ type Styles = {
   container: ViewStyle;
   avatar: ViewStyle;
   avatarImage: ImageStyle;
-  friendTitle: TextStyle;
-  friendSubtitle: TextStyle;
+  subtitle: TextStyle;
   rightIcon: ViewStyle;
   rightIconImage: ImageStyle;
 };
 
 const styles = StyleSheet.create<Styles>({
   container: {
-    height: 84,
+    height: 72,
   },
   avatar: {
     width: 45,
@@ -109,10 +90,7 @@ const styles = StyleSheet.create<Styles>({
     width: 30,
     height: 30,
   },
-  friendTitle: {
-    fontFamily: customTheme.boldFontFamily,
-  },
-  friendSubtitle: {
+  subtitle: {
     fontFamily: customTheme.fontFamily,
     color: customTheme.colors.gray,
   },

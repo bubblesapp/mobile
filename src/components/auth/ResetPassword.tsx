@@ -1,10 +1,4 @@
-import {
-  Modal as ModalNative,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Modal as ModalNative, Platform, Text, TouchableOpacity, View,} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useAuth} from '../../auth/Auth';
 import {useToast} from '../Toast';
@@ -12,11 +6,10 @@ import I18n from '../../i18n';
 import {Overlay} from 'react-native-elements';
 import {SmallSpinner} from '../common/Spinner';
 import ModalWeb from 'modal-react-native-web';
-import {authStyleSheet as styles, authStyleSheet} from './Styles';
+import {authStyleSheet} from './Styles';
 import {Input} from '../common/Input';
 import _ from 'lodash';
 import {SubmitButton} from '../common/SubmitButton';
-import {Routes} from '../../nav/Routes';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 
@@ -68,7 +61,11 @@ export const ResetPassword: React.FC<Props> = (props) => {
         Toast.success(I18n.t('auth.resetPasswordSuccess'));
         await auth.signIn(email, password);
         if (Platform.OS === 'web') {
-          window.location.search = '';
+          window.history.pushState(
+            null,
+            window.history.state?.title || 'Bubbles',
+            '/',
+          );
         }
         setIsVisible(false);
         setSubmitting(false);

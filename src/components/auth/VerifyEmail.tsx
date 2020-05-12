@@ -42,7 +42,11 @@ export const VerifyEmail: React.FC<Props> = (props) => {
       })
       .then(() => {
         if (Platform.OS === 'web') {
-          window.location.search = '';
+          window.history.pushState(
+            null,
+            window.history.state?.title || 'Bubbles',
+            '/',
+          );
         }
       });
   }, []);

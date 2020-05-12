@@ -16,6 +16,7 @@ import {authStyleSheet} from './Styles';
 import {customTheme} from '../../theme/theme';
 import {Input} from '../common/Input';
 import assets from '../../assets';
+import {Analytics, Events} from '../../analytics/Analytics';
 
 const validationSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -33,7 +34,6 @@ export const SignIn: React.FC = (): JSX.Element => {
   const auth = useAuth();
   const nav = useNavigation();
   const Toast = useToast();
-  console.log('Signnnn in');
 
   if (auth.state?.uid && !auth.state?.name) {
     nav.navigate(Routes.SignUpNext);
@@ -45,7 +45,6 @@ export const SignIn: React.FC = (): JSX.Element => {
     {email, password, remember}: FormValues,
     {setSubmitting},
   ) => {
-    console.log('Signing in');
     try {
       await auth.signIn(email, password, remember);
       /* if (auth.state?.uid && !auth.state?.emailVerified) {

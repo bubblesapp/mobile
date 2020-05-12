@@ -7,6 +7,9 @@ import {Platform} from 'react-native';
 // @ts-ignore
 import {firebaseAuth, setPersistence} from './FirebaseAuth';
 import {API, Device} from '@bubblesapp/api';
+import {Analytics, Events} from '../analytics/Analytics';
+import env from '../../active.env';
+import ENV from '../../environment';
 
 class Auth {
   constructor(
@@ -24,8 +27,8 @@ class Auth {
       installApp: true,
     },
     handleCodeInApp: true,
-    dynamicLinkDomain: 'bubblesdev.page.link',
-    url: 'https://dev.app.bubblesapp.org',
+    dynamicLinkDomain: ENV[env].dynamicLinksDomain,
+    url: ENV[env].baseUrl,
   };
 
   changeState = (authState: AuthState) =>
@@ -33,7 +36,6 @@ class Auth {
 
   refreshState = async () => {
     const user = firebaseAuth().currentUser;
-    console.log(user);
     if (user) {
       const authState = {
         uid: user.uid,
@@ -42,10 +44,9 @@ class Auth {
         emailVerified: user.emailVerified,
         verifyingEmail: undefined,
       };
+      //Analytics.setUserId(user.uid);
       this.changeState(authState);
-      console.log('Refresh auth state 1', authState, user.emailVerified);
     } else {
-      console.log('Refresh auth state 2', {});
       this.changeState({});
     }
   };
@@ -60,7 +61,10 @@ class Auth {
     }
     return await firebaseAuth()
       .signInWithEmailAndPassword(email, password)
-      .then((credentials) => credentials.user.uid);
+      .then((credentials) => {
+        Analytics.logEvent(Events.LogIn);
+        return credentials.user.uid;
+      });
   };
 
   signUp = async (
@@ -80,6 +84,7 @@ class Auth {
     });
     this.refreshState().catch((err) => console.log(err));
     await this.sendVerificationEmail();
+    Analytics.logEvent(Events.SignUp);
     return uid;
   };
 
@@ -93,6 +98,7 @@ class Auth {
     await firebaseAuth().applyActionCode(code);
     await firebaseAuth().currentUser?.reload();
     await this.refreshState();
+    Analytics.logEvent(Events.VerifyEmail);
   };
 
   restoreEmail = async (code: string): Promise<void> => {
@@ -103,7 +109,10 @@ class Auth {
     await this.refreshState();
   };
 
-  signOut = async (): Promise<void> => await firebaseAuth().signOut();
+  signOut = async (): Promise<void> => {
+    Analytics.logEvent(Events.LogOut);
+    await firebaseAuth().signOut();
+  };
 
   resetPassword = async (email: string): Promise<void> => {
     await firebaseAuth().sendPasswordResetEmail(email, Auth.actionCodeSettings);

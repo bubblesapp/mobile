@@ -1,104 +1,77 @@
-import {Friend} from '@bubblesapp/api';
-import {FriendItem} from './FriendItem';
-import React, {useEffect, useState} from 'react';
+import {Alert} from '@bubblesapp/api';
+import React, {useState} from 'react';
 import {useAPI} from '../../api/useAPI';
 import I18n from '../../i18n';
-import {FlatList, View} from 'react-native';
-import {useActionSheet} from '@expo/react-native-action-sheet';
-import {useAuth} from '../../auth/Auth';
+import {View} from 'react-native';
 import {useToast} from '../Toast';
-import {FriendListEmpty} from './FriendListEmpty';
 import {AlertListEmpty} from './AlertListEmpty';
+import {SwipeListView} from 'react-native-swipe-list-view';
+import {DestructiveButton} from './DestructiveButton';
+import {AlertItem} from './AlertItem';
+import {AlertsHeader} from './AlertsHeader';
+import {AlertDetailsModal} from './AlertDetailsModal';
+import {Analytics, Events} from '../../analytics/Analytics';
 
-export const AlertList: React.FC = () => {
-  const [friends, setFriends] = useState<Friend[]>([]);
-  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
-  const [datePickerVisible, setDatePickerVisible] = useState(false);
+type Props = {
+  alerts: Alert[];
+};
 
-  const auth = useAuth();
+export const AlertList: React.FC<Props> = ({alerts}) => {
+  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
+  const [alertDetailsVisible, setAlertDetailsVisible] = useState(false);
+
   const api = useAPI();
-
-  const {showActionSheetWithOptions} = useActionSheet();
   const Toast = useToast();
 
-  useEffect(() => {
-    const friendsSubscription = api.friends.observeAll().subscribe(setFriends);
-    return () => friendsSubscription.unsubscribe();
-  }, [api]);
-
-  const removeFriend = async (friendUid: string) => {
+  const deleteAlert = async (alert: Alert) => {
     try {
-      await api.friends.delete(friendUid);
-      Toast.success(I18n.t('bubble.friends.deleteFriendSuccess'));
+      await api.alerts.delete(alert.id);
+      Analytics.logEvent(Events.DeleteAlert);
+      Toast.success(I18n.t('bubble.alerts.deleteSuccess'));
     } catch (err) {
-      console.log(err);
       Toast.danger(err.message);
+    } finally {
+      setAlertDetailsVisible(false);
     }
   };
 
-  const onFriendPress = async (friend: Friend) => {
-    const options = [
-      I18n.t('bubble.friends.setLastMet'),
-      I18n.t('bubble.friends.deleteFriendButtonTitle'),
-      I18n.t('bubble.friends.confirmDeleteCancel'),
-    ];
-    showActionSheetWithOptions(
-      {
-        options,
-        destructiveButtonIndex: 1,
-        cancelButtonIndex: 2,
-      },
-      async (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            setDatePickerVisible(true);
-            console.log(datePickerVisible);
-            setSelectedFriend(friend);
-            return;
-          case 1:
-            console.log('Remove pressed');
-            await onRemovePressed(friend.uid);
-            console.log('Voila');
-            return;
-          case 2:
-            return;
-        }
-      },
-    );
-  };
-
-  const onRemovePressed = async (friendUid: string) => {
-    const options = [
-      I18n.t('bubble.friends.confirmDeleteConfirm'),
-      I18n.t('bubble.friends.confirmDeleteCancel'),
-    ];
-    showActionSheetWithOptions(
-      {
-        options,
-        title: I18n.t('bubble.friends.confirmDeleteFriendTitle'),
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1,
-      },
-      async (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            await removeFriend(friendUid);
-            break;
-          case 1:
-            break;
-        }
-      },
-    );
-  };
-
   return (
-    <View style={{flex: 1}}>
-      {friends.length > 0 ? (
-        friends.map((friend) => {
-          return (
-            <FriendItem friend={friend} onLogPress={() => onLogPress(friend)} />
-          );
-        })
+    <View style={{backgroundColor: '#fff'}}>
+      {alerts.length > 0 ? (
+        <>
+          <AlertDetailsModal
+            onCancel={() => setAlertDetailsVisible(false)}
+            onDelete={(alert: Alert) => deleteAlert(alert)}
+            alert={selectedAlert || alerts[0]}
+            visible={alertDetailsVisible}
+          />
+          <SwipeListView<Alert>
+            data={alerts}
+            contentContainerStyle={{backgroundColor: '#fff'}}
+            scrollEnabled={true}
+            ListHeaderComponent={AlertsHeader}
+            renderItem={({item}) => (
+              <AlertItem
+                alert={item}
+                onPress={() => {
+                  setSelectedAlert(item);
+                  setAlertDetailsVisible(true);
+                }}
+              />
+            )}
+            keyExtractor={(item) => item.createdAt.toString()}
+            renderHiddenItem={({item}) => {
+              return (
+                <DestructiveButton
+                  title={I18n.t('bubble.alerts.deleteButton')}
+                  onPress={() => deleteAlert(item)}
+                />
+              );
+            }}
+            disableRightSwipe={true}
+            rightOpenValue={-85}
+          />
+        </>
       ) : (
         <AlertListEmpty />
       )}

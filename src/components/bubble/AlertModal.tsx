@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
-  Image,
+  Image, Linking,
   Modal as ModalNative,
   Platform,
   ScrollView,
@@ -19,13 +19,16 @@ import {Overlay} from 'react-native-elements';
 import {SubmitButton} from '../common/SubmitButton';
 import {CloseButton} from '../common/CloseButton';
 import I18n from '../../i18n';
-import {Friend} from '@bubblesapp/api';
+import {Alert, Friend, NewAlert} from '@bubblesapp/api';
 import {FriendSelectedItem} from './FriendSelectItem';
 import _ from 'lodash';
 import moment from 'moment';
 import Constants from '../../Constants';
 import {RecentFriendsItem} from './RecentFriendsItem';
 import {ExtraButton} from '../common/ExtraButton';
+import {useAPI} from '../../api/useAPI';
+import {useToast} from '../Toast';
+import {Analytics, Events} from '../../analytics/Analytics';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -50,46 +53,21 @@ export const AlertModal: React.FC<Props> = (props) => {
   const [step, setStep] = useState(1);
   const [selectedFriends, setSelectedFriends] = useState<Friend[]>([]);
   const [message, setMessage] = useState('');
+  const [sendingAlert, setSendingAlert] = useState(false);
+  const [openingMailApp, setOpeningEmailApp] = useState(false);
+  const Toast = useToast();
 
   const selectFriend = (friend: Friend) =>
     setSelectedFriends([friend, ...selectedFriends]);
   const deSelectFriend = (friend: Friend) =>
     setSelectedFriends(_.filter(selectedFriends, (f) => f.uid !== friend.uid));
 
-  const [friends, setFriends] = useState<Friend[]>([
-    {
-      uid: 'kjdsbodfjsfo',
-      lastMet: 1588836021000,
-    },
-    {
-      uid: 'fffd',
-      lastMet: 1588663221000,
-    },
-    {
-      uid: 'kjdsboqsqdsdfjsfo',
-      lastMet: 1588922421000,
-    },
-    {
-      uid: 'sfgs',
-      lastMet: 2532632762,
-    },
-    {
-      uid: 'rre',
-      lastMet: 2532632762,
-    },
-    {
-      uid: 'zqqef',
-      lastMet: 2532632762,
-    },
-    {
-      uid: 'dgggf',
-      lastMet: 2532632762,
-    },
-    {
-      uid: 'qer',
-      lastMet: 2532632762,
-    },
-  ]);
+  const api = useAPI();
+  const [friends, setFriends] = useState<Friend[]>([]);
+  useEffect(() => {
+    const friendsSubscription = api.friends.observeAll().subscribe(setFriends);
+    return () => friendsSubscription.unsubscribe();
+  }, [api]);
 
   const allSeenRecently = friends.filter(seenRecently);
 
@@ -104,6 +82,39 @@ export const AlertModal: React.FC<Props> = (props) => {
   const [charactersLeft, setCharactersLeft] = useState(
     Constants.ALERT_MESSAGE_MAX_CHARACTERS,
   );
+
+  const sendAlert = async () => {
+    try {
+      setSendingAlert(true);
+      await api.newAlerts.sendAlert(
+        selectedFriends.map((f) => f.uid),
+        message,
+      );
+      setSendingAlert(false);
+      Toast.success(I18n.t('bubble.alerts.alertSent'));
+      Analytics.logEvent(Events.SendAlert);
+      props.onAlertSent && props.onAlertSent();
+    } catch (err) {
+      setSendingAlert(false);
+      Toast.danger(err.message);
+    }
+  };
+
+  const writeEmail = async () => {
+    /* const emails = await Promise.all(
+      selectedFriends.map((f) => api.profiles.get(f.uid).then((p) => p.email)),
+    ); */
+    const url = 'mailto:edouard.goossens@gmail.com;edouard@tastyelectrons.com';
+    //const url = `mailto:${_.join(emails, ';')}`;
+    try {
+      setOpeningEmailApp(true);
+      await Linking.openURL(url);
+    } catch (err) {
+      Toast.danger('An error occured');
+    } finally {
+      setOpeningEmailApp(false);
+    }
+  };
 
   return (
     <Overlay
@@ -165,9 +176,12 @@ export const AlertModal: React.FC<Props> = (props) => {
                 <View style={styles.floatingButtonContainer}>
                   <SubmitButton
                     buttonStyle={[styles.button, styles.buttonShadow]}
-                    containerStyle={styles.buttonContainer}
+                    containerStyle={[styles.buttonContainer, {height: 140}]}
                     title={I18n.t('bubble.alerts.newAlertContinueButton')}
                     onPress={() => setStep(2)}
+                    //title={I18n.t('bubble.alerts.newAlertOpenMailApp')}
+                    //onPress={() => writeEmail()}
+                    //loading={openingMailApp}
                   />
                 </View>
               ) : null}
@@ -231,19 +245,19 @@ export const AlertModal: React.FC<Props> = (props) => {
                   charactersLeft.toString(),
                 )}
               </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-evenly',
-                  alignItems: 'center',
-                  alignSelf: 'stretch',
-                }}>
-                <ExtraButton onPress={() => setStep(1)} title={'Back'} />
-                <SubmitButton
-                  buttonStyle={styles.button}
+              <View style={styles.buttonsContainer}>
+                <ExtraButton
+                  onPress={() => setStep(1)}
                   containerStyle={styles.buttonContainer}
+                  buttonStyle={styles.button}
+                  title={'Back'}
+                />
+                <View style={{width: 24}} />
+                <SubmitButton
+                  onPress={() => sendAlert()}
+                  containerStyle={styles.buttonContainer}
+                  buttonStyle={styles.button}
                   title={I18n.t('bubble.alerts.newAlertSendButton')}
-                  onPress={() => {}}
                 />
               </View>
             </ScrollView>
@@ -266,6 +280,7 @@ type Styles = {
   heading1: TextStyle;
   heading2: TextStyle;
   floatingButtonContainer: ViewStyle;
+  buttonsContainer: ViewStyle;
   buttonContainer: ViewStyle;
   button: ViewStyle;
   buttonShadow: ViewStyle;
@@ -291,7 +306,7 @@ const styles = StyleSheet.create<Styles>({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    backgroundColor: customTheme.colors.orange,
+    backgroundColor: customTheme.colors.red,
     borderTopStartRadius: 10,
     borderTopEndRadius: 10,
     padding: 32,
@@ -344,17 +359,24 @@ const styles = StyleSheet.create<Styles>({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    height: 140,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    marginHorizontal: 16,
+    marginTop: 24,
   },
   buttonContainer: {
     backgroundColor: 'rgba(0, 255, 0, 0)',
+    flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
     alignSelf: 'stretch',
-    height: 140,
   },
   button: {
-    paddingHorizontal: 32,
   },
   buttonShadow: {
     shadowOpacity: 0.2,
@@ -364,5 +386,5 @@ const styles = StyleSheet.create<Styles>({
     },
     shadowRadius: 5,
     shadowColor: '#000',
-  }
+  },
 });

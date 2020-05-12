@@ -3,17 +3,20 @@ import {ImageStyle, Platform, StyleSheet, TextStyle, ViewStyle} from 'react-nati
 import {Avatar, ListItem} from 'react-native-elements';
 import assets from '../../assets';
 import {customTheme} from '../../theme/theme';
-import {Invite} from '@bubblesapp/api';
-import I18n from '../../i18n';
+import {Alert} from '@bubblesapp/api';
+import moment from 'moment';
 
 type Props = {
-  invite: Invite;
+  alert: Alert;
+  onPress?: (alert: Alert) => void;
 };
 
-export const OutgoingInviteItem: React.FC<Props> = ({invite}) => {
+export const AlertItem: React.FC<Props> = ({alert, onPress}) => {
+  console.log(alert);
   return (
     <ListItem
-      bottomDivider={true}
+      onPress={() => onPress && onPress(alert)}
+      topDivider={true}
       containerStyle={styles.container}
       leftElement={
         <Avatar
@@ -24,15 +27,15 @@ export const OutgoingInviteItem: React.FC<Props> = ({invite}) => {
           }}
           containerStyle={styles.avatar}
           avatarStyle={styles.avatarImage}
-          source={assets.images.bubble.avatar}
+          source={assets.images.bubble.alert}
         />
       }
-      title={invite.to}
+      title={alert.message}
       titleStyle={styles.title}
       titleProps={{
         numberOfLines: 1,
       }}
-      subtitle={I18n.t('bubble.invites.awaitingResponse')}
+      subtitle={moment(alert.createdAt).format('dddd D, HH:mm')}
       subtitleStyle={styles.subtitle}
       subtitleProps={{
         numberOfLines: 1,
@@ -57,13 +60,12 @@ const styles = StyleSheet.create<Styles>({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: customTheme.colors.lightBlue,
+    backgroundColor: customTheme.colors.red,
     marginRight: Platform.OS === 'web' ? 16 : 0,
   },
   avatarImage: {
-    margin: 7,
-    width: 30,
-    height: 30,
+    width: 44,
+    height: 44,
   },
   title: {
     fontFamily: customTheme.boldFontFamily,

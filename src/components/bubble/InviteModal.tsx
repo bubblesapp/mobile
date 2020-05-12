@@ -21,9 +21,11 @@ import {useAuth} from '../../auth/Auth';
 import {InviteButton} from '../common/InviteButton';
 import I18n from '../../i18n';
 import {ExtraButton} from '../common/ExtraButton';
-import Constants from '../../Constants';
 import {useToast} from '../Toast';
 import Clipboard from '@react-native-community/clipboard';
+import ENV from '../../../environment';
+import env from '../../../active.env';
+import {Analytics, Events} from '../../analytics/Analytics';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -34,20 +36,12 @@ type Props = {
 
 export const InviteModal: React.FC<Props> = (props) => {
   const auth = useAuth();
-  const firstLetters = auth.state.name?.substr(0, 3);
-  const link = `${Constants.LINK_PREFIX}${firstLetters}-${auth.state.uid}`;
-  let shareContent: ShareContent | {title: string; text: string};
-  if (Platform.OS === 'web') {
-    shareContent = {
-      title: I18n.t('bubble.invites.shareMessageTitle'),
-      text: I18n.t('bubble.invites.shareMessageContent').replace('$0', link),
-    };
-  } else {
-    shareContent = {
-      title: I18n.t('bubble.invites.shareMessageTitle'),
-      message: I18n.t('bubble.invites.shareMessageContent').replace('$0', link),
-    };
-  }
+  const link = `${ENV[env].baseUrl}?mode=invite&n=${auth.state.name}&e=${auth.state.email}`;
+  const shareContent = {
+    title: I18n.t('bubble.invites.shareMessageTitle'),
+    text: I18n.t('bubble.invites.shareMessageContent').replace('$0', link),
+    message: I18n.t('bubble.invites.shareMessageContent').replace('$0', link),
+  };
   const shareOptions: ShareOptions = {
     subject: I18n.t('bubble.invites.shareMessageTitle'),
   };
@@ -69,7 +63,9 @@ export const InviteModal: React.FC<Props> = (props) => {
       Clipboard.setString(link);
       Toast.success(I18n.t('bubble.invites.copiedToClipboard'));
     }
+    Analytics.logEvent(Events.CopyBubbleLink);
   };
+
   const shareLink = async () => {
     try {
       if (Platform.OS === 'web' && navigator.share) {
@@ -77,11 +73,13 @@ export const InviteModal: React.FC<Props> = (props) => {
       } else {
         await Share.share(shareContent as ShareContent, shareOptions);
       }
+      Analytics.logEvent(Events.ShareBubbleLink);
     } catch (err) {
       console.log(err.message);
       await copyLinkToClipboard();
     }
   };
+
   const Toast = useToast();
 
   return (
@@ -112,9 +110,7 @@ export const InviteModal: React.FC<Props> = (props) => {
           <TouchableOpacity
             style={styles.linkContainer}
             onPress={() => copyLinkToClipboard()}>
-            <Text style={styles.linkText}>
-              {'https://bubblesapp.link/jbfjdbfo2489bIU2Bbibdjdb'}
-            </Text>
+            <Text style={styles.linkText}>{link}</Text>
           </TouchableOpacity>
           <View
             style={{
@@ -180,8 +176,8 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: customTheme.colors.ctaBackground,
-    borderTopStartRadius: 10,
-    borderTopEndRadius: 10,
+    borderTopStartRadius: 5,
+    borderTopEndRadius: 5,
     padding: 32,
   },
   headerTitle: {
@@ -200,8 +196,8 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderBottomStartRadius: 10,
-    borderBottomEndRadius: 10,
+    borderBottomStartRadius: 5,
+    borderBottomEndRadius: 5,
     padding: 32,
   },
   heading1: {
@@ -218,20 +214,20 @@ const styles = StyleSheet.create<Styles>({
   linkLabel: {
     color: customTheme.colors.gray,
     fontFamily: customTheme.fontFamily,
-    fontSize: 16,
+    fontSize: 14,
     alignSelf: 'flex-start',
   },
   linkContainer: {
     borderWidth: 1,
     borderColor: customTheme.colors.mediumGray,
     borderRadius: 10,
-    padding: 16,
+    padding: 8,
     alignSelf: 'stretch',
   },
   linkText: {
     fontFamily: customTheme.fontFamily,
-    fontSize: 16,
-    textAlign: 'center',
+    fontSize: 12,
+    textAlign: 'left',
   },
   buttonContainer: {
     flex: 1,

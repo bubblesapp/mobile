@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Root} from './src/components/Root';
 import {APIProvider} from './src/api/useAPI';
 import {AuthProvider} from './src/auth/Auth';
-import {View, StyleSheet, ViewStyle, Platform, SafeAreaView, Text} from 'react-native';
+import {Platform, StyleSheet, View, ViewStyle, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import * as Font from 'expo-font';
@@ -10,6 +10,11 @@ import {Splash} from './src/onboarding/Splash';
 import * as Device from 'expo-device';
 import {CurrentDevice, DeviceContext} from './src/device/useDevice';
 import {isMountedRef, navigationRef} from './src/nav/Navigation';
+import {customTheme, CustomTheme} from './src/theme/theme';
+import {ToastProvider} from './src/components/Toast';
+import {ThemeProvider} from 'react-native-elements';
+import {Analytics} from './src/analytics/Analytics';
+import {ResponsiveContainer} from './src/components/common/ResponsiveContainer';
 
 console.disableYellowBox = true;
 
@@ -25,7 +30,6 @@ const webContainerStyle: ViewStyle = {
   flex: 1,
   flexDirection: 'row',
   justifyContent: 'center',
-  maxWidth: 500,
 };
 
 const nativeContainerStyle: ViewStyle = {
@@ -66,6 +70,7 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
         'Nunito-Black': require('./assets/fonts/Nunito-Black.ttf'),
       });
       try {
+        Analytics.init();
         setDevice({
           type: await Device.getDeviceTypeAsync(),
         });
@@ -83,21 +88,27 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
     return <Splash />;
   }
   return (
-    <View style={styles.wrapperStyle}>
-      <Container>
-        <DeviceContext.Provider value={device}>
-          <APIProvider>
-            <AuthProvider>
-              <NavigationContainer ref={navigationRef}>
-                <ActionSheetProvider>
-                  <Root />
-                </ActionSheetProvider>
-              </NavigationContainer>
-            </AuthProvider>
-          </APIProvider>
-        </DeviceContext.Provider>
-      </Container>
-    </View>
+    <ResponsiveContainer>
+      <View style={styles.wrapperStyle}>
+        <ThemeProvider<CustomTheme> theme={customTheme}>
+          <ToastProvider>
+            <Container>
+              <DeviceContext.Provider value={device}>
+                <APIProvider>
+                  <AuthProvider>
+                    <NavigationContainer ref={navigationRef}>
+                      <ActionSheetProvider>
+                        <Root />
+                      </ActionSheetProvider>
+                    </NavigationContainer>
+                  </AuthProvider>
+                </APIProvider>
+              </DeviceContext.Provider>
+            </Container>
+          </ToastProvider>
+        </ThemeProvider>
+      </View>
+    </ResponsiveContainer>
   );
 };
 

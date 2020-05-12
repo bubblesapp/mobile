@@ -11,6 +11,7 @@ import {Icon} from 'react-native-elements';
 import {customTheme} from '../../theme/theme';
 import moment, {Moment} from 'moment';
 import I18n from '../../i18n';
+import _ from 'lodash';
 
 const daysDiff = (m: Moment) => moment().diff(m.startOf('day'), 'days');
 
@@ -18,9 +19,9 @@ const daysAgoString = (m: Moment): string => {
   const days = daysDiff(m);
   switch (days) {
     case 0:
-      return I18n.t('bubble.friends.today');
+      return _.upperFirst(I18n.t('bubble.friends.today'));
     case 1:
-      return I18n.t('bubble.friends.yesterday');
+      return _.upperFirst(I18n.t('bubble.friends.yesterday'));
     default:
       return I18n.t('bubble.friends.xDaysAgo').replace('$0', days.toString());
   }

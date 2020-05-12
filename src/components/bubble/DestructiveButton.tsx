@@ -40,6 +40,7 @@ const styles = StyleSheet.create<Styles>({
   },
   deleteButton: {
     width: 85,
+    height: 72,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
