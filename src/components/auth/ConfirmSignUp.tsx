@@ -82,11 +82,21 @@ export const ConfirmSignUp: React.FC = (): JSX.Element => {
           <Image
             source={assets.images.bubble.bubble}
             style={{
-              width: 155,
-              height: 139,
+              width: 100,
+              height: 100,
               position: 'absolute',
               zIndex: 4,
-              top: -100,
+              top: -50,
+            }}
+          />
+          <Image
+            source={assets.images.bubble.avatarMultiBig}
+            style={{
+              width: 70,
+              height: 70,
+              position: 'absolute',
+              zIndex: 4,
+              top: -35,
             }}
           />
           <View style={authStyleSheet.formContainer}>

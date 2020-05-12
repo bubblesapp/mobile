@@ -53,6 +53,8 @@ export const fr: Locale = {
     signUpContinue: 'Suivant',
     alreadyHaveAccount: 'Vous avez une Bulle?',
     alreadyHaveAccountAction: 'Connexion',
+    signUpNextTitle: 'Bulle en cours de création...',
+    signUpNextSubtitle: "En attendant, mettez-vous à l'aise.",
     cancel: 'Annuler',
     close: 'Fermer',
     welcomeText: 'Bienvenue $0!',

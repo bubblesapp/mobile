@@ -42,6 +42,8 @@ export type Locale = {
     signUpPasswordPlaceholder: string;
     signUpAgreeToTerms: string;
     signUpContinue: string;
+    signUpNextTitle: string;
+    signUpNextSubtitle: string;
     alreadyHaveAccount: string;
     alreadyHaveAccountAction: string;
     cancel: string;

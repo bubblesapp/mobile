@@ -3,6 +3,7 @@
   "displayName": "Bubbles",
   "expo": {
     "name": "Bubbles",
+    "icon": "assets/images/icon_1024.png",
     "slug": "bubbles",
     "platforms": ["web"]
   }

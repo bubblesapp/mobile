@@ -53,6 +53,8 @@ export const en: Locale = {
     signUpContinue: 'Continue',
     alreadyHaveAccount: 'Already have a Bubble?',
     alreadyHaveAccountAction: 'Log in',
+    signUpNextTitle: 'We are setting it up...',
+    signUpNextSubtitle: 'In the meantime, make yourself at home.',
     cancel: 'Cancel',
     close: 'Close',
     welcomeText: 'Welcome $0!',

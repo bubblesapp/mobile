@@ -32,19 +32,15 @@ type Props = {
 
 export const LogModal: React.FC<Props> = (props) => {
   const [date, setDate] = useState(new Date());
-  const [profile, setProfile] = useState<Profile>({
-    name: 'Edouard',
-    email: 'edouard@bubblesapp.org',
-    uid: 'dbdobf',
-  });
+  const [profile, setProfile] = useState<Profile>();
 
   const api = useAPI();
 
   useEffect(() => {
-    /*const profileSubscription = api.profiles
-      .observe(friend.uid)
+    const profileSubscription = api.profiles
+      .observe(props.friend?.uid)
       .subscribe(setProfile);
-    return () => profileSubscription.unsubscribe();*/
+    return () => profileSubscription.unsubscribe();
   }, [api, props.friend]);
 
   return (

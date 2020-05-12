@@ -52,7 +52,6 @@ const Container: React.FC = ({children}) => {
   return <View style={styles.containerStyle}>{children}</View>;
 };
 
-
 const App: React.FC<AppProps> = ({isHeadless}) => {
   const [ready, setReady] = useState(false);
   const [device, setDevice] = useState<CurrentDevice>();
@@ -75,6 +74,18 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
         setDevice({
           type: await Device.getDeviceTypeAsync(),
         });
+        if (Platform.OS === 'web') {
+          let deferredPrompt;
+
+          window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Update UI notify the user they can install the PWA
+            console.log('In PWA beforeinstallprompt');
+          });
+        }
       } catch (err) {
         console.log(err);
       }
