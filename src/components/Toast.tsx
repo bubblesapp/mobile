@@ -19,8 +19,8 @@ interface ToastAPI {
 
 export const ToastContext = React.createContext<ToastAPI>(null);
 
-const SUCCESS_COLOR = customTheme.colors.success;
-const DANGER_COLOR = '#d9534f';
+const SUCCESS_COLOR = customTheme.colors.green;
+const DANGER_COLOR = customTheme.colors.red;
 const WARNING_COLOR = '#f0ad4e';
 const INFO_COLOR = '#f4f4f4';
 
