@@ -12,6 +12,7 @@ import _ from 'lodash';
 import {SubmitButton} from '../common/SubmitButton';
 import {Formik} from 'formik';
 import * as yup from 'yup';
+import {commonStyles} from '../common/Styles';
 
 const validationSchema = yup.object().shape({
   password: yup.string().required().label(I18n.t('auth.resetPasswordNewPasswordLabel')),
@@ -79,7 +80,7 @@ export const ResetPassword: React.FC<Props> = (props) => {
 
   return (
     <Overlay
-      overlayStyle={authStyleSheet.overlay}
+      overlayStyle={[commonStyles.overlay, authStyleSheet.overlay]}
       isVisible={isVisible}
       ModalComponent={Modal}>
       {!isActionCodeVerified ? (

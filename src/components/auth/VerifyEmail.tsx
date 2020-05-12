@@ -53,7 +53,7 @@ export const VerifyEmail: React.FC<Props> = (props) => {
 
   return (
     <Overlay
-      overlayStyle={[authStyleSheet.overlay, {backgroundColor: '#fff'}]}
+      overlayStyle={[commonStyles.overlay, authStyleSheet.overlay]}
       isVisible={isVisible}
       ModalComponent={Modal}>
       <View style={commonStyles.popupWrapper}>

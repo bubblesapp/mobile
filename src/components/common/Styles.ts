@@ -2,6 +2,7 @@ import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import {customTheme} from '../../theme/theme';
 
 type Styles = {
+  overlay: ViewStyle;
   popupTitle: TextStyle;
   popupWrapper: ViewStyle;
   popupHeader: ViewStyle;
@@ -9,6 +10,12 @@ type Styles = {
 };
 
 export const commonStyles = StyleSheet.create<Styles>({
+  overlay: {
+    width: '80%',
+    height: '80%',
+    maxWidth: 326,
+    maxHeight: 570,
+  },
   popupWrapper: {
     flexDirection: 'column',
     justifyContent: 'space-evenly',

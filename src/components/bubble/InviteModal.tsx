@@ -26,6 +26,7 @@ import Clipboard from '@react-native-community/clipboard';
 import ENV from '../../../environment';
 import env from '../../../active.env';
 import {Analytics, Events} from '../../analytics/Analytics';
+import {commonStyles} from '../common/Styles';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -87,7 +88,7 @@ export const InviteModal: React.FC<Props> = (props) => {
       ModalComponent={Modal}
       transparent={true}
       isVisible={props.visible}
-      overlayStyle={styles.overlay}
+      overlayStyle={[commonStyles.overlay, styles.overlay]}
       onBackdropPress={() => props.onCancel()}
       animationType={'fade'}>
       <>
@@ -157,8 +158,6 @@ type Styles = {
 
 const styles = StyleSheet.create<Styles>({
   overlay: {
-    width: '80%',
-    height: '80%',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'stretch',

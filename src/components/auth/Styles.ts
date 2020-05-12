@@ -116,8 +116,6 @@ export const authStyleSheet = StyleSheet.create<Styles>({
     color: customTheme.colors.ctaBackground,
   },
   overlay: {
-    width: '85%',
-    maxWidth: 400,
     borderRadius: 10,
     //borderWidth: 5,
     //borderColor: customTheme.colors.darkBlue,

@@ -16,6 +16,7 @@ import {useAPI} from '../../api/useAPI';
 import I18n from '../../i18n';
 import {useToast} from '../Toast';
 import {useAuth} from '../../auth/Auth';
+import {commonStyles} from '../common/Styles';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -66,7 +67,7 @@ export const SendOutgoingInviteModal: React.FC<Props> = (props) => {
   return (
     <Overlay
       isVisible={isVisible}
-      overlayStyle={styles.overlay}
+      overlayStyle={[commonStyles.overlay, styles.overlay]}
       ModalComponent={Modal}>
       <View style={styles.container}>
         <Text style={styles.title}>Joining {props.toName}'s Bubble</Text>
@@ -85,7 +86,6 @@ type Styles = {
 
 const styles = StyleSheet.create<Styles>({
   overlay: {
-    width: '80%',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'stretch',
