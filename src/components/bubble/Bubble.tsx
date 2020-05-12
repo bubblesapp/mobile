@@ -191,7 +191,7 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
     alignSelf: 'stretch',
     padding: 16,
-    marginTop: 75,
+    marginTop: 48,
     marginBottom: 24,
     //marginBottom: Dimensions.LANGUETTE_ALWAYS_OPEN + Dimensions.TAB_BAR_HEIGHT,
   },
