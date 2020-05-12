@@ -30,7 +30,7 @@ const slides: Slide[] = [
     image: require('../../assets/images/onboarding/Screen1.png'),
     imageStyle: {
       width: 246,
-      height: 229,
+      height: 255,
       marginVertical: 16,
     },
   },
@@ -40,8 +40,8 @@ const slides: Slide[] = [
     heading2: I18n.t('onboarding.screen2.heading2'),
     image: require('../../assets/images/onboarding/Screen2.png'),
     imageStyle: {
-      width: 245,
-      height: 246,
+      width: 236,
+      height: 230,
       marginVertical: 32,
     },
   },
@@ -51,8 +51,8 @@ const slides: Slide[] = [
     heading2: I18n.t('onboarding.screen3.heading2'),
     image: require('../../assets/images/onboarding/Screen3.png'),
     imageStyle: {
-      width: 173,
-      height: 254,
+      width: 161,
+      height: 268,
       marginVertical: 32,
     },
   },
@@ -159,7 +159,8 @@ type Props = {
 
 export const Onboarding: React.FC<Props> = () => {
   const nav = useNavigation();
-  const size = useWindowSize();
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
   const [onboarded, setOnboarded] = useAsyncStorage('onboarded', false);
   const device = useDevice();
   const slider = useRef<AppIntroSlider<Slide>>(null);
@@ -170,7 +171,7 @@ export const Onboarding: React.FC<Props> = () => {
     nav.navigate(Routes.SignIn);
   }
 
-  const height = size.height ? size.height - 128 : undefined;
+  const contentHeight = height ? height - 128 : undefined;
 
   const goToSignIn = async () => {
     await setOnboarded(true);
@@ -183,7 +184,12 @@ export const Onboarding: React.FC<Props> = () => {
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView
+      style={styles.wrapper}
+      onLayout={(e) => {
+        setHeight(e.nativeEvent.layout.height);
+        setWidth(e.nativeEvent.layout.width);
+      }}>
       <AppIntroSlider<Slide>
         ref={slider}
         keyExtractor={(item) => item.heading1}
@@ -191,7 +197,7 @@ export const Onboarding: React.FC<Props> = () => {
         renderItem={(slide: any) => {
           const {item} = slide;
           return (
-            <View style={[styles.slide, {height}]}>
+            <View style={[styles.slide, {height: contentHeight}]}>
               <SafeAreaView
                 style={{
                   flex: 1,
@@ -238,10 +244,6 @@ export const Onboarding: React.FC<Props> = () => {
         dotClickEnabled={false}
         onScroll={(e) => {
           const {x} = e.nativeEvent.contentOffset;
-          const width = size?.width;
-          if (!width) {
-            return;
-          }
           if (slider.current && x % width === 0) {
             slider.current._onMomentumScrollEnd(e);
           }
