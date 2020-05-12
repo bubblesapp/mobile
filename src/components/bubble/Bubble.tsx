@@ -22,11 +22,11 @@ import {AlertModal} from './AlertModal';
 import {Alert, Friend, Invite} from '@bubblesapp/api';
 import {useAPI} from '../../api/useAPI';
 import {Analytics} from '../../analytics/Analytics';
+import {openURLInNewTab} from './utils';
+import Constants from '../../Constants';
 
 const openRecommendations = async () => {
-  await Linking.openURL(
-    'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public',
-  );
+  openURLInNewTab(Constants.RECOMMENDATIONS_LINK);
 };
 
 export const Bubble: React.FC = () => {
@@ -156,7 +156,7 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
     paddingTop: '5%',
     paddingBottom: '5%',
-    height: 0.35 * Dimensions.get('screen').height,
+    flex: 1,
   },
   title: {
     fontFamily: customTheme.boldFontFamily,
@@ -176,7 +176,7 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
   },
   content: {
-    flex: 1,
+    flex: 2,
     flexDirection: 'column',
     backgroundColor: customTheme.colors.lightBlue,
   },
@@ -191,7 +191,7 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
     alignSelf: 'stretch',
     padding: 16,
-    marginTop: 75,
+    marginTop: 48,
     marginBottom: 24,
     //marginBottom: Dimensions.LANGUETTE_ALWAYS_OPEN + Dimensions.TAB_BAR_HEIGHT,
   },

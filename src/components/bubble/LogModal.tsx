@@ -19,6 +19,7 @@ import {CloseButton} from '../common/CloseButton';
 import {Friend, Profile} from '@bubblesapp/api';
 import {useAPI} from '../../api/useAPI';
 import I18n from '../../i18n';
+import {commonStyles} from '../common/Styles';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -51,7 +52,7 @@ export const LogModal: React.FC<Props> = (props) => {
       ModalComponent={Modal}
       transparent={true}
       isVisible={props.visible}
-      overlayStyle={styles.overlay}
+      overlayStyle={[commonStyles.overlay, styles.overlay]}
       onBackdropPress={() => props.onCancel()}
       animationType={'fade'}>
       <>
@@ -101,8 +102,6 @@ type Styles = {
 
 const styles = StyleSheet.create<Styles>({
   overlay: {
-    width: '80%',
-    height: '80%',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'stretch',

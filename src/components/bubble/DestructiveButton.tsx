@@ -6,6 +6,7 @@ import {
   ViewStyle,
   Text,
 } from 'react-native';
+import {customTheme} from '../../theme/theme';
 
 export type Props = {
   title: string;
@@ -33,7 +34,7 @@ export type Styles = {
 const styles = StyleSheet.create<Styles>({
   deleteRow: {
     margin: 1,
-    backgroundColor: '#d9534f',
+    backgroundColor: customTheme.colors.red,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end',

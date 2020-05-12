@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
-  Image, Linking,
+  Image,
+  Linking,
   Modal as ModalNative,
   Platform,
   ScrollView,
@@ -19,7 +20,7 @@ import {Overlay} from 'react-native-elements';
 import {SubmitButton} from '../common/SubmitButton';
 import {CloseButton} from '../common/CloseButton';
 import I18n from '../../i18n';
-import {Alert, Friend, NewAlert} from '@bubblesapp/api';
+import {Friend} from '@bubblesapp/api';
 import {FriendSelectedItem} from './FriendSelectItem';
 import _ from 'lodash';
 import moment from 'moment';
@@ -29,6 +30,7 @@ import {ExtraButton} from '../common/ExtraButton';
 import {useAPI} from '../../api/useAPI';
 import {useToast} from '../Toast';
 import {Analytics, Events} from '../../analytics/Analytics';
+import {commonStyles} from '../common/Styles';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -121,7 +123,7 @@ export const AlertModal: React.FC<Props> = (props) => {
       ModalComponent={Modal}
       transparent={true}
       isVisible={props.visible}
-      overlayStyle={styles.overlay}
+      overlayStyle={[commonStyles.overlay, styles.overlay]}
       onBackdropPress={() => props.onCancel && props.onCancel()}
       animationType={'fade'}>
       <>
@@ -208,7 +210,7 @@ export const AlertModal: React.FC<Props> = (props) => {
                 }}>
                 <TextInput
                   style={{
-                    height: 150,
+                    height: 100,
                     textAlign: 'left',
                     fontFamily: customTheme.fontFamily,
                     outline: 'none',
@@ -257,6 +259,7 @@ export const AlertModal: React.FC<Props> = (props) => {
                   onPress={() => sendAlert()}
                   containerStyle={styles.buttonContainer}
                   buttonStyle={styles.button}
+                  loading={sendingAlert}
                   title={I18n.t('bubble.alerts.newAlertSendButton')}
                 />
               </View>
@@ -288,8 +291,6 @@ type Styles = {
 
 const styles = StyleSheet.create<Styles>({
   overlay: {
-    width: '80%',
-    height: '80%',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'stretch',
