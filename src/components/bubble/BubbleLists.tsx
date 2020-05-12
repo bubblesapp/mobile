@@ -1,38 +1,32 @@
-import React, {useRef, useState} from 'react';
-import {StyleSheet, TextStyle, TouchableOpacity, TouchableWithoutFeedback, View, ViewStyle,} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, TextStyle, View, ViewStyle,} from 'react-native';
 import {ButtonGroup} from 'react-native-elements';
 import {customTheme} from '../../theme/theme';
-import {FriendList} from './FriendList';
+import {PeopleList} from './PeopleList';
 import {AlertList} from './AlertList';
-import {Modalize} from 'react-native-modalize';
-import {Portal} from 'react-native-portalize';
-import {useSafeArea} from 'react-native-safe-area-context';
 import I18n from '../../i18n';
-import Dimensions from '../common/Dimensions';
+import {Alert, Friend, Invite} from '@bubblesapp/api';
 
-export const BubbleLists: React.FC = () => {
+type Props = {
+  friends: Friend[];
+  outgoingInvites: Invite[];
+  incomingInvites: Invite[];
+  alerts: Alert[];
+};
+
+export const BubbleLists: React.FC<Props> = (props) => {
   const [selectedButton, setSelectedButton] = useState(0);
-  const [languetteOpen, setLanguetteOpen] = useState(false);
-  const languette = useRef<Modalize | null>();
-  const insets = useSafeArea();
   return (
     <View style={styles.lists}>
       <View style={styles.listHeader}>
         <View style={styles.listHeaderContent}>
-          <View
-            style={styles.handleContainer}
-            /*onPress={() =>
-              languetteOpen
-                ? languette.current?.close('alwaysOpen')
-                : languette.current?.open('top')
-            }*/
-          >
+          <View style={styles.handleContainer}>
             <View style={styles.handle} />
           </View>
           <ButtonGroup
             buttons={[
               I18n.t('bubble.friends.title'),
-              I18n.t('bubble.alerts.title'),
+              `${I18n.t('bubble.alerts.title')} (${props.alerts.length})`,
             ]}
             selectedIndex={selectedButton}
             onPress={(i) => setSelectedButton(i)}
@@ -45,7 +39,24 @@ export const BubbleLists: React.FC = () => {
           />
         </View>
       </View>
-      {selectedButton === 0 ? <FriendList /> : <AlertList />}
+      <View
+        style={{
+          display:
+            selectedButton === 0 ? 'flex' : 'none',
+        }}>
+        <PeopleList
+          friends={props.friends}
+          outgoingInvites={props.outgoingInvites}
+          incomingInvites={props.incomingInvites}
+        />
+      </View>
+      <View
+        style={{
+          display:
+            selectedButton === 1 ? 'flex' : 'none',
+        }}>
+        <AlertList alerts={props.alerts} />
+      </View>
     </View>
   );
 };
@@ -91,6 +102,7 @@ const styles = StyleSheet.create<Styles>({
     borderTopEndRadius: 40,
     shadowRadius: 45,
     shadowColor: customTheme.colors.shadow,
+    backgroundColor: '#fff',
   },
   listHeader: {
     backgroundColor: '#fff',
@@ -120,7 +132,7 @@ const styles = StyleSheet.create<Styles>({
     backgroundColor: customTheme.colors.lightGray,
     borderRadius: 5,
     padding: 2,
-    width: '65%',
+    width: '75%',
     maxWidth: 300,
     borderWidth: 0,
     height: 32,

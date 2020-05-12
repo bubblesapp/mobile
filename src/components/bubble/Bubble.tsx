@@ -1,17 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {Bubble as BubbleModel} from '@bubblesapp/api';
-import {useAPI} from '../../api/useAPI';
 import {
+  Dimensions,
   Image,
   ImageStyle,
   Linking,
   StyleSheet,
   Text,
   TextStyle,
+  TouchableOpacity,
   View,
   ViewStyle,
-  Dimensions,
-  TouchableOpacity,
 } from 'react-native';
 import {customTheme} from '../../theme/theme';
 import {useAuth} from '../../auth/Auth';
@@ -19,9 +17,11 @@ import {BubbleLists} from './BubbleLists';
 import {Wrapper} from '../common/Wrapper';
 import assets from '../../assets';
 import I18n from '../../i18n';
-import {Button} from 'react-native-elements';
 import {ExtraButton} from '../common/ExtraButton';
 import {AlertModal} from './AlertModal';
+import {Alert, Friend, Invite} from '@bubblesapp/api';
+import {useAPI} from '../../api/useAPI';
+import {Analytics} from '../../analytics/Analytics';
 
 const openRecommendations = async () => {
   await Linking.openURL(
@@ -30,27 +30,64 @@ const openRecommendations = async () => {
 };
 
 export const Bubble: React.FC = () => {
-  const [bubble, setBubble] = useState<BubbleModel | undefined>();
   const [alertModalVisible, setAlertModalVisible] = useState(false);
-  const api = useAPI();
+  const [friends, setFriends] = useState<Friend[]>([]);
+  const [incomingInvites, setIncomingInvites] = useState<Invite[]>([]);
+  const [outgoingInvites, setOutgoingInvites] = useState<Invite[]>([]);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
   const auth = useAuth();
+  const api = useAPI();
 
   useEffect(() => {
-    const bubbleSubscription = api.bubble.observe().subscribe((bu) => {
-      setBubble(bu);
+    const friendsSubscription = api.friends.observeAll().subscribe((f) => {
+      Analytics.set('people_count', f.length);
+      setFriends(f);
     });
-    return () => bubbleSubscription.unsubscribe();
+    return () => friendsSubscription.unsubscribe();
   }, [api]);
 
+  useEffect(() => {
+    const outgoingInvitesSubscription = api.invites.outgoing
+      .observeAll()
+      .subscribe(setOutgoingInvites);
+    return () => outgoingInvitesSubscription.unsubscribe();
+  }, [auth.state.uid, api]);
+
+  useEffect(() => {
+    const incomingInvitesSubscription = api.invites.incoming
+      .observeAll()
+      .subscribe(setIncomingInvites);
+    return () => incomingInvitesSubscription.unsubscribe();
+  }, [auth.state.uid, api]);
+
+  useEffect(() => {
+    const alertsSubscription = api.alerts.observeAll().subscribe((a) => {
+      Analytics.set('alert_count', a.length);
+      setAlerts(a);
+    });
+    return () => alertsSubscription.unsubscribe();
+  }, [api]);
+
+  const color =
+    alerts.length === 0 ? customTheme.colors.green : customTheme.colors.red;
+
   return (
-    <Wrapper
-      topColor={customTheme.colors.green}
-      bottomColor={'#fff'}
-      scrollEnabled={true}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Laura's Bubble</Text>
+    <Wrapper topColor={color} bottomColor={'#fff'} scrollEnabled={true}>
+      <View style={[styles.header, {backgroundColor: color}]}>
+        <Text style={styles.title}>
+          {auth.state.name
+            ? I18n.t('bubble.bubbleTitle').replace('$0', auth.state.name)
+            : I18n.t('bubble.title')}
+        </Text>
         <View style={styles.badgeContainer}>
-          <Text style={styles.badgeText}>No alerts</Text>
+          <Text style={[styles.badgeText, {color}]}>
+            {alerts.length === 0
+              ? I18n.t('bubble.noAlert')
+              : I18n.t('bubble.xAlerts').replace(
+                  '$0',
+                  alerts.length.toString(),
+                )}
+          </Text>
         </View>
       </View>
       <View style={styles.content}>
@@ -62,7 +99,7 @@ export const Bubble: React.FC = () => {
               onPress={() => setAlertModalVisible(true)}>
               <AlertModal
                 onCancel={() => setAlertModalVisible(false)}
-                onAlertSent={() => {}}
+                onAlertSent={() => setAlertModalVisible(false)}
                 visible={alertModalVisible}
               />
               <Image
@@ -79,20 +116,16 @@ export const Bubble: React.FC = () => {
             />
           </View>
         </View>
-        <BubbleLists />
+        <BubbleLists
+          friends={friends}
+          incomingInvites={incomingInvites}
+          outgoingInvites={outgoingInvites}
+          alerts={alerts}
+        />
       </View>
     </Wrapper>
   );
 };
-
-/*
-<View style={styles.bubbleAlertContainer}>
-              <Image
-                source={assets.images.bubble.alert}
-                style={styles.bubbleAlert}
-              />
-            </View>
- */
 
 type Styles = {
   wrapper: ViewStyle;
@@ -104,8 +137,6 @@ type Styles = {
   middle: ViewStyle;
   bubble: ImageStyle;
   bubbleTextContainer: ViewStyle;
-  //bubbleTextNumber: TextStyle;
-  //bubbleText: TextStyle;
   bubbleAlertContainer: ViewStyle;
   bubbleAlert: ImageStyle;
   takeCareText: TextStyle;
@@ -126,7 +157,6 @@ const styles = StyleSheet.create<Styles>({
     paddingTop: '5%',
     paddingBottom: '5%',
     height: 0.35 * Dimensions.get('screen').height,
-    backgroundColor: customTheme.colors.green,
   },
   title: {
     fontFamily: customTheme.boldFontFamily,
@@ -185,21 +215,10 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  /*bubbleTextNumber: {
-    fontSize: 26,
-    fontFamily: customTheme.boldFontFamily,
-    color: customTheme.colors.darkBlue,
-  },
-  bubbleText: {
-    fontSize: 14,
-    fontFamily: customTheme.boldFontFamily,
-    color: customTheme.colors.darkBlue,
-  },*/
   bubbleAlertContainer: {
     position: 'absolute',
     width: 90,
     height: 90,
-    //backgroundColor: 'rgba(255, 255, 255, 0.35)',
     borderRadius: 45,
     flexDirection: 'column',
     alignItems: 'center',

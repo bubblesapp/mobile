@@ -5,7 +5,7 @@ import dynamicLinks, {
 import URL, {UrlWithStringQuery} from 'url';
 import QueryString from 'query-string';
 import {useAuth} from '../auth/Auth';
-import Toast from '../components/common/Toast';
+import {useToast} from '../components/Toast';
 
 type DynamicLinkQueryString = {
   mode: 'verifyEmail' | 'recoverEmail' | 'resetPassword';
@@ -17,6 +17,7 @@ type DynamicLinkQueryString = {
 
 export const DynamicLinkHandler: React.FC = (): null => {
   const auth = useAuth();
+  const Toast = useToast();
 
   const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
     const url: UrlWithStringQuery = URL.parse(link.url);

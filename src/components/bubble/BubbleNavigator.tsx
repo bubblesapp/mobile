@@ -27,7 +27,6 @@ export const BubbleNavigator: React.FC = (): JSX.Element => {
     <Host>
       <BubbleStack.Navigator headerMode={'none'}>
         <BubbleStack.Screen name={Routes.Bubble} component={Bubble} />
-        <BubbleStack.Screen name={Routes.Invites} component={Invites} />
       </BubbleStack.Navigator>
     </Host>
   );

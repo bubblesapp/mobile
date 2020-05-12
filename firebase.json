@@ -1,10 +1,8 @@
 {
-  "projectId": "bubbles-273e5",
   "headers": [
     {"source": "/service-worker.js", "headers": [{"key": "Cache-Control", "value": "no-cache"}]}
   ],
   "hosting": {
-    "site": "bubbles-273e5",
     "public": "web-build",
     "ignore": [
       "firebase.json",

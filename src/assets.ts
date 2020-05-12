@@ -1,5 +1,6 @@
 export default {
   images: {
+    chrome: require('../assets/images/Chrome.png'),
     auth: {
       man: require('../assets/images/auth/Man.png'),
       woman: require('../assets/images/auth/Woman.png'),
@@ -11,6 +12,7 @@ export default {
       avatar: require('../assets/images/bubble/Avatar_small.png'),
       avatarMask: require('../assets/images/bubble/Avatar_mask.png'),
       avatarMulti: require('../assets/images/bubble/Avatar_multi.png'),
+      avatarMultiBig: require('../assets/images/bubble/Avatar_multi_big.png'),
       notepad: require('../assets/images/bubble/Notepad.png'),
       notepadBig: require('../assets/images/bubble/Notepad_big.png'),
     },

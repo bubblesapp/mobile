@@ -14,7 +14,7 @@ export enum Routes {
   Bubble = 'Bubble',
 
   //InvitesNavigator = 'InvitesNavigator',
-  Invites = 'Invites',
+  Invite = 'Invite',
 
   ProfileNavigator = 'ProfileNavigator',
   Profile = 'Profile',

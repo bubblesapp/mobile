@@ -45,7 +45,6 @@ export const AuthNavigator: React.FC = (): JSX.Element => {
     <ScrollView
       alwaysBounceVertical={false}
       contentContainerStyle={styles.contentContainer}>
-      <DynamicLinkHandler />
       <AuthStack.Navigator
         headerMode={'none'}
         initialRouteName={'Onboarding'}

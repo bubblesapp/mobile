@@ -16,13 +16,10 @@ import {customTheme} from '../theme/theme';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import I18n from '../i18n';
 import {Routes} from '../nav/Routes';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Oval from '../../assets/images/Oval.png';
 import User from '../../assets/images/User.png';
 import Dimensions from './common/Dimensions';
 import {InviteButton} from './common/InviteButton';
-import {LogModal} from './bubble/LogModal';
-import {InviteModal} from './bubble/InviteModal';
 
 type TabBarLabelProps = {
   focused: boolean;
@@ -140,14 +137,10 @@ export const TabBar: React.FC<BottomTabBarProps> = ({
         </View>
       </TouchableWithoutFeedback>
       <TouchableOpacity
-        onPress={() => setInviteModalVisible(true)}
+        onPress={() => navigation.navigate(Routes.Invite)}
         style={styles.buttonContainer}>
         <InviteButton />
       </TouchableOpacity>
-      <InviteModal
-        visible={inviteModalVisible}
-        onCancel={() => setInviteModalVisible(false)}
-      />
     </SafeAreaView>
   );
 };
