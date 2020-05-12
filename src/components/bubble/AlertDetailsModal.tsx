@@ -10,6 +10,7 @@ import I18n from '../../i18n';
 import {Alert} from '@bubblesapp/api';
 import moment from 'moment';
 import {daysAgo, daysAgoString} from './utils';
+import {commonStyles} from '../common/Styles';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -28,7 +29,7 @@ export const AlertDetailsModal: React.FC<Props> = (props) => {
       ModalComponent={Modal}
       transparent={true}
       isVisible={props.visible}
-      overlayStyle={styles.overlay}
+      overlayStyle={[commonStyles.overlay, styles.overlay]}
       onBackdropPress={() => props.onCancel && props.onCancel()}
       animationType={'fade'}>
       <>
