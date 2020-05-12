@@ -10,6 +10,7 @@
     "setenv:prod": "echo \"export default 'prod';\" > active.env.js && firebase use bubbles-prod",
     "build:web:dev": "npm run setenv:dev && expo build:web",
     "build:web:prod": "npm run setenv:prod && expo build:web",
+    "deploy:web:dev": "npm run build:web:dev && firebase deploy --only hosting",
     "deploy:web:prod": "npm run build:web:prod && firebase deploy --only hosting",
     "test": "firebase emulators:exec ./test.sh",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
