@@ -30,6 +30,7 @@ const webContainerStyle: ViewStyle = {
   flex: 1,
   flexDirection: 'row',
   justifyContent: 'center',
+  backgroundColor: '#ff0',
 };
 
 const nativeContainerStyle: ViewStyle = {

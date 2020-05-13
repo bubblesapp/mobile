@@ -50,7 +50,7 @@ export const SendOutgoingInviteModal: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    if (auth.state.uid && auth.state.emailVerified) {
+    if (auth.state.uid /* && auth.state.emailVerified*/) {
       (async () => {
         await invite();
         if (Platform.OS === 'web') {

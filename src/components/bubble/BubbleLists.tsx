@@ -39,22 +39,14 @@ export const BubbleLists: React.FC<Props> = (props) => {
           />
         </View>
       </View>
-      <View
-        style={{
-          display:
-            selectedButton === 0 ? 'flex' : 'none',
-        }}>
+      <View style={{display: selectedButton === 0 ? 'flex' : 'none'}}>
         <PeopleList
           friends={props.friends}
           outgoingInvites={props.outgoingInvites}
           incomingInvites={props.incomingInvites}
         />
       </View>
-      <View
-        style={{
-          display:
-            selectedButton === 1 ? 'flex' : 'none',
-        }}>
+      <View style={{display: selectedButton === 1 ? 'flex' : 'none'}}>
         <AlertList alerts={props.alerts} />
       </View>
     </View>
@@ -94,7 +86,6 @@ type Styles = {
 
 const styles = StyleSheet.create<Styles>({
   lists: {
-    flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'stretch',
@@ -102,7 +93,7 @@ const styles = StyleSheet.create<Styles>({
     borderTopEndRadius: 40,
     shadowRadius: 45,
     shadowColor: customTheme.colors.shadow,
-    backgroundColor: '#fff',
+    backgroundColor: '#ff0',
   },
   listHeader: {
     backgroundColor: '#fff',

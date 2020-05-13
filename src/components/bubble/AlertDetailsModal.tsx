@@ -11,6 +11,12 @@ import {Alert} from '@bubblesapp/api';
 import moment from 'moment';
 import {daysAgo, daysAgoString} from './utils';
 import {commonStyles} from '../common/Styles';
+import {Analytics, Events} from '../../analytics/Analytics';
+import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
+import {useToast} from '../Toast';
+import {useAPI} from '../../api/useAPI';
+import {BubbleStackParamsList} from './BubbleNavigator';
+import {Routes} from '../../nav/Routes';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -21,72 +27,83 @@ type Props = {
   visible: boolean;
 };
 
+type AlertDetailsRouteProp = RouteProp<
+  BubbleStackParamsList,
+  Routes.AlertDetails
+>;
+
 export const AlertDetailsModal: React.FC<Props> = (props) => {
   const [isDeletingAlert, setIsDeletingAlert] = useState(false);
+  const Toast = useToast();
+  const api = useAPI();
+  const nav = useNavigation();
+  const {params} = useRoute<AlertDetailsRouteProp>();
+
+  const deleteAlert = async () => {
+    try {
+      setIsDeletingAlert(true);
+      await api.alerts.delete(params.alert.id);
+      Analytics.logEvent(Events.DeleteAlert);
+      Toast.success(I18n.t('bubble.alerts.deleteSuccess'));
+      setIsDeletingAlert(false);
+      nav.goBack();
+    } catch (err) {
+      Toast.danger(err.message);
+      setIsDeletingAlert(false);
+    }
+  };
 
   return (
-    <Overlay
-      ModalComponent={Modal}
-      transparent={true}
-      isVisible={props.visible}
-      overlayStyle={[commonStyles.overlay, styles.overlay]}
-      onBackdropPress={() => props.onCancel && props.onCancel()}
-      animationType={'fade'}>
-      <>
-        <View style={styles.header}>
-          <View style={styles.closeButton}>
-            <CloseButton onPress={props.onCancel} />
-          </View>
-          <Image
-            source={assets.images.bubble.alert}
-            style={{width: 90, height: 90}}
+    <>
+      <View style={styles.header}>
+        <View style={styles.closeButton}>
+          <CloseButton onPress={() => nav.goBack()} />
+        </View>
+        <Image
+          source={assets.images.bubble.alert}
+          style={{width: 90, height: 90}}
+        />
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>
+            {I18n.t('bubble.alerts.detailsTitle')}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.heading1}>
+          {I18n.t('bubble.alerts.detailsDate')
+            .replace('$0', daysAgo(params.alert.createdAt))
+            .replace(
+              '$1',
+              moment(params.alert.createdAt).format(
+                I18n.t('bubble.alerts.detailsDateFormat'),
+              ),
+            )}
+        </Text>
+        <Text style={styles.text}>
+          {params.alert.message}
+        </Text>
+        <View style={styles.buttonsContainer}>
+          <SubmitButton
+            onPress={() => nav.goBack()}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={styles.button}
+            title={I18n.t('bubble.alerts.detailsCloseButton')}
           />
-          <View style={styles.headerTitleContainer}>
-            <Text style={styles.headerTitle}>
-              {I18n.t('bubble.alerts.detailsTitle')}
-            </Text>
-          </View>
+          <View style={{width: 24}} />
+          <SubmitButton
+            onPress={() => deleteAlert()}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={[
+              styles.button,
+              {backgroundColor: customTheme.colors.red},
+            ]}
+            loading={isDeletingAlert}
+            title={I18n.t('bubble.alerts.detailsDeleteButton')}
+          />
         </View>
-        <View style={styles.content}>
-          <Text style={styles.heading1}>
-            {I18n.t('bubble.alerts.detailsDate')
-              .replace('$0', daysAgo(props.alert.createdAt))
-              .replace(
-                '$1',
-                moment(props.alert.createdAt).format(
-                  I18n.t('bubble.alerts.detailsDateFormat'),
-                ),
-              )}
-          </Text>
-          <Text style={styles.text}>
-            {props.alert.message}
-          </Text>
-          <View style={styles.buttonsContainer}>
-            <SubmitButton
-              onPress={() => props.onCancel && props.onCancel()}
-              containerStyle={styles.buttonContainer}
-              buttonStyle={styles.button}
-              title={I18n.t('bubble.alerts.detailsCloseButton')}
-            />
-            <View style={{width: 24}} />
-            <SubmitButton
-              onPress={() => {
-                setIsDeletingAlert(true);
-                props.onDelete && props.onDelete(props.alert);
-                setIsDeletingAlert(false);
-              }}
-              containerStyle={styles.buttonContainer}
-              buttonStyle={[
-                styles.button,
-                {backgroundColor: customTheme.colors.red},
-              ]}
-              loading={isDeletingAlert}
-              title={I18n.t('bubble.alerts.detailsDeleteButton')}
-            />
-          </View>
-        </View>
-      </>
-    </Overlay>
+      </View>
+    </>
   );
 };
 

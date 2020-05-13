@@ -15,6 +15,9 @@ export enum Routes {
 
   //InvitesNavigator = 'InvitesNavigator',
   Invite = 'Invite',
+  Alert = 'Alert',
+  AlertDetails = 'AlertDetails',
+  Log = 'Log',
 
   ProfileNavigator = 'ProfileNavigator',
   Profile = 'Profile',

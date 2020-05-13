@@ -13,6 +13,8 @@ import {DestructiveButton} from './DestructiveButton';
 import {OutgoingInviteItem} from '../invites/OutgoingInviteItem';
 import {IncomingInviteItem} from '../invites/IncomingInviteItem';
 import {Analytics, Events} from '../../analytics/Analytics';
+import {useNavigation} from '@react-navigation/native';
+import {Routes} from '../../nav/Routes';
 
 type Props = {
   friends: Friend[];
@@ -30,6 +32,7 @@ export const PeopleList: React.FC<Props> = ({
   const auth = useAuth();
   const api = useAPI();
   const Toast = useToast();
+  const nav = useNavigation();
 
   const isIncomingInvite = (item: Friend | Invite) =>
     (item as Invite).to && (item as Invite).to === auth.state.email;
@@ -50,13 +53,14 @@ export const PeopleList: React.FC<Props> = ({
   };
 
   const onLogPress = async (friend: Friend) => {
-    setSelectedFriend(friend);
-    setDatePickerVisible(true);
+    //setSelectedFriend(friend);
+    //setDatePickerVisible(true);
+    nav.navigate(Routes.Log, {friend});
   };
 
   return (
     <View style={{backgroundColor: '#fff'}}>
-      <LogModal
+      {/*<LogModal
         onDatePicked={async (date: Date) => {
           setDatePickerVisible(false);
           if (typeof auth.getCurrentUser() !== 'undefined' && selectedFriend) {
@@ -70,7 +74,7 @@ export const PeopleList: React.FC<Props> = ({
         visible={datePickerVisible}
         onCancel={() => setDatePickerVisible(false)}
         friend={selectedFriend}
-      />
+      />*/}
       {friends.length + incomingInvites.length + outgoingInvites.length > 0 ? (
         <SwipeListView<Friend | Invite>
           contentContainerStyle={{backgroundColor: '#fff'}}

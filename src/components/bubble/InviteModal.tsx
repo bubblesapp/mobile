@@ -113,77 +113,76 @@ export const InviteModal: React.FC<Props> = (props) => {
   };
 
   const Toast = useToast();
-
+  /*<Overlay
+        ModalComponent={Modal}
+        transparent={true}
+        isVisible={props.visible}
+        overlayStyle={[commonStyles.overlay, styles.overlay]}
+        onBackdropPress={() => props.onCancel()}
+        backdropStyle={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}
+        animationType={'fade'}>*/
   return (
-    <Overlay
-      ModalComponent={Modal}
-      transparent={true}
-      isVisible={props.visible}
-      overlayStyle={[commonStyles.overlay, styles.overlay]}
-      onBackdropPress={() => props.onCancel()}
-      animationType={'fade'}>
-      <>
-        <View style={styles.header}>
-          <View style={styles.closeButton}>
-            <CloseButton onPress={props.onCancel} />
-          </View>
-          <InviteButton />
-          <Text style={styles.headerTitle}>
-            {I18n.t('bubble.invites.title')}
-          </Text>
+    <>
+      <View style={styles.header}>
+        <View style={styles.closeButton}>
+          <CloseButton onPress={props.onCancel} />
         </View>
-        <View style={styles.content}>
-          <Text style={styles.heading1}>
-            {I18n.t('bubble.invites.linkInstructions')}
-          </Text>
-          <Text style={styles.linkLabel}>
-            {I18n.t('bubble.invites.linkLabel')}
-          </Text>
-          <TouchableOpacity
-            style={{alignSelf: 'stretch', padding: 0}}
-            onPress={() => copyLinkToClipboard()}>
-            <Input
-              containerStyle={{
-                alignSelf: 'stretch',
-                paddingLeft: 0,
-                paddingRight: 0,
-                paddingBottom: 0,
-              }}
-              nativeID={'linkInput'}
-              disabled={true}
-              disabledInputStyle={{color: '#000', opacity: 1}}
-              inputContainerStyle={styles.linkContainer}
-              inputStyle={styles.linkText}
-              value={link}
-              multiline={true}
-              numberOfLines={3}
-              errorStyle={{display: 'none'}}
-            />
-          </TouchableOpacity>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-              alignItems: 'center',
+        <InviteButton />
+        <Text style={styles.headerTitle}>
+          {I18n.t('bubble.invites.title')}
+        </Text>
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.heading1}>
+          {I18n.t('bubble.invites.linkInstructions')}
+        </Text>
+        <Text style={styles.linkLabel}>
+          {I18n.t('bubble.invites.linkLabel')}
+        </Text>
+        <TouchableOpacity
+          style={{alignSelf: 'stretch', padding: 0}}
+          onPress={() => copyLinkToClipboard()}>
+          <Input
+            containerStyle={{
               alignSelf: 'stretch',
-            }}>
-            <ExtraButton
-              onPress={() => copyLinkToClipboard()}
-              containerStyle={styles.buttonContainer}
-              buttonStyle={styles.button}
-              title={I18n.t('bubble.invites.copyButton')}
-            />
-            <View style={{width: 24}} />
-            <SubmitButton
-              onPress={() => shareLink()}
-              containerStyle={styles.buttonContainer}
-              buttonStyle={styles.button}
-              title={I18n.t('bubble.invites.shareButton')}
-            />
-          </View>
+              paddingLeft: 0,
+              paddingRight: 0,
+              paddingBottom: 0,
+            }}
+            nativeID={'linkInput'}
+            disabled={true}
+            disabledInputStyle={{color: '#000', opacity: 1}}
+            inputContainerStyle={styles.linkContainer}
+            inputStyle={styles.linkText}
+            value={link}
+            multiline={true}
+            numberOfLines={3}
+            errorStyle={{display: 'none'}}
+          />
+        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            alignSelf: 'stretch',
+          }}>
+          <ExtraButton
+            onPress={() => copyLinkToClipboard()}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={styles.button}
+            title={I18n.t('bubble.invites.copyButton')}
+          />
+          <View style={{width: 24}} />
+          <SubmitButton
+            onPress={() => shareLink()}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={styles.button}
+            title={I18n.t('bubble.invites.shareButton')}
+          />
         </View>
-      </>
-    </Overlay>
+      </View>
+    </>
   );
 };
 

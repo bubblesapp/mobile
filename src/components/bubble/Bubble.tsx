@@ -24,6 +24,8 @@ import {useAPI} from '../../api/useAPI';
 import {Analytics} from '../../analytics/Analytics';
 import {openURLInNewTab} from './utils';
 import Constants from '../../Constants';
+import {useNavigation} from '@react-navigation/native';
+import {Routes} from '../../nav/Routes';
 
 const openRecommendations = async () => {
   openURLInNewTab(Constants.RECOMMENDATIONS_LINK);
@@ -37,8 +39,7 @@ export const Bubble: React.FC = () => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const auth = useAuth();
   const api = useAPI();
-
-  console.log(I18n.currentLocale());
+  const nav = useNavigation();
 
   useEffect(() => {
     const friendsSubscription = api.friends.observeAll().subscribe((f) => {
@@ -93,38 +94,32 @@ export const Bubble: React.FC = () => {
         </View>
       </View>
       <View style={{flex: 0.15, minHeight: 120}}>
-        <View style={{flex: 0.5, minHeight: 60, backgroundColor: color}}>
-
-        </View>
+        <View style={{flex: 0.5, minHeight: 60, backgroundColor: color}} />
         <View style={[styles.bubbleTextContainer]}>
           <Image source={assets.images.bubble.bubble} style={styles.bubble} />
           <TouchableOpacity
             style={styles.bubbleAlertContainer}
-            onPress={() => setAlertModalVisible(true)}>
-            <AlertModal
+            onPress={() => nav.navigate(Routes.Alert)}>
+            {/*<AlertModal
               onCancel={() => setAlertModalVisible(false)}
               onAlertSent={() => setAlertModalVisible(false)}
               visible={alertModalVisible}
-            />
+            />*/}
             <Image
               source={assets.images.bubble.alert}
               style={styles.bubbleAlert}
             />
           </TouchableOpacity>
         </View>
-        <View style={{flex: 0.5, minHeight: 60, backgroundColor: customTheme.colors.lightBlue}}>
-
-        </View>
+        <View style={{flex: 0.5, minHeight: 60, backgroundColor: customTheme.colors.lightBlue}} />
       </View>
       <View style={styles.content}>
-        <View style={styles.middle}>
-          <View style={styles.recommendationsContainer}>
-            <Text style={styles.takeCareText}>{I18n.t('bubble.takeCare')}</Text>
-            <ExtraButton
-              onPress={() => openRecommendations()}
-              title={I18n.t('bubble.recommendationsButton')}
-            />
-          </View>
+        <View style={styles.recommendationsContainer}>
+          <Text style={styles.takeCareText}>{I18n.t('bubble.takeCare')}</Text>
+          <ExtraButton
+            onPress={() => openRecommendations()}
+            title={I18n.t('bubble.recommendationsButton')}
+          />
         </View>
         <BubbleLists
           friends={friends}
@@ -165,7 +160,7 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: '32',
-    flex: 0.25,
+    flex: 0.20,
   },
   title: {
     fontFamily: customTheme.boldFontFamily,
@@ -185,7 +180,7 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
   },
   content: {
-    flex: 0.6,
+    flex: 0.65,
     flexDirection: 'column',
     backgroundColor: customTheme.colors.lightBlue,
   },
@@ -195,12 +190,13 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
   },
   recommendationsContainer: {
+    //backgroundColor: '#f00',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'stretch',
     padding: 16,
-    marginBottom: 24,
+    //marginBottom: 24,
     //marginBottom: Dimensions.LANGUETTE_ALWAYS_OPEN + Dimensions.TAB_BAR_HEIGHT,
   },
   takeCareText: {

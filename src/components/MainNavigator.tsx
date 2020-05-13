@@ -24,7 +24,7 @@ const Tabs: React.FC = () => {
       tabBar={(props) => <TabBar {...props} />}>
       <BottomTabs.Screen
         name={Routes.Bubble}
-        component={Bubble}
+        component={BubbleNavigator}
       />
       <BottomTabs.Screen
         name={Routes.Profile}
