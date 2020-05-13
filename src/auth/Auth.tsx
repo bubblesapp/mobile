@@ -19,7 +19,7 @@ class Auth {
   ) {}
 
   static actionCodeSettings = {
-    iOS: {
+    /*iOS: {
       bundleId: 'org.bubblesapp.bubbles',
     },
     android: {
@@ -27,7 +27,7 @@ class Auth {
       installApp: true,
     },
     handleCodeInApp: true,
-    dynamicLinkDomain: ENV[env].dynamicLinksDomain,
+    dynamicLinkDomain: ENV[env].dynamicLinksDomain,*/
     url: ENV[env].baseUrl,
   };
 

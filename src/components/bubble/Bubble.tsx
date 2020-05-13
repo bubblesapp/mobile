@@ -92,24 +92,32 @@ export const Bubble: React.FC = () => {
           </Text>
         </View>
       </View>
+      <View style={{flex: 0.15, minHeight: 120}}>
+        <View style={{flex: 0.5, minHeight: 60, backgroundColor: color}}>
+
+        </View>
+        <View style={[styles.bubbleTextContainer]}>
+          <Image source={assets.images.bubble.bubble} style={styles.bubble} />
+          <TouchableOpacity
+            style={styles.bubbleAlertContainer}
+            onPress={() => setAlertModalVisible(true)}>
+            <AlertModal
+              onCancel={() => setAlertModalVisible(false)}
+              onAlertSent={() => setAlertModalVisible(false)}
+              visible={alertModalVisible}
+            />
+            <Image
+              source={assets.images.bubble.alert}
+              style={styles.bubbleAlert}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={{flex: 0.5, minHeight: 60, backgroundColor: customTheme.colors.lightBlue}}>
+
+        </View>
+      </View>
       <View style={styles.content}>
         <View style={styles.middle}>
-          <View style={[styles.bubbleTextContainer]}>
-            <Image source={assets.images.bubble.bubble} style={styles.bubble} />
-            <TouchableOpacity
-              style={styles.bubbleAlertContainer}
-              onPress={() => setAlertModalVisible(true)}>
-              <AlertModal
-                onCancel={() => setAlertModalVisible(false)}
-                onAlertSent={() => setAlertModalVisible(false)}
-                visible={alertModalVisible}
-              />
-              <Image
-                source={assets.images.bubble.alert}
-                style={styles.bubbleAlert}
-              />
-            </TouchableOpacity>
-          </View>
           <View style={styles.recommendationsContainer}>
             <Text style={styles.takeCareText}>{I18n.t('bubble.takeCare')}</Text>
             <ExtraButton
@@ -157,8 +165,7 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: '32',
-    paddingBottom: '50',
-    flex: 1,
+    flex: 0.25,
   },
   title: {
     fontFamily: customTheme.boldFontFamily,
@@ -178,7 +185,7 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
   },
   content: {
-    flex: 2,
+    flex: 0.6,
     flexDirection: 'column',
     backgroundColor: customTheme.colors.lightBlue,
   },
@@ -193,7 +200,6 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
     alignSelf: 'stretch',
     padding: 16,
-    marginTop: 48,
     marginBottom: 24,
     //marginBottom: Dimensions.LANGUETTE_ALWAYS_OPEN + Dimensions.TAB_BAR_HEIGHT,
   },
@@ -204,14 +210,18 @@ const styles = StyleSheet.create<Styles>({
     marginBottom: 24,
   },
   bubble: {
+    alignSelf: 'center',
     width: 100,
     height: 100,
   },
   bubbleTextContainer: {
-    width: 100,
-    height: 100,
+    flex: 0.2,
+    minHeight: 120,
     position: 'absolute',
-    top: -50,
+    left: 0,
+    right: 0,
+    zIndex: 2,
+    alignSelf: 'stretch',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

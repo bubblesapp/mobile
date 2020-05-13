@@ -6,7 +6,7 @@ import {
   ShareContent,
   ShareOptions,
   StyleSheet,
-  Text,
+  Text, TextInput,
   TextStyle,
   TouchableOpacity,
   View,
@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {customTheme} from '../../theme/theme';
 import ModalWeb from 'modal-react-native-web';
-import {Overlay} from 'react-native-elements';
+import {Input, Overlay} from 'react-native-elements';
 import {SubmitButton} from '../common/SubmitButton';
 import {CloseButton} from '../common/CloseButton';
 import {useAuth} from '../../auth/Auth';
@@ -35,6 +35,35 @@ type Props = {
   visible: boolean;
 };
 
+const copy = (elementId: string) => {
+  const input = document.getElementById(elementId) as HTMLInputElement | null;
+  const isiOSDevice = navigator.userAgent.match(/ipad|iphone/i);
+
+  if (input) {
+    if (isiOSDevice) {
+      const editable = input.contentEditable;
+      const readOnly = input.readOnly;
+
+      input.contentEditable = 'true';
+      input.readOnly = false;
+
+      const range = document.createRange();
+      range.selectNodeContents(input);
+
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+
+      input.setSelectionRange(0, 999999);
+      input.contentEditable = editable;
+      input.readOnly = readOnly;
+    } else {
+      input.select();
+    }
+    document.execCommand('copy');
+  }
+};
+
 export const InviteModal: React.FC<Props> = (props) => {
   const auth = useAuth();
   const link = `${ENV[env].baseUrl}?mode=invite&n=${auth.state.name}&e=${auth.state.email}`;
@@ -49,7 +78,7 @@ export const InviteModal: React.FC<Props> = (props) => {
 
   const copyLinkToClipboard = async () => {
     if (Platform.OS === 'web') {
-      const permission = await navigator.permissions.query({name: 'clipboard-write'});
+      /* const permission = await navigator.permissions.query({name: 'clipboard-write'});
       if (permission.state === 'granted' || permission.state === 'prompt') {
         try {
           await navigator.clipboard.writeText(link);
@@ -59,7 +88,9 @@ export const InviteModal: React.FC<Props> = (props) => {
         }
       } else {
         Toast.danger(I18n.t('bubble.invites.clipboardError'));
-      }
+      } */
+      copy('linkInput');
+      Toast.success(I18n.t('bubble.invites.copiedToClipboard'));
     } else {
       Clipboard.setString(link);
       Toast.success(I18n.t('bubble.invites.copiedToClipboard'));
@@ -109,9 +140,25 @@ export const InviteModal: React.FC<Props> = (props) => {
             {I18n.t('bubble.invites.linkLabel')}
           </Text>
           <TouchableOpacity
-            style={styles.linkContainer}
+            style={{alignSelf: 'stretch', padding: 0}}
             onPress={() => copyLinkToClipboard()}>
-            <Text style={styles.linkText}>{link}</Text>
+            <Input
+              containerStyle={{
+                alignSelf: 'stretch',
+                paddingLeft: 0,
+                paddingRight: 0,
+                paddingBottom: 0,
+              }}
+              nativeID={'linkInput'}
+              disabled={true}
+              disabledInputStyle={{color: '#000', opacity: 1}}
+              inputContainerStyle={styles.linkContainer}
+              inputStyle={styles.linkText}
+              value={link}
+              multiline={true}
+              numberOfLines={3}
+              errorStyle={{display: 'none'}}
+            />
           </TouchableOpacity>
           <View
             style={{
