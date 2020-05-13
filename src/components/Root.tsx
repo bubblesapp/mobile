@@ -26,7 +26,7 @@ export const Root: React.FC = () => {
       <RootStack.Navigator
         headerMode={'none'}
         screenOptions={{animationEnabled: false}}>
-        {auth.state?.uid && auth.state?.name && auth.state?.emailVerified ? (
+        {auth.state?.uid && auth.state?.name /* && auth.state?.emailVerified */ ? (
           <RootStack.Screen name="MainNavigator" component={MainNavigator} />
         ) : (
           <RootStack.Screen name="AuthNavigator" component={AuthNavigator} />

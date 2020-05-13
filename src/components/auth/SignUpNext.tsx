@@ -29,7 +29,7 @@ export const SignUpNext: React.FC = (): JSX.Element => {
     try {
       await auth.changeName(name);
       setSubmitting(false);
-      nav.navigate(Routes.ConfirmSignUp);
+      //nav.navigate(Routes.ConfirmSignUp);
     } catch (e) {
       console.log(e);
       setSubmitting(false);

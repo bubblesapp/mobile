@@ -37,9 +37,9 @@ export const SignIn: React.FC = (): JSX.Element => {
 
   if (auth.state?.uid && !auth.state?.name) {
     nav.navigate(Routes.SignUpNext);
-  } else if (auth.state?.uid && !auth.state?.emailVerified) {
+  } /* else if (auth.state?.uid && !auth.state?.emailVerified) {
     nav.navigate(Routes.ConfirmSignUp);
-  }
+  } */
 
   const signIn = async (
     {email, password, remember}: FormValues,

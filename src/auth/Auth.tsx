@@ -28,6 +28,7 @@ class Auth {
     },
     handleCodeInApp: true,
     dynamicLinkDomain: ENV[env].dynamicLinksDomain,*/
+    handleCodeInApp: false,
     url: ENV[env].baseUrl,
   };
 
@@ -83,7 +84,7 @@ class Auth {
       emailNotificationsEnabled: true,
     });
     this.refreshState().catch((err) => console.log(err));
-    await this.sendVerificationEmail();
+    //await this.sendVerificationEmail();
     Analytics.logEvent(Events.SignUp);
     return uid;
   };
