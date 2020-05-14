@@ -10,6 +10,7 @@ import {API, Device} from '@bubblesapp/api';
 import {Analytics, Events} from '../analytics/Analytics';
 import env from '../../active.env';
 import ENV from '../../environment';
+import _ from 'lodash';
 
 class Auth {
   constructor(
@@ -19,7 +20,7 @@ class Auth {
   ) {}
 
   static actionCodeSettings = {
-    iOS: {
+    /*iOS: {
       bundleId: 'org.bubblesapp.bubbles',
     },
     android: {
@@ -27,7 +28,8 @@ class Auth {
       installApp: true,
     },
     handleCodeInApp: true,
-    dynamicLinkDomain: ENV[env].dynamicLinksDomain,
+    dynamicLinkDomain: ENV[env].dynamicLinksDomain,*/
+    handleCodeInApp: false,
     url: ENV[env].baseUrl,
   };
 
@@ -83,7 +85,7 @@ class Auth {
       emailNotificationsEnabled: true,
     });
     this.refreshState().catch((err) => console.log(err));
-    await this.sendVerificationEmail();
+    //await this.sendVerificationEmail();
     Analytics.logEvent(Events.SignUp);
     return uid;
   };
@@ -160,10 +162,11 @@ class Auth {
   };
 
   changeName = async (name: string): Promise<void> => {
+    const trimmedName = _.trim(name);
     await firebaseAuth().currentUser?.updateProfile({
-      displayName: name,
+      displayName: trimmedName,
     });
-    await this.api.profiles.update({name});
+    await this.api.profiles.update({name: trimmedName});
     await firebaseAuth().currentUser?.reload();
     await this.refreshState();
   };

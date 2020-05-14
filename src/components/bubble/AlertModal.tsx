@@ -31,6 +31,7 @@ import {useAPI} from '../../api/useAPI';
 import {useToast} from '../Toast';
 import {Analytics, Events} from '../../analytics/Analytics';
 import {commonStyles} from '../common/Styles';
+import {useNavigation} from '@react-navigation/native';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -58,6 +59,7 @@ export const AlertModal: React.FC<Props> = (props) => {
   const [sendingAlert, setSendingAlert] = useState(false);
   const [openingMailApp, setOpeningEmailApp] = useState(false);
   const Toast = useToast();
+  const nav = useNavigation();
 
   const selectFriend = (friend: Friend) =>
     setSelectedFriends([friend, ...selectedFriends]);
@@ -95,7 +97,8 @@ export const AlertModal: React.FC<Props> = (props) => {
       setSendingAlert(false);
       Toast.success(I18n.t('bubble.alerts.alertSent'));
       Analytics.logEvent(Events.SendAlert);
-      props.onAlertSent && props.onAlertSent();
+      //props.onAlertSent && props.onAlertSent();
+      nav.goBack();
     } catch (err) {
       setSendingAlert(false);
       Toast.danger(err.message);
@@ -106,7 +109,6 @@ export const AlertModal: React.FC<Props> = (props) => {
     /* const emails = await Promise.all(
       selectedFriends.map((f) => api.profiles.get(f.uid).then((p) => p.email)),
     ); */
-    const url = 'mailto:edouard.goossens@gmail.com;edouard@tastyelectrons.com';
     //const url = `mailto:${_.join(emails, ';')}`;
     try {
       setOpeningEmailApp(true);
@@ -118,156 +120,158 @@ export const AlertModal: React.FC<Props> = (props) => {
     }
   };
 
-  return (
-    <Overlay
+  /*
+  <Overlay
       ModalComponent={Modal}
       transparent={true}
       isVisible={props.visible}
       overlayStyle={[commonStyles.overlay, styles.overlay]}
       onBackdropPress={() => props.onCancel && props.onCancel()}
       animationType={'fade'}>
-      <>
-        <View style={styles.header}>
-          <View style={styles.closeButton}>
-            <CloseButton onPress={props.onCancel} />
-          </View>
-          <Image
-            source={assets.images.bubble.alert}
-            style={{width: 90, height: 90}}
-          />
-          <View style={styles.headerTitleContainer}>
-            <Text style={styles.headerTitle}>
-              {I18n.t('bubble.alerts.newAlertTitle')}
-            </Text>
-            <Text style={styles.headerSubtitle}>
-              {I18n.t('bubble.alerts.newAlertSubtitle')}
-            </Text>
-          </View>
+   */
+
+  return (
+    <>
+      <View style={styles.header}>
+        <View style={styles.closeButton}>
+          <CloseButton onPress={() => nav.goBack()} />
         </View>
-        <View style={styles.content}>
-          <Text style={styles.stepText}>{`${step}/2`}</Text>
-          {step === 1 ? (
-            <>
-              <Text style={styles.heading1}>
-                {I18n.t('bubble.alerts.newAlertWho')}
-              </Text>
-              <FlatList<Friend>
-                style={{alignSelf: 'stretch'}}
-                data={friends}
-                scrollEnabled={true}
-                ListHeaderComponent={
-                  <RecentFriendsItem
-                    selected={isArrayEqual(allSeenRecently, selectedFriends)}
-                    onSelected={() => selectRecent()}
-                    onDeselected={() => deselectRecent()}
-                  />
-                }
-                ListEmptyComponent={<Text>Empty</Text>}
-                renderItem={({item: friend}) => (
-                  <FriendSelectedItem
-                    friend={friend}
-                    selected={_.includes(selectedFriends, friend)}
-                    onSelected={(f) => deSelectFriend(f)}
-                    onDeselected={(f) => selectFriend(f)}
-                    disabled={!seenRecently(friend)}
-                  />
-                )}
-                keyExtractor={(friend, index) => friend.uid + index}
-              />
-              {selectedFriends.length > 0 ? (
-                <View style={styles.floatingButtonContainer}>
-                  <SubmitButton
-                    buttonStyle={[styles.button, styles.buttonShadow]}
-                    containerStyle={[styles.buttonContainer, {height: 140}]}
-                    title={I18n.t('bubble.alerts.newAlertContinueButton')}
-                    onPress={() => setStep(2)}
-                    //title={I18n.t('bubble.alerts.newAlertOpenMailApp')}
-                    //onPress={() => writeEmail()}
-                    //loading={openingMailApp}
-                  />
-                </View>
-              ) : null}
-            </>
-          ) : step === 2 ? (
-            <ScrollView
+        <Image
+          source={assets.images.bubble.alert}
+          style={{width: 90, height: 90}}
+        />
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>
+            {I18n.t('bubble.alerts.newAlertTitle')}
+          </Text>
+          <Text style={styles.headerSubtitle}>
+            {I18n.t('bubble.alerts.newAlertSubtitle')}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.stepText}>{`${step}/2`}</Text>
+        {step === 1 ? (
+          <>
+            <Text style={styles.heading1}>
+              {I18n.t('bubble.alerts.newAlertWho')}
+            </Text>
+            <FlatList<Friend>
               style={{alignSelf: 'stretch'}}
-              contentContainerStyle={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={styles.heading1}>
-                {I18n.t('bubble.alerts.newAlertWhy')}
-              </Text>
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: customTheme.colors.mediumGray,
-                  borderRadius: 10,
-                  padding: 16,
-                  alignSelf: 'stretch',
-                  margin: 16,
-                }}>
-                <TextInput
-                  style={{
-                    height: 100,
-                    textAlign: 'left',
-                    fontFamily: customTheme.fontFamily,
-                    outline: 'none',
-                  }}
-                  multiline={true}
-                  underlineColorAndroid={'transparent'}
-                  autoCorrect={false}
-                  autoCapitalize={'none'}
-                  maxLength={Constants.ALERT_MESSAGE_MAX_CHARACTERS}
-                  onChangeText={(text) => {
-                    if (charactersLeft >= 0) {
-                      setMessage(text);
-                      setCharactersLeft(
-                        Constants.ALERT_MESSAGE_MAX_CHARACTERS - message.length,
-                      );
-                    }
-                  }}
-                  value={message}
-                  placeholder={I18n.t(
-                    'bubble.alerts.newAlertMessagePlaceholder',
-                  )}
-                  placeholderTextColor={customTheme.colors.mediumGray}
+              data={friends}
+              scrollEnabled={true}
+              ListHeaderComponent={
+                <RecentFriendsItem
+                  selected={isArrayEqual(allSeenRecently, selectedFriends)}
+                  onSelected={() => selectRecent()}
+                  onDeselected={() => deselectRecent()}
                 />
-              </View>
-              <Text
-                style={{
-                  alignSelf: 'stretch',
-                  marginHorizontal: 16,
-                  fontFamily: customTheme.fontFamily,
-                  color: customTheme.colors.gray,
-                }}>
-                {I18n.t('bubble.alerts.newAlertMessageLabel').replace(
-                  '$0',
-                  charactersLeft.toString(),
-                )}
-              </Text>
-              <View style={styles.buttonsContainer}>
-                <ExtraButton
-                  onPress={() => setStep(1)}
-                  containerStyle={styles.buttonContainer}
-                  buttonStyle={styles.button}
-                  title={'Back'}
+              }
+              ListEmptyComponent={<Text>Empty</Text>}
+              renderItem={({item: friend}) => (
+                <FriendSelectedItem
+                  friend={friend}
+                  selected={_.includes(selectedFriends, friend)}
+                  onSelected={(f) => deSelectFriend(f)}
+                  onDeselected={(f) => selectFriend(f)}
+                  disabled={!seenRecently(friend)}
                 />
-                <View style={{width: 24}} />
+              )}
+              keyExtractor={(friend, index) => friend.uid + index}
+            />
+            {selectedFriends.length > 0 ? (
+              <View style={styles.floatingButtonContainer}>
                 <SubmitButton
-                  onPress={() => sendAlert()}
-                  containerStyle={styles.buttonContainer}
-                  buttonStyle={styles.button}
-                  loading={sendingAlert}
-                  title={I18n.t('bubble.alerts.newAlertSendButton')}
+                  buttonStyle={[styles.button, styles.buttonShadow]}
+                  containerStyle={[styles.buttonContainer, {height: 140}]}
+                  title={I18n.t('bubble.alerts.newAlertContinueButton')}
+                  onPress={() => setStep(2)}
+                  //title={I18n.t('bubble.alerts.newAlertOpenMailApp')}
+                  //onPress={() => writeEmail()}
+                  //loading={openingMailApp}
                 />
               </View>
-            </ScrollView>
-          ) : null}
-        </View>
-      </>
-    </Overlay>
+            ) : null}
+          </>
+        ) : step === 2 ? (
+          <ScrollView
+            style={{alignSelf: 'stretch'}}
+            contentContainerStyle={{
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={styles.heading1}>
+              {I18n.t('bubble.alerts.newAlertWhy')}
+            </Text>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: customTheme.colors.mediumGray,
+                borderRadius: 10,
+                padding: 16,
+                alignSelf: 'stretch',
+                margin: 16,
+              }}>
+              <TextInput
+                style={{
+                  height: 100,
+                  textAlign: 'left',
+                  fontFamily: customTheme.fontFamily,
+                  outline: 'none',
+                }}
+                multiline={true}
+                underlineColorAndroid={'transparent'}
+                autoCorrect={false}
+                autoCapitalize={'none'}
+                maxLength={Constants.ALERT_MESSAGE_MAX_CHARACTERS}
+                onChangeText={(text) => {
+                  if (charactersLeft >= 0) {
+                    setMessage(text);
+                    setCharactersLeft(
+                      Constants.ALERT_MESSAGE_MAX_CHARACTERS - message.length,
+                    );
+                  }
+                }}
+                value={message}
+                placeholder={I18n.t(
+                  'bubble.alerts.newAlertMessagePlaceholder',
+                )}
+                placeholderTextColor={customTheme.colors.mediumGray}
+              />
+            </View>
+            <Text
+              style={{
+                alignSelf: 'stretch',
+                marginHorizontal: 16,
+                fontFamily: customTheme.fontFamily,
+                color: customTheme.colors.gray,
+              }}>
+              {I18n.t('bubble.alerts.newAlertMessageLabel').replace(
+                '$0',
+                charactersLeft.toString(),
+              )}
+            </Text>
+            <View style={styles.buttonsContainer}>
+              <ExtraButton
+                onPress={() => setStep(1)}
+                containerStyle={styles.buttonContainer}
+                buttonStyle={styles.button}
+                title={'Back'}
+              />
+              <View style={{width: 24}} />
+              <SubmitButton
+                onPress={() => sendAlert()}
+                containerStyle={styles.buttonContainer}
+                buttonStyle={styles.button}
+                loading={sendingAlert}
+                title={I18n.t('bubble.alerts.newAlertSendButton')}
+              />
+            </View>
+          </ScrollView>
+        ) : null}
+      </View>
+    </>
   );
 };
 
@@ -360,7 +364,7 @@ const styles = StyleSheet.create<Styles>({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 140,
+    height: 100,
   },
   buttonsContainer: {
     flexDirection: 'row',

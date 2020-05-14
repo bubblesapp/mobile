@@ -67,7 +67,9 @@ export const ResponsiveContainer: React.FC = ({children}) => {
           )}
           <View style={styles.centerContainer}>
             <View style={styles.frame}>
-              <View style={styles.frameContent}>{children}</View>
+              <View style={styles.frameContent}>
+                {children}
+              </View>
             </View>
           </View>
           {isWide && (
@@ -211,7 +213,9 @@ export const ResponsiveContainer: React.FC = ({children}) => {
       </View>
     </>
   ) : (
-    <>{children}</>
+    <>
+      {children}
+    </>
   );
 };
 
@@ -246,6 +250,7 @@ const styles = StyleSheet.create<Styles>({
     bottom: 0,
   },
   frontWrapper: {
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'stretch',
     backgroundColor: 'rgba(0,0,0,0)',
@@ -270,7 +275,7 @@ const styles = StyleSheet.create<Styles>({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
   leftContainer: {
     flex: 1,
@@ -327,7 +332,6 @@ const styles = StyleSheet.create<Styles>({
     backgroundColor: customTheme.colors.gray,
   },
   frame: {
-    flex: 1,
     width: 432,
     height: 719,
     backgroundColor: '#212121',

@@ -38,7 +38,7 @@ type Styles = {
 
 const styles = StyleSheet.create<Styles>({
   wrapper: {
-    flex: 1,
+    height: 150,
     flexDirection: 'column',
     justifyContent: 'center',
     padding: 32,

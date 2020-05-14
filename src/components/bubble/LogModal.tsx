@@ -20,6 +20,11 @@ import {Friend, Profile} from '@bubblesapp/api';
 import {useAPI} from '../../api/useAPI';
 import I18n from '../../i18n';
 import {commonStyles} from '../common/Styles';
+import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
+import {BubbleStackParamsList} from './BubbleNavigator';
+import {Routes} from '../../nav/Routes';
+import {useAuth} from '../../auth/Auth';
+import {Analytics, Events} from '../../analytics/Analytics';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -30,57 +35,71 @@ type Props = {
   friend?: Friend;
 };
 
+type LogRouteProp = RouteProp<BubbleStackParamsList, Routes.Log>;
+
 export const LogModal: React.FC<Props> = (props) => {
   const [date, setDate] = useState(new Date());
   const [profile, setProfile] = useState<Profile>();
-
+  const [loading, setLoading] = useState(false);
+  const auth = useAuth();
   const api = useAPI();
+  const nav = useNavigation();
+  const {params} = useRoute<LogRouteProp>();
+
+  const setLastMet = async () => {
+    if (typeof auth.getCurrentUser() !== 'undefined' && params.friend) {
+      setLoading(true)
+      const uid = auth.getCurrentUser() as string;
+      const lastMet = date.getTime();
+      await api.friends.update({lastMet}, params.friend.uid, uid);
+      await api.friends.update({lastMet}, uid, params.friend.uid);
+      Analytics.logEvent(Events.SetLastMetDate);
+      setLoading(false)
+      nav.goBack();
+    }
+  };
 
   useEffect(() => {
     const profileSubscription = api.profiles
-      .observe(props.friend?.uid)
+      .observe(params.friend?.uid)
       .subscribe(setProfile);
     return () => profileSubscription.unsubscribe();
-  }, [api, props.friend]);
+  }, [api, params.friend]);
 
   return (
-    <Overlay
-      ModalComponent={Modal}
-      transparent={true}
-      isVisible={props.visible}
-      overlayStyle={[commonStyles.overlay, styles.overlay]}
-      onBackdropPress={() => props.onCancel()}
-      animationType={'fade'}>
-      <>
-        <View style={styles.header}>
-          <View style={styles.closeButton}>
-            <CloseButton onPress={props.onCancel} />
-          </View>
-          <Image
-            source={assets.images.bubble.notepadBig}
-            style={{width: 64, height: 64}}
-          />
-          <Text style={styles.headerTitle}>
-            {I18n.t('bubble.friends.logTitle')}
-          </Text>
-          <Text style={styles.headerSubtitle}>{profile?.name}</Text>
+    <>
+      <View style={styles.header}>
+        <View style={styles.closeButton}>
+          <CloseButton onPress={() => nav.goBack()} />
         </View>
-        <View style={styles.content}>
-          <Text style={styles.heading1}>
-            {I18n.t('bubble.friends.logQuestion').replace('$0', profile?.name)}
-          </Text>
-          <Text style={styles.heading2}>
-            {I18n.t('bubble.friends.logExplanation')}
-          </Text>
-          <DayPicker onChange={(d) => setDate(d)} />
-          <SubmitButton
-            containerStyle={styles.buttonContainer}
-            title={I18n.t('bubble.friends.logButton')}
-            onPress={() => props.onDatePicked(date)}
-          />
-        </View>
-      </>
-    </Overlay>
+        <Image
+          source={assets.images.bubble.notepadBig}
+          style={{width: 64, height: 64}}
+        />
+        <Text style={styles.headerTitle}>
+          {I18n.t('bubble.friends.logTitle')}
+        </Text>
+        <Text style={styles.headerSubtitle}>{profile?.name}</Text>
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.heading1}>
+          {I18n.t('bubble.friends.logQuestion').replace(
+            '$0',
+            profile?.name ?? '',
+          )}
+        </Text>
+        <Text style={styles.heading2}>
+          {I18n.t('bubble.friends.logExplanation')}
+        </Text>
+        <DayPicker onChange={(d) => setDate(d)} />
+        <SubmitButton
+          loading={loading}
+          containerStyle={styles.buttonContainer}
+          title={I18n.t('bubble.friends.logButton')}
+          onPress={() => setLastMet()}
+        />
+      </View>
+    </>
   );
 };
 

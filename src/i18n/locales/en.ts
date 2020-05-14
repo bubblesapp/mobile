@@ -49,7 +49,8 @@ export const en: Locale = {
       'It is stored according to our Privacy Policy as long as your account exists.',
     signUpPasswordLabel: 'Password',
     signUpPasswordPlaceholder: '••••••••••••',
-    signUpAgreeToTerms: 'I agree to Terms & Conditions',
+    signUpAgreeToTerms: ' I agree to ',
+    signUpAgreeToTermsLink: 'Terms & Conditions',
     signUpContinue: 'Continue',
     alreadyHaveAccount: 'Already have a Bubble?',
     alreadyHaveAccountAction: 'Log in',
@@ -107,6 +108,7 @@ export const en: Locale = {
       decline: 'Decline',
       cancel: 'Cancel',
       acceptSuccess: 'User joined your bubble.',
+      inviteSent: 'Invite sent successfully.',
     },
     friends: {
       title: 'People',

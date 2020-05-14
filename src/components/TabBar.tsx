@@ -92,6 +92,14 @@ const styles = StyleSheet.create<Styles>({
   },
 });
 
+/*
+<SafeAreaView
+      style={[
+        styles.tabBar,
+        {height: insets.bottom + Dimensions.TAB_BAR_HEIGHT},
+      ]}>
+ */
+
 export const TabBar: React.FC<BottomTabBarProps> = ({
   state,
   descriptors,
@@ -99,11 +107,7 @@ export const TabBar: React.FC<BottomTabBarProps> = ({
 }): JSX.Element => {
   const insets = useSafeArea();
   return (
-    <SafeAreaView
-      style={[
-        styles.tabBar,
-        {height: insets.bottom + Dimensions.TAB_BAR_HEIGHT},
-      ]}>
+    <View style={styles.tabBar}>
       <TouchableWithoutFeedback
         onPress={() => {
           if (state.index !== 0) {
@@ -139,6 +143,6 @@ export const TabBar: React.FC<BottomTabBarProps> = ({
         style={styles.buttonContainer}>
         <InviteButton />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };

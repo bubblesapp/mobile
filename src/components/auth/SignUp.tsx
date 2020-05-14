@@ -16,6 +16,8 @@ import {Input} from '../common/Input';
 import {CheckBox} from 'react-native-elements';
 import {customTheme} from '../../theme/theme';
 import assets from '../../assets';
+import {openURLInNewTab} from '../bubble/utils';
+import Constants from '../../Constants';
 
 const validationSchema = yup.object().shape({
   //name: yup.string().required(),
@@ -153,9 +155,18 @@ export const SignUp: React.FC = (): JSX.Element => {
                 <InfoText>{I18n.t('auth.signUpLegal')}</InfoText>*/}
                 <View style={authStyleSheet.rememberContainer}>
                   <CheckBox
-                    textStyle={authStyleSheet.checkboxLabel}
+                    title={
+                      <Text style={authStyleSheet.checkboxLabel}>
+                        {I18n.t('auth.signUpAgreeToTerms')}
+                        <TouchableOpacity
+                          onPress={() => openURLInNewTab(Constants.TERMS_LINK)}>
+                          <Text style={authStyleSheet.checkboxLabelLink}>
+                            {I18n.t('auth.signUpAgreeToTermsLink')}
+                          </Text>
+                        </TouchableOpacity>
+                      </Text>
+                    }
                     containerStyle={authStyleSheet.checkboxContainer}
-                    title={I18n.t('auth.signUpAgreeToTerms')}
                     checkedIcon={'check-circle'}
                     uncheckedIcon={'circle-thin'}
                     checkedColor={customTheme.colors.success}

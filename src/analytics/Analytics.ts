@@ -1,6 +1,7 @@
 import amplitude from 'amplitude-js';
 import ENV from '../../environment';
 import env from '../../active.env';
+import Constants from 'expo-constants';
 
 export const Analytics = {
   init: () => amplitude.getInstance().init(ENV[env].amplitudeApiKey),
@@ -10,6 +11,11 @@ export const Analytics = {
     amplitude
       .getInstance()
       .identify(new amplitude.Identify().set(property, value)),
+  setVersionName: () => {
+    if (Constants.manifest?.version) {
+      amplitude.getInstance().setVersionName(Constants.manifest?.version);
+    }
+  },
 };
 
 export enum Events {

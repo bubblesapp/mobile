@@ -3,7 +3,7 @@ import {
   Dimensions,
   Image,
   ImageStyle,
-  Linking,
+  Linking, ScrollView,
   StyleSheet,
   Text,
   TextStyle,
@@ -19,26 +19,27 @@ import assets from '../../assets';
 import I18n from '../../i18n';
 import {ExtraButton} from '../common/ExtraButton';
 import {AlertModal} from './AlertModal';
-import {Alert, Friend, Invite} from '@bubblesapp/api';
+import {Alert, Friend, Invite, Profile} from '@bubblesapp/api';
 import {useAPI} from '../../api/useAPI';
 import {Analytics} from '../../analytics/Analytics';
 import {openURLInNewTab} from './utils';
 import Constants from '../../Constants';
+import {useNavigation} from '@react-navigation/native';
+import {Routes} from '../../nav/Routes';
 
 const openRecommendations = async () => {
   openURLInNewTab(Constants.RECOMMENDATIONS_LINK);
 };
 
 export const Bubble: React.FC = () => {
-  const [alertModalVisible, setAlertModalVisible] = useState(false);
+  const [profile, setProfile] = useState<Profile>();
   const [friends, setFriends] = useState<Friend[]>([]);
   const [incomingInvites, setIncomingInvites] = useState<Invite[]>([]);
   const [outgoingInvites, setOutgoingInvites] = useState<Invite[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const auth = useAuth();
   const api = useAPI();
-
-  console.log(I18n.currentLocale());
+  const nav = useNavigation();
 
   useEffect(() => {
     const friendsSubscription = api.friends.observeAll().subscribe((f) => {
@@ -70,15 +71,25 @@ export const Bubble: React.FC = () => {
     return () => alertsSubscription.unsubscribe();
   }, [api]);
 
+  useEffect(() => {
+    const profileSubscription = api.profiles.observe().subscribe(setProfile);
+    return () => profileSubscription.unsubscribe();
+  }, [api]);
+
   const color =
     alerts.length === 0 ? customTheme.colors.green : customTheme.colors.red;
 
   return (
-    <Wrapper topColor={color} bottomColor={'#fff'} scrollEnabled={true}>
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+      }}>
       <View style={[styles.header, {backgroundColor: color}]}>
         <Text style={styles.title}>
-          {auth.state.name
-            ? I18n.t('bubble.bubbleTitle').replace('$0', auth.state.name)
+          {profile?.name
+            ? I18n.t('bubble.bubbleTitle').replace('$0', profile.name)
             : I18n.t('bubble.title')}
         </Text>
         <View style={styles.badgeContainer}>
@@ -92,31 +103,33 @@ export const Bubble: React.FC = () => {
           </Text>
         </View>
       </View>
-      <View style={styles.content}>
-        <View style={styles.middle}>
-          <View style={[styles.bubbleTextContainer]}>
-            <Image source={assets.images.bubble.bubble} style={styles.bubble} />
-            <TouchableOpacity
-              style={styles.bubbleAlertContainer}
-              onPress={() => setAlertModalVisible(true)}>
-              <AlertModal
-                onCancel={() => setAlertModalVisible(false)}
-                onAlertSent={() => setAlertModalVisible(false)}
-                visible={alertModalVisible}
-              />
-              <Image
-                source={assets.images.bubble.alert}
-                style={styles.bubbleAlert}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.recommendationsContainer}>
-            <Text style={styles.takeCareText}>{I18n.t('bubble.takeCare')}</Text>
-            <ExtraButton
-              onPress={() => openRecommendations()}
-              title={I18n.t('bubble.recommendationsButton')}
+      <View style={{flex: 0.1, minHeight: 120}}>
+        <View style={{flex: 1, minHeight: 60, backgroundColor: color}} />
+        <View style={[styles.bubbleTextContainer]}>
+          <Image source={assets.images.bubble.bubble} style={styles.bubble} />
+          <TouchableOpacity
+            style={styles.bubbleAlertContainer}
+            onPress={() => nav.navigate(Routes.Alert)}>
+            {/*<AlertModal
+              onCancel={() => setAlertModalVisible(false)}
+              onAlertSent={() => setAlertModalVisible(false)}
+              visible={alertModalVisible}
+            />*/}
+            <Image
+              source={assets.images.bubble.alert}
+              style={styles.bubbleAlert}
             />
-          </View>
+          </TouchableOpacity>
+        </View>
+        <View style={{flex: 1, minHeight: 60, backgroundColor: customTheme.colors.lightBlue}} />
+      </View>
+      <View style={styles.content}>
+        <View style={styles.recommendationsContainer}>
+          <Text style={styles.takeCareText}>{I18n.t('bubble.takeCare')}</Text>
+          <ExtraButton
+            onPress={() => openRecommendations()}
+            title={I18n.t('bubble.recommendationsButton')}
+          />
         </View>
         <BubbleLists
           friends={friends}
@@ -125,9 +138,10 @@ export const Bubble: React.FC = () => {
           alerts={alerts}
         />
       </View>
-    </Wrapper>
+    </ScrollView>
   );
 };
+{/*</Wrapper>*/}
 
 type Styles = {
   wrapper: ViewStyle;
@@ -156,9 +170,7 @@ const styles = StyleSheet.create<Styles>({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: '32',
-    paddingBottom: '50',
-    flex: 1,
+    paddingTop: 32,
   },
   title: {
     fontFamily: customTheme.boldFontFamily,
@@ -178,8 +190,9 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
   },
   content: {
-    flex: 2,
+    flexGrow: 0.65,
     flexDirection: 'column',
+    justifyContent: 'flex-end',
     backgroundColor: customTheme.colors.lightBlue,
   },
   middle: {
@@ -188,13 +201,13 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
   },
   recommendationsContainer: {
+    //backgroundColor: '#f00',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'stretch',
     padding: 16,
-    marginTop: 48,
-    marginBottom: 24,
+    //marginBottom: 24,
     //marginBottom: Dimensions.LANGUETTE_ALWAYS_OPEN + Dimensions.TAB_BAR_HEIGHT,
   },
   takeCareText: {
@@ -204,14 +217,17 @@ const styles = StyleSheet.create<Styles>({
     marginBottom: 24,
   },
   bubble: {
+    alignSelf: 'center',
     width: 100,
     height: 100,
   },
   bubbleTextContainer: {
-    width: 100,
-    height: 100,
     position: 'absolute',
-    top: -50,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

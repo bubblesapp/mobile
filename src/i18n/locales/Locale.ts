@@ -41,6 +41,7 @@ export type Locale = {
     signUpPasswordLabel: string;
     signUpPasswordPlaceholder: string;
     signUpAgreeToTerms: string;
+    signUpAgreeToTermsLink: string;
     signUpContinue: string;
     signUpNextTitle: string;
     signUpNextSubtitle: string;
@@ -97,6 +98,7 @@ export type Locale = {
       decline: string;
       cancel: string;
       acceptSuccess: string;
+      inviteSent: string;
     };
     friends: {
       title: string;

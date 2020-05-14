@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Modal as ModalNative,
   Platform,
@@ -6,7 +6,7 @@ import {
   ShareContent,
   ShareOptions,
   StyleSheet,
-  Text,
+  Text, TextInput,
   TextStyle,
   TouchableOpacity,
   View,
@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {customTheme} from '../../theme/theme';
 import ModalWeb from 'modal-react-native-web';
-import {Overlay} from 'react-native-elements';
+import {Input, Overlay} from 'react-native-elements';
 import {SubmitButton} from '../common/SubmitButton';
 import {CloseButton} from '../common/CloseButton';
 import {useAuth} from '../../auth/Auth';
@@ -26,7 +26,10 @@ import Clipboard from '@react-native-community/clipboard';
 import ENV from '../../../environment';
 import env from '../../../active.env';
 import {Analytics, Events} from '../../analytics/Analytics';
+import {useNavigation} from '@react-navigation/native';
 import {commonStyles} from '../common/Styles';
+import {useAPI} from '../../api/useAPI';
+import {Link} from '@bubblesapp/api';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -35,9 +38,49 @@ type Props = {
   visible: boolean;
 };
 
+const copy = (elementId: string) => {
+  const input = document.getElementById(elementId) as HTMLInputElement | null;
+  const isiOSDevice = navigator.userAgent.match(/ipad|iphone/i);
+
+  if (input) {
+    if (isiOSDevice) {
+      const editable = input.contentEditable;
+      const readOnly = input.readOnly;
+
+      input.contentEditable = 'true';
+      input.readOnly = false;
+
+      const range = document.createRange();
+      range.selectNodeContents(input);
+
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+
+      input.setSelectionRange(0, 999999);
+      input.contentEditable = editable;
+      input.readOnly = readOnly;
+    } else {
+      input.select();
+    }
+    document.execCommand('copy');
+  }
+};
+
 export const InviteModal: React.FC<Props> = (props) => {
+  let [link, setLink] = useState<Link>();
   const auth = useAuth();
-  const link = `${ENV[env].baseUrl}?mode=invite&n=${auth.state.name}&e=${auth.state.email}`;
+  const nav = useNavigation();
+  const api = useAPI();
+
+  useEffect(() => {
+    const linkSubscription = api.links.observe().subscribe(setLink);
+    return () => linkSubscription.unsubscribe();
+  }, [api]);
+
+  link = link || {
+    url: `${ENV[env].baseUrl}?mode=invite&n=${auth.state.name}&e=${auth.state.email}`,
+  };
   const shareContent = {
     title: I18n.t('bubble.invites.shareMessageTitle'),
     text: I18n.t('bubble.invites.shareMessageContent').replace('$0', link),
@@ -49,7 +92,7 @@ export const InviteModal: React.FC<Props> = (props) => {
 
   const copyLinkToClipboard = async () => {
     if (Platform.OS === 'web') {
-      const permission = await navigator.permissions.query({name: 'clipboard-write'});
+      /* const permission = await navigator.permissions.query({name: 'clipboard-write'});
       if (permission.state === 'granted' || permission.state === 'prompt') {
         try {
           await navigator.clipboard.writeText(link);
@@ -59,9 +102,11 @@ export const InviteModal: React.FC<Props> = (props) => {
         }
       } else {
         Toast.danger(I18n.t('bubble.invites.clipboardError'));
-      }
+      } */
+      copy('linkInput');
+      Toast.success(I18n.t('bubble.invites.copiedToClipboard'));
     } else {
-      Clipboard.setString(link);
+      Clipboard.setString(link.url);
       Toast.success(I18n.t('bubble.invites.copiedToClipboard'));
     }
     Analytics.logEvent(Events.CopyBubbleLink);
@@ -82,61 +127,76 @@ export const InviteModal: React.FC<Props> = (props) => {
   };
 
   const Toast = useToast();
-
+  /*<Overlay
+        ModalComponent={Modal}
+        transparent={true}
+        isVisible={props.visible}
+        overlayStyle={[commonStyles.overlay, styles.overlay]}
+        onBackdropPress={() => props.onCancel()}
+        backdropStyle={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}
+        animationType={'fade'}>*/
   return (
-    <Overlay
-      ModalComponent={Modal}
-      transparent={true}
-      isVisible={props.visible}
-      overlayStyle={[commonStyles.overlay, styles.overlay]}
-      onBackdropPress={() => props.onCancel()}
-      animationType={'fade'}>
-      <>
-        <View style={styles.header}>
-          <View style={styles.closeButton}>
-            <CloseButton onPress={props.onCancel} />
-          </View>
-          <InviteButton />
-          <Text style={styles.headerTitle}>
-            {I18n.t('bubble.invites.title')}
-          </Text>
+    <>
+      <View style={styles.header}>
+        <View style={styles.closeButton}>
+          <CloseButton onPress={() => nav.goBack()} />
         </View>
-        <View style={styles.content}>
-          <Text style={styles.heading1}>
-            {I18n.t('bubble.invites.linkInstructions')}
-          </Text>
-          <Text style={styles.linkLabel}>
-            {I18n.t('bubble.invites.linkLabel')}
-          </Text>
-          <TouchableOpacity
-            style={styles.linkContainer}
-            onPress={() => copyLinkToClipboard()}>
-            <Text style={styles.linkText}>{link}</Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-              alignItems: 'center',
+        <InviteButton />
+        <Text style={styles.headerTitle}>
+          {I18n.t('bubble.invites.title')}
+        </Text>
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.heading1}>
+          {I18n.t('bubble.invites.linkInstructions')}
+        </Text>
+        <Text style={styles.linkLabel}>
+          {I18n.t('bubble.invites.linkLabel')}
+        </Text>
+        <TouchableOpacity
+          style={{alignSelf: 'stretch', padding: 0}}
+          onPress={() => copyLinkToClipboard()}>
+          <Input
+            containerStyle={{
               alignSelf: 'stretch',
-            }}>
-            <ExtraButton
-              onPress={() => copyLinkToClipboard()}
-              containerStyle={styles.buttonContainer}
-              buttonStyle={styles.button}
-              title={I18n.t('bubble.invites.copyButton')}
-            />
-            <View style={{width: 24}} />
-            <SubmitButton
-              onPress={() => shareLink()}
-              containerStyle={styles.buttonContainer}
-              buttonStyle={styles.button}
-              title={I18n.t('bubble.invites.shareButton')}
-            />
-          </View>
+              paddingLeft: 0,
+              paddingRight: 0,
+              paddingBottom: 0,
+            }}
+            nativeID={'linkInput'}
+            disabled={true}
+            disabledInputStyle={{color: '#000', opacity: 1}}
+            inputContainerStyle={styles.linkContainer}
+            inputStyle={styles.linkText}
+            value={link.url}
+            multiline={true}
+            numberOfLines={3}
+            errorStyle={{display: 'none'}}
+          />
+        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            alignSelf: 'stretch',
+          }}>
+          <ExtraButton
+            onPress={() => copyLinkToClipboard()}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={styles.button}
+            title={I18n.t('bubble.invites.copyButton')}
+          />
+          <View style={{width: 24}} />
+          <SubmitButton
+            onPress={() => shareLink()}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={styles.button}
+            title={I18n.t('bubble.invites.shareButton')}
+          />
         </View>
-      </>
-    </Overlay>
+      </View>
+    </>
   );
 };
 

@@ -1,18 +1,25 @@
 import React from 'react';
 import {Routes} from '../../nav/Routes';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Invites} from '../invites/Invites';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {MainTabsParamList} from '../MainNavigator';
 import {Bubble} from './Bubble';
-import {InviteButton} from './InviteButton';
-import I18n from '../../i18n';
-import {ScrollView} from 'react-native';
-import {Host} from 'react-native-portalize';
+import {InviteModal} from './InviteModal';
+import {AlertModal} from './AlertModal';
+import {Alert, Friend} from '@bubblesapp/api';
+import {LogModal} from './LogModal';
+import {AlertDetailsModal} from './AlertDetailsModal';
 
 export type BubbleStackParamsList = {
   [Routes.Bubble]: undefined;
-  [Routes.Invites]: undefined;
+  [Routes.Invite]: undefined;
+  [Routes.Alert]: undefined;
+  [Routes.Log]: {
+    friend: Friend,
+  };
+  [Routes.AlertDetails]: {
+    alert: Alert,
+  };
 };
 
 const BubbleStack = createStackNavigator<BubbleStackParamsList>();
@@ -24,10 +31,12 @@ export type BubbleNavigatorNavigationProp = BottomTabNavigationProp<
 
 export const BubbleNavigator: React.FC = (): JSX.Element => {
   return (
-    <Host>
-      <BubbleStack.Navigator headerMode={'none'}>
-        <BubbleStack.Screen name={Routes.Bubble} component={Bubble} />
-      </BubbleStack.Navigator>
-    </Host>
+    <BubbleStack.Navigator headerMode={'none'} mode={'modal'}>
+      <BubbleStack.Screen name={Routes.Bubble} component={Bubble} />
+      <BubbleStack.Screen name={Routes.Invite} component={InviteModal} />
+      <BubbleStack.Screen name={Routes.Alert} component={AlertModal} />
+      <BubbleStack.Screen name={Routes.Log} component={LogModal} />
+      <BubbleStack.Screen name={Routes.AlertDetails} component={AlertDetailsModal} />
+    </BubbleStack.Navigator>
   );
 };

@@ -71,6 +71,7 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
       });
       try {
         Analytics.init();
+        Analytics.setVersionName();
         setDevice({
           type: await Device.getDeviceTypeAsync(),
         });

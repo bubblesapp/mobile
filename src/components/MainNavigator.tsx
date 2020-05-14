@@ -21,10 +21,13 @@ const Tabs: React.FC = () => {
   return (
     <BottomTabs.Navigator
       initialRouteName={Routes.Bubble}
+      tabBarOptions={{
+        keyboardHidesTabBar: true,
+      }}
       tabBar={(props) => <TabBar {...props} />}>
       <BottomTabs.Screen
         name={Routes.Bubble}
-        component={Bubble}
+        component={BubbleNavigator}
       />
       <BottomTabs.Screen
         name={Routes.Profile}

@@ -11,6 +11,8 @@ import {AlertItem} from './AlertItem';
 import {AlertsHeader} from './AlertsHeader';
 import {AlertDetailsModal} from './AlertDetailsModal';
 import {Analytics, Events} from '../../analytics/Analytics';
+import {useNavigation} from '@react-navigation/native';
+import {Routes} from '../../nav/Routes';
 
 type Props = {
   alerts: Alert[];
@@ -22,6 +24,7 @@ export const AlertList: React.FC<Props> = ({alerts}) => {
 
   const api = useAPI();
   const Toast = useToast();
+  const nav = useNavigation();
 
   const deleteAlert = async (alert: Alert) => {
     try {
@@ -30,8 +33,6 @@ export const AlertList: React.FC<Props> = ({alerts}) => {
       Toast.success(I18n.t('bubble.alerts.deleteSuccess'));
     } catch (err) {
       Toast.danger(err.message);
-    } finally {
-      setAlertDetailsVisible(false);
     }
   };
 
@@ -39,12 +40,6 @@ export const AlertList: React.FC<Props> = ({alerts}) => {
     <View style={{backgroundColor: '#fff'}}>
       {alerts.length > 0 ? (
         <>
-          <AlertDetailsModal
-            onCancel={() => setAlertDetailsVisible(false)}
-            onDelete={(alert: Alert) => deleteAlert(alert)}
-            alert={selectedAlert || alerts[0]}
-            visible={alertDetailsVisible}
-          />
           <SwipeListView<Alert>
             data={alerts}
             contentContainerStyle={{backgroundColor: '#fff'}}
@@ -53,10 +48,7 @@ export const AlertList: React.FC<Props> = ({alerts}) => {
             renderItem={({item}) => (
               <AlertItem
                 alert={item}
-                onPress={() => {
-                  setSelectedAlert(item);
-                  setAlertDetailsVisible(true);
-                }}
+                onPress={() => nav.navigate(Routes.AlertDetails, {alert: item})}
               />
             )}
             keyExtractor={(item) => item.createdAt.toString()}

@@ -49,7 +49,8 @@ export const fr: Locale = {
       'Il est stocké en accord avec notre politique de confidentalité tant que votre compte existe.',
     signUpPasswordLabel: 'Mot de passe',
     signUpPasswordPlaceholder: '••••••••••••',
-    signUpAgreeToTerms: "J'accepte les CGU",
+    signUpAgreeToTerms: " J'accepte les ",
+    signUpAgreeToTermsLink: 'CGU',
     signUpContinue: 'Suivant',
     alreadyHaveAccount: 'Vous avez une Bulle?',
     alreadyHaveAccountAction: 'Connexion',
@@ -106,6 +107,7 @@ export const fr: Locale = {
       decline: 'Décliner',
       cancel: 'Annuler',
       acceptSuccess: 'Utilisateur ajouté.',
+      inviteSent: 'Invitation envoyée.',
     },
     friends: {
       title: 'Personnes',

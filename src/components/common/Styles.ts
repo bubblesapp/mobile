@@ -11,10 +11,13 @@ type Styles = {
 
 export const commonStyles = StyleSheet.create<Styles>({
   overlay: {
-    width: '80%',
-    height: '80%',
-    maxWidth: 326,
-    maxHeight: 570,
+    //width: '80%',
+    //height: '80%',
+    margin: 8,
+    maxWidth: 416,
+    maxHeight: 663,
+    flex: 1,
+    alignSelf: 'stretch',
   },
   popupWrapper: {
     flexDirection: 'column',
