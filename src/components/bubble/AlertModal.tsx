@@ -109,7 +109,6 @@ export const AlertModal: React.FC<Props> = (props) => {
     /* const emails = await Promise.all(
       selectedFriends.map((f) => api.profiles.get(f.uid).then((p) => p.email)),
     ); */
-    const url = 'mailto:edouard.goossens@gmail.com;edouard@tastyelectrons.com';
     //const url = `mailto:${_.join(emails, ';')}`;
     try {
       setOpeningEmailApp(true);

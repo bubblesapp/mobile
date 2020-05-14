@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Modal as ModalNative,
   Platform,
@@ -26,7 +26,10 @@ import Clipboard from '@react-native-community/clipboard';
 import ENV from '../../../environment';
 import env from '../../../active.env';
 import {Analytics, Events} from '../../analytics/Analytics';
+import {useNavigation} from '@react-navigation/native';
 import {commonStyles} from '../common/Styles';
+import {useAPI} from '../../api/useAPI';
+import {Link} from '@bubblesapp/api';
 
 const Modal = Platform.OS === 'web' ? ModalWeb : ModalNative;
 
@@ -65,8 +68,19 @@ const copy = (elementId: string) => {
 };
 
 export const InviteModal: React.FC<Props> = (props) => {
+  let [link, setLink] = useState<Link>();
   const auth = useAuth();
-  const link = `${ENV[env].baseUrl}?mode=invite&n=${auth.state.name}&e=${auth.state.email}`;
+  const nav = useNavigation();
+  const api = useAPI();
+
+  useEffect(() => {
+    const linkSubscription = api.links.observe().subscribe(setLink);
+    return () => linkSubscription.unsubscribe();
+  }, [api]);
+
+  link = link || {
+    url: `${ENV[env].baseUrl}?mode=invite&n=${auth.state.name}&e=${auth.state.email}`,
+  };
   const shareContent = {
     title: I18n.t('bubble.invites.shareMessageTitle'),
     text: I18n.t('bubble.invites.shareMessageContent').replace('$0', link),
@@ -92,7 +106,7 @@ export const InviteModal: React.FC<Props> = (props) => {
       copy('linkInput');
       Toast.success(I18n.t('bubble.invites.copiedToClipboard'));
     } else {
-      Clipboard.setString(link);
+      Clipboard.setString(link.url);
       Toast.success(I18n.t('bubble.invites.copiedToClipboard'));
     }
     Analytics.logEvent(Events.CopyBubbleLink);
@@ -125,7 +139,7 @@ export const InviteModal: React.FC<Props> = (props) => {
     <>
       <View style={styles.header}>
         <View style={styles.closeButton}>
-          <CloseButton onPress={props.onCancel} />
+          <CloseButton onPress={() => nav.goBack()} />
         </View>
         <InviteButton />
         <Text style={styles.headerTitle}>
@@ -154,7 +168,7 @@ export const InviteModal: React.FC<Props> = (props) => {
             disabledInputStyle={{color: '#000', opacity: 1}}
             inputContainerStyle={styles.linkContainer}
             inputStyle={styles.linkText}
-            value={link}
+            value={link.url}
             multiline={true}
             numberOfLines={3}
             errorStyle={{display: 'none'}}

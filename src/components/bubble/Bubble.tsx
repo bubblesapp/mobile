@@ -3,7 +3,7 @@ import {
   Dimensions,
   Image,
   ImageStyle,
-  Linking,
+  Linking, ScrollView,
   StyleSheet,
   Text,
   TextStyle,
@@ -19,7 +19,7 @@ import assets from '../../assets';
 import I18n from '../../i18n';
 import {ExtraButton} from '../common/ExtraButton';
 import {AlertModal} from './AlertModal';
-import {Alert, Friend, Invite} from '@bubblesapp/api';
+import {Alert, Friend, Invite, Profile} from '@bubblesapp/api';
 import {useAPI} from '../../api/useAPI';
 import {Analytics} from '../../analytics/Analytics';
 import {openURLInNewTab} from './utils';
@@ -32,7 +32,7 @@ const openRecommendations = async () => {
 };
 
 export const Bubble: React.FC = () => {
-  const [alertModalVisible, setAlertModalVisible] = useState(false);
+  const [profile, setProfile] = useState<Profile>();
   const [friends, setFriends] = useState<Friend[]>([]);
   const [incomingInvites, setIncomingInvites] = useState<Invite[]>([]);
   const [outgoingInvites, setOutgoingInvites] = useState<Invite[]>([]);
@@ -71,15 +71,25 @@ export const Bubble: React.FC = () => {
     return () => alertsSubscription.unsubscribe();
   }, [api]);
 
+  useEffect(() => {
+    const profileSubscription = api.profiles.observe().subscribe(setProfile);
+    return () => profileSubscription.unsubscribe();
+  }, [api]);
+
   const color =
     alerts.length === 0 ? customTheme.colors.green : customTheme.colors.red;
 
   return (
-    <Wrapper topColor={color} bottomColor={'#fff'} scrollEnabled={true}>
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+      }}>
       <View style={[styles.header, {backgroundColor: color}]}>
         <Text style={styles.title}>
-          {auth.state.name
-            ? I18n.t('bubble.bubbleTitle').replace('$0', auth.state.name)
+          {profile?.name
+            ? I18n.t('bubble.bubbleTitle').replace('$0', profile.name)
             : I18n.t('bubble.title')}
         </Text>
         <View style={styles.badgeContainer}>
@@ -93,8 +103,8 @@ export const Bubble: React.FC = () => {
           </Text>
         </View>
       </View>
-      <View style={{flex: 0.15, minHeight: 120}}>
-        <View style={{flex: 0.5, minHeight: 60, backgroundColor: color}} />
+      <View style={{flex: 0.1, minHeight: 120}}>
+        <View style={{flex: 1, minHeight: 60, backgroundColor: color}} />
         <View style={[styles.bubbleTextContainer]}>
           <Image source={assets.images.bubble.bubble} style={styles.bubble} />
           <TouchableOpacity
@@ -111,7 +121,7 @@ export const Bubble: React.FC = () => {
             />
           </TouchableOpacity>
         </View>
-        <View style={{flex: 0.5, minHeight: 60, backgroundColor: customTheme.colors.lightBlue}} />
+        <View style={{flex: 1, minHeight: 60, backgroundColor: customTheme.colors.lightBlue}} />
       </View>
       <View style={styles.content}>
         <View style={styles.recommendationsContainer}>
@@ -128,9 +138,10 @@ export const Bubble: React.FC = () => {
           alerts={alerts}
         />
       </View>
-    </Wrapper>
+    </ScrollView>
   );
 };
+{/*</Wrapper>*/}
 
 type Styles = {
   wrapper: ViewStyle;
@@ -159,8 +170,7 @@ const styles = StyleSheet.create<Styles>({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: '32',
-    flex: 0.20,
+    paddingTop: 32,
   },
   title: {
     fontFamily: customTheme.boldFontFamily,
@@ -180,8 +190,9 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
   },
   content: {
-    flex: 0.65,
+    flexGrow: 0.65,
     flexDirection: 'column',
+    justifyContent: 'flex-end',
     backgroundColor: customTheme.colors.lightBlue,
   },
   middle: {
@@ -211,13 +222,12 @@ const styles = StyleSheet.create<Styles>({
     height: 100,
   },
   bubbleTextContainer: {
-    flex: 0.2,
-    minHeight: 120,
     position: 'absolute',
+    top: 0,
+    bottom: 0,
     left: 0,
     right: 0,
     zIndex: 2,
-    alignSelf: 'stretch',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

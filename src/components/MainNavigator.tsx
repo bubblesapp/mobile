@@ -21,6 +21,9 @@ const Tabs: React.FC = () => {
   return (
     <BottomTabs.Navigator
       initialRouteName={Routes.Bubble}
+      tabBarOptions={{
+        keyboardHidesTabBar: true,
+      }}
       tabBar={(props) => <TabBar {...props} />}>
       <BottomTabs.Screen
         name={Routes.Bubble}

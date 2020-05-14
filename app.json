@@ -3,9 +3,13 @@
   "displayName": "Bubbles",
   "expo": {
     "name": "Bubbles",
+    "description": "Safely get your social life back.",
     "icon": "assets/images/icon_1024.png",
     "slug": "bubbles",
     "platforms": ["web"],
-    "version": "0.0.2"
+    "version": "0.0.6",
+    "web": {
+      "display": "standalone"
+    }
   }
 }

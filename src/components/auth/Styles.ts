@@ -14,6 +14,7 @@ interface Styles {
   rememberContainer: ViewStyle;
   noAccountContainer: ViewStyle;
   checkboxLabel: TextStyle;
+  checkboxLabelLink: TextStyle;
   checkboxContainer: ViewStyle;
   extraText: TextStyle;
   extraLink: TextStyle;
@@ -86,7 +87,7 @@ export const authStyleSheet = StyleSheet.create<Styles>({
     flexDirection: 'row',
     alignSelf: 'stretch',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginRight: 8,
   },
   noAccountContainer: {
@@ -105,6 +106,12 @@ export const authStyleSheet = StyleSheet.create<Styles>({
     fontFamily: 'Nunito',
     fontWeight: 'normal',
     color: customTheme.colors.gray,
+  },
+  checkboxLabelLink: {
+    paddingTop: 2,
+    fontFamily: 'Nunito',
+    fontWeight: 'normal',
+    color: customTheme.colors.ctaBackground,
   },
   extraText: {
     fontFamily: 'Nunito',

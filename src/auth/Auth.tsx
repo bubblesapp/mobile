@@ -10,6 +10,7 @@ import {API, Device} from '@bubblesapp/api';
 import {Analytics, Events} from '../analytics/Analytics';
 import env from '../../active.env';
 import ENV from '../../environment';
+import _ from 'lodash';
 
 class Auth {
   constructor(
@@ -161,10 +162,11 @@ class Auth {
   };
 
   changeName = async (name: string): Promise<void> => {
+    const trimmedName = _.trim(name);
     await firebaseAuth().currentUser?.updateProfile({
-      displayName: name,
+      displayName: trimmedName,
     });
-    await this.api.profiles.update({name});
+    await this.api.profiles.update({name: trimmedName});
     await firebaseAuth().currentUser?.reload();
     await this.refreshState();
   };

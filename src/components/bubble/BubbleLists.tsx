@@ -39,19 +39,56 @@ export const BubbleLists: React.FC<Props> = (props) => {
           />
         </View>
       </View>
-      <View style={{display: selectedButton === 0 ? 'flex' : 'none'}}>
+      <View style={{display: selectedButton === 0 ? 'flex' : 'none', flex: 1, backgroundColor: '#fff'}}>
         <PeopleList
           friends={props.friends}
           outgoingInvites={props.outgoingInvites}
           incomingInvites={props.incomingInvites}
         />
       </View>
-      <View style={{display: selectedButton === 1 ? 'flex' : 'none'}}>
+      <View style={{display: selectedButton === 1 ? 'flex' : 'none', flex: 1, backgroundColor: '#fff'}}>
         <AlertList alerts={props.alerts} />
       </View>
     </View>
   );
 };
+
+/*
+
+<View style={styles.lists}>
+  <View style={styles.listHeader}>
+    <View style={styles.listHeaderContent}>
+      <View style={styles.handleContainer}>
+        <View style={styles.handle} />
+      </View>
+      <ButtonGroup
+        buttons={[
+          I18n.t('bubble.friends.title'),
+          `${I18n.t('bubble.alerts.title')} (${props.alerts.length})`,
+        ]}
+        selectedIndex={selectedButton}
+        onPress={(i) => setSelectedButton(i)}
+        containerStyle={styles.buttonsContainer}
+        buttonStyle={styles.buttons}
+        textStyle={styles.buttonsText}
+        selectedButtonStyle={styles.selectedButton}
+        selectedTextStyle={styles.selectedButtonText}
+        innerBorderStyle={{width: 0}}
+      />
+    </View>
+  </View>
+  <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
+    <View style={{display: selectedButton === 0 ? 'flex' : 'none', backgroundColor: '#0f0'}}>
+
+    </View>
+    <View style={{display: selectedButton === 1 ? 'flex' : 'none'}}>
+      <AlertList alerts={props.alerts} />
+    </View>
+  </View>
+</View>
+
+*/
+
 
 /*
 <Portal>
@@ -86,19 +123,23 @@ type Styles = {
 
 const styles = StyleSheet.create<Styles>({
   lists: {
+    flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'stretch',
+    //borderTopStartRadius: 40,
+    //borderTopEndRadius: 40,
+    //shadowRadius: 45,
+    //shadowColor: customTheme.colors.shadow,
+    //backgroundColor: '#f00',
+  },
+  listHeader: {
+    height: 110,
+    backgroundColor: '#fff',
     borderTopStartRadius: 40,
     borderTopEndRadius: 40,
     shadowRadius: 45,
     shadowColor: customTheme.colors.shadow,
-    backgroundColor: '#ff0',
-  },
-  listHeader: {
-    backgroundColor: '#fff',
-    borderTopStartRadius: 40,
-    borderTopEndRadius: 40,
   },
   listHeaderContent: {
     marginTop: 16,
@@ -107,6 +148,9 @@ const styles = StyleSheet.create<Styles>({
   },
   handleContainer: {
     paddingVertical: 8,
+    height: 20,
+    //backgroundColor: '#f00',
+    marginBottom: 16,
   },
   handle: {
     width: 100,
@@ -117,7 +161,6 @@ const styles = StyleSheet.create<Styles>({
   },
   buttonsContainer: {
     alignSelf: 'center',
-    marginTop: 16,
     backgroundColor: customTheme.colors.lightGray,
     borderRadius: 5,
     padding: 2,

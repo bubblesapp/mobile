@@ -12,7 +12,7 @@ export const Wrapper: React.FC<Props> = (props) => {
   return (
     <>
       <SafeAreaView style={{flex: 0, backgroundColor: props.topColor}} />
-      <SafeAreaView
+      <View
         style={[styles.wrapper, {backgroundColor: props.bottomColor}]}>
         <ScrollView
           scrollEnabled={props.scrollEnabled}
@@ -33,7 +33,7 @@ export const Wrapper: React.FC<Props> = (props) => {
           )}
           {props.children}
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </>
   );
 };

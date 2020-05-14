@@ -7,8 +7,7 @@ import {Profile as ProfileModel} from '@bubblesapp/api';
 import {useNavigation} from '@react-navigation/native';
 import {Notifications} from './Notifications';
 import {ListItem} from 'react-native-elements';
-import {SubmitButton} from '../common/SubmitButton';
-import {ScrollView, Text, View, Image, SafeAreaView, Linking} from 'react-native';
+import {Image, Linking, Platform, Text, View} from 'react-native';
 import {useToast} from '../Toast';
 import {profileStyles as styles} from './Styles';
 import {ItemIcon} from './ItemIcon';
@@ -124,8 +123,11 @@ export const Profile: React.FC = (): JSX.Element => {
           chevron={chevronProps}
         />
         <ListItem
+          onPress={() =>
+            Platform.OS === 'web' && document.location.reload(true)
+          }
           containerStyle={{height: 32}}
-          title={`v${Constants.manifest.version}`}
+          title={`v${Constants.manifest?.version}`}
           titleStyle={{
             textAlign: 'center',
             color: customTheme.colors.mediumGray,

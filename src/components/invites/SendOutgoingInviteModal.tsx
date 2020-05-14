@@ -39,7 +39,7 @@ export const SendOutgoingInviteModal: React.FC<Props> = (props) => {
       console.log('Sending outgoing invite', props.toEmail);
       await api.invites.invite(props.toEmail);
       Toast.success(
-        I18n.t('bubble.newInvite.inviteSent').replace('$0', props.toName),
+        I18n.t('bubble.invites.inviteSent').replace('$0', props.toName),
       );
     } catch (err) {
       Toast.danger(err.message);
