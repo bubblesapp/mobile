@@ -3,11 +3,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {ProfileNavigator} from './profile/ProfileNavigator';
 import {BubbleNavigator} from './bubble/BubbleNavigator';
 import {Routes} from '../nav/Routes';
-import I18n from '../i18n';
 import {TabBar} from './TabBar';
 import {createStackNavigator} from '@react-navigation/stack';
 import {InviteModal} from './bubble/InviteModal';
-import {Bubble} from './bubble/Bubble';
 
 const BottomTabs = createBottomTabNavigator();
 const ModalStack = createStackNavigator();
@@ -25,14 +23,8 @@ const Tabs: React.FC = () => {
         keyboardHidesTabBar: true,
       }}
       tabBar={(props) => <TabBar {...props} />}>
-      <BottomTabs.Screen
-        name={Routes.Bubble}
-        component={BubbleNavigator}
-      />
-      <BottomTabs.Screen
-        name={Routes.Profile}
-        component={ProfileNavigator}
-      />
+      <BottomTabs.Screen name={Routes.Bubble} component={BubbleNavigator} />
+      <BottomTabs.Screen name={Routes.Profile} component={ProfileNavigator} />
     </BottomTabs.Navigator>
   );
 };
