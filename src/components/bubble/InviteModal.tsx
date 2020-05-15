@@ -238,8 +238,6 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: customTheme.colors.ctaBackground,
-    borderTopStartRadius: 5,
-    borderTopEndRadius: 5,
     padding: 32,
   },
   headerTitle: {
@@ -258,8 +256,6 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderBottomStartRadius: 5,
-    borderBottomEndRadius: 5,
     padding: 32,
   },
   heading1: {
