@@ -167,7 +167,7 @@ export const AlertModal: React.FC<Props> = (props) => {
                   onDeselected={() => deselectRecent()}
                 />
               }
-              ListEmptyComponent={<Text>Empty</Text>}
+              //ListEmptyComponent={<Text>Empty</Text>}
               renderItem={({item: friend}) => (
                 <FriendSelectedItem
                   friend={friend}

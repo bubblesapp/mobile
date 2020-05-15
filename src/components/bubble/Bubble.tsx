@@ -1,31 +1,31 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Dimensions,
   Image,
   ImageStyle,
-  Linking, ScrollView,
+  ScrollView,
   StyleSheet,
   Text,
   TextStyle,
-  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native';
 import {customTheme} from '../../theme/theme';
 import {useAuth} from '../../auth/Auth';
 import {BubbleLists} from './BubbleLists';
-import {Wrapper} from '../common/Wrapper';
-import assets from '../../assets';
 import I18n from '../../i18n';
 import {ExtraButton} from '../common/ExtraButton';
-import {AlertModal} from './AlertModal';
 import {Alert, Friend, Invite, Profile} from '@bubblesapp/api';
 import {useAPI} from '../../api/useAPI';
 import {Analytics} from '../../analytics/Analytics';
 import {openURLInNewTab} from './utils';
 import Constants from '../../Constants';
 import {useNavigation} from '@react-navigation/native';
+import {BubbleAnimation} from './BubbleAnimation';
+import {SubmitButton} from '../common/SubmitButton';
+import {PeopleList} from './PeopleList';
+import assets from '../../assets';
 import {Routes} from '../../nav/Routes';
+import _ from 'lodash';
 
 const openRecommendations = async () => {
   openURLInNewTab(Constants.RECOMMENDATIONS_LINK);
@@ -85,8 +85,125 @@ export const Bubble: React.FC = () => {
         flexGrow: 1,
         flexDirection: 'column',
         justifyContent: 'flex-start',
+        backgroundColor: color,
       }}>
-      <View style={[styles.header, {backgroundColor: color}]}>
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '65%',
+          backgroundColor: color,
+        }}>
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: color,
+            zIndex: -1,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View style={{flex: 2}} />
+          <View
+            style={{
+              flex: 2,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <BubbleAnimation
+              speed={alerts.length > 0 ? 2 : 0.5}
+              containerStyle={{height: '200%', aspectRatio: 1}}
+            />
+          </View>
+          <View style={{flex: 1}} />
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              flex: 2,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={styles.title}>
+              {profile?.name
+                ? I18n.t('bubble.bubbleTitle').replace('$0', profile.name)
+                : I18n.t('bubble.title')}
+            </Text>
+            <View style={styles.badgeContainer}>
+              <Text style={[styles.badgeText, {color}]}>
+                {alerts.length === 0
+                  ? I18n.t('bubble.noAlert')
+                  : I18n.t('bubble.xAlerts').replace(
+                      '$0',
+                      alerts.length.toString(),
+                    )}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flex: 2,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={
+                alerts.length > 0
+                  ? assets.images.bubble.alert
+                  : assets.images.bubble.peaceful
+              }
+              style={{width: 75, height: 75}}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}>
+            <SubmitButton
+              titleStyle={{color: '#fff', paddingHorizontal: 24}}
+              onPress={() => nav.navigate(Routes.Alert)}
+              title={I18n.t('bubble.sendAlert')}
+            />
+          </View>
+        </View>
+      </View>
+      <BubbleLists
+        friends={_.sortBy(friends, 'lastMet')}
+        incomingInvites={incomingInvites}
+        outgoingInvites={outgoingInvites}
+        alerts={alerts}
+      />
+    </ScrollView>
+  );
+};
+{
+  /*</Wrapper>*/
+}
+
+/*
+<View style={[styles.header, {backgroundColor: color}]}>
         <Text style={styles.title}>
           {profile?.name
             ? I18n.t('bubble.bubbleTitle').replace('$0', profile.name)
@@ -106,29 +223,19 @@ export const Bubble: React.FC = () => {
       <View style={{flex: 0.1, minHeight: 120}}>
         <View style={{flex: 1, minHeight: 60, backgroundColor: color}} />
         <View style={[styles.bubbleTextContainer]}>
-          <Image source={assets.images.bubble.bubble} style={styles.bubble} />
-          <TouchableOpacity
-            style={styles.bubbleAlertContainer}
-            onPress={() => nav.navigate(Routes.Alert)}>
-            {/*<AlertModal
-              onCancel={() => setAlertModalVisible(false)}
-              onAlertSent={() => setAlertModalVisible(false)}
-              visible={alertModalVisible}
-            />*/}
-            <Image
-              source={assets.images.bubble.alert}
-              style={styles.bubbleAlert}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={{flex: 1, minHeight: 60, backgroundColor: customTheme.colors.lightBlue}} />
-      </View>
-      <View style={styles.content}>
+<BubbleAnimation speed={alerts.length > 0 ? 2 : 0.5} />
+</View>
+<View style={{flex: 1, minHeight: 60, backgroundColor: color}} />
+</View>
+
+
+<View style={[styles.content, {backgroundColor: color}]}>
         <View style={styles.recommendationsContainer}>
-          <Text style={styles.takeCareText}>{I18n.t('bubble.takeCare')}</Text>
-          <ExtraButton
+          <SubmitButton
+            containerStyle={{margin: 16}}
+            buttonStyle={{backgroundColor: customTheme.colors.red}}
             onPress={() => openRecommendations()}
-            title={I18n.t('bubble.recommendationsButton')}
+            title={I18n.t('bubble.sendAlert')}
           />
         </View>
         <BubbleLists
@@ -138,10 +245,7 @@ export const Bubble: React.FC = () => {
           alerts={alerts}
         />
       </View>
-    </ScrollView>
-  );
-};
-{/*</Wrapper>*/}
+ */
 
 type Styles = {
   wrapper: ViewStyle;
@@ -176,7 +280,8 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
     fontSize: 24,
     color: customTheme.colors.gray,
-    marginVertical: 16,
+    marginTop: 48,
+    marginBottom: 16,
   },
   badgeContainer: {
     borderRadius: 10,
@@ -190,7 +295,7 @@ const styles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
   },
   content: {
-    flexGrow: 0.65,
+    flexGrow: 0.3,
     flexDirection: 'column',
     justifyContent: 'flex-end',
     backgroundColor: customTheme.colors.lightBlue,
@@ -223,14 +328,15 @@ const styles = StyleSheet.create<Styles>({
   },
   bubbleTextContainer: {
     position: 'absolute',
-    top: 0,
+    top: -100,
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: 2,
+    zIndex: -4,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 30,
   },
   bubbleAlertContainer: {
     position: 'absolute',

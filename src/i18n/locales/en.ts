@@ -91,6 +91,7 @@ export const en: Locale = {
     bubbleTitle: "$0's Bubble",
     noAlert: 'No alerts',
     xAlerts: '$0 alert(s)',
+    sendAlert: 'Send an alert',
     invites: {
       title: 'Invite someone',
       linkLabel: 'Your Bubble link',

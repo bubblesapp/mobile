@@ -82,6 +82,7 @@ export type Locale = {
     bubbleTitle: string;
     noAlert: string;
     xAlerts: string;
+    sendAlert: string;
     invites: {
       title: string;
       linkLabel: string;

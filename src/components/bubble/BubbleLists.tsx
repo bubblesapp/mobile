@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, TextStyle, View, ViewStyle,} from 'react-native';
 import {ButtonGroup} from 'react-native-elements';
 import {customTheme} from '../../theme/theme';
@@ -12,10 +12,16 @@ type Props = {
   outgoingInvites: Invite[];
   incomingInvites: Invite[];
   alerts: Alert[];
+  color: string;
 };
 
 export const BubbleLists: React.FC<Props> = (props) => {
   const [selectedButton, setSelectedButton] = useState(0);
+  useEffect(() => {
+    if (props.alerts.length > 0) {
+      setSelectedButton(1);
+    }
+  }, [props.alerts]);
   return (
     <View style={styles.lists}>
       <View style={styles.listHeader}>
@@ -123,7 +129,12 @@ type Styles = {
 
 const styles = StyleSheet.create<Styles>({
   lists: {
-    flex: 1,
+    //flex: 1,
+    position: 'absolute',
+    top: '65%',
+    left: 0,
+    right: 0,
+    bottom: 0,
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'stretch',
