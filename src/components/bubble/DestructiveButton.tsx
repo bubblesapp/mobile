@@ -33,7 +33,6 @@ export type Styles = {
 
 const styles = StyleSheet.create<Styles>({
   deleteRow: {
-    margin: 1,
     backgroundColor: customTheme.colors.red,
     flex: 1,
     flexDirection: 'row',

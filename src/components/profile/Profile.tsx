@@ -3,10 +3,10 @@ import {Routes} from '../../nav/Routes';
 import I18n from '../../i18n/';
 import {useAuth} from '../../auth/Auth';
 import {useAPI} from '../../api/useAPI';
-import {Profile as ProfileModel} from '@bubblesapp/api';
+import {Config, Profile as ProfileModel} from '@bubblesapp/api';
 import {useNavigation} from '@react-navigation/native';
 import {Notifications} from './Notifications';
-import {ListItem} from 'react-native-elements';
+import {Icon, ListItem} from 'react-native-elements';
 import {Image, Linking, Platform, Text, View} from 'react-native';
 import {useToast} from '../Toast';
 import {profileStyles as styles} from './Styles';
@@ -14,16 +14,27 @@ import {ItemIcon} from './ItemIcon';
 import {customTheme} from '../../theme/theme';
 import {Wrapper} from '../common/Wrapper';
 import assets from '../../assets';
-import Constants from 'expo-constants';
+import ExpoConstants from 'expo-constants';
+import Constants from '../../Constants';
+import compareVersions from 'compare-versions';
+import {openURLInNewTab} from '../bubble/utils';
 
 const chevronProps = {size: 24, marginEnd: 8};
 
 export const Profile: React.FC = (): JSX.Element => {
   const [profile, setProfile] = useState<ProfileModel>();
+  const [webConfig, setWebConfig] = useState<Config>();
   const nav = useNavigation();
   const auth = useAuth();
   const api = useAPI();
   const Toast = useToast();
+
+  useEffect(() => {
+    const configSubscription = api.config
+      .observe('web')
+      .subscribe(setWebConfig);
+    return () => configSubscription.unsubscribe();
+  }, [api]);
 
   useEffect(() => {
     const profileSubscription = api.profiles.observe().subscribe(setProfile);
@@ -37,6 +48,19 @@ export const Profile: React.FC = (): JSX.Element => {
       await Toast.danger(e.message);
     }
   };
+
+  const update = () => {
+    if (Platform.OS === 'web') {
+      window.location.reload(true);
+    }
+  };
+
+  const currentVersion = ExpoConstants.manifest?.version;
+  const latestVersion = webConfig?.latestVersion;
+  let needsUpdate: boolean | undefined;
+  if (currentVersion && latestVersion) {
+    needsUpdate = compareVersions(latestVersion, currentVersion) > 0;
+  }
 
   return (
     <Wrapper topColor={customTheme.colors.lightBlue} bottomColor={'#fff'}>
@@ -87,8 +111,24 @@ export const Profile: React.FC = (): JSX.Element => {
         <Notifications profile={profile} />
         <ListItem
           containerStyle={styles.itemContainer}
-          onPress={() => Linking.openURL('mailto:hello@bubblesapp.org') }
+          onPress={() => Linking.openURL('mailto:hello@bubblesapp.org')}
           leftIcon={<ItemIcon imageSource={assets.images.profile.chatBubble} />}
+          buttonGroup={{
+            containerStyle: {flex: 0.2},
+            buttons: [
+              {
+                element: () => (
+                  <Icon
+                    color={'#1BA2FC'}
+                    name={'facebook-messenger'}
+                    type={'font-awesome-5'}
+                    size={20}
+                  />
+                ),
+              },
+            ],
+            onPress: () => openURLInNewTab(Constants.CHAT_LINK),
+          }}
           title={I18n.t('profile.helpTitle')}
           titleStyle={styles.itemTitle}
           subtitle={I18n.t('profile.helpSubtitle')}
@@ -104,6 +144,49 @@ export const Profile: React.FC = (): JSX.Element => {
           chevron={chevronProps}
           bottomDivider={true}
         />
+        {currentVersion && (
+          <ListItem
+            onPress={() =>
+              Platform.OS === 'web' && document.location.reload(true)
+            }
+            containerStyle={styles.itemContainer}
+            leftIcon={{
+              type: 'font-awesome',
+              name: 'refresh',
+              size: 16,
+              style: {
+                marginRight: 20,
+              },
+            }}
+            title={I18n.t('profile.version').replace(
+              '$0',
+              `v${currentVersion}`,
+            )}
+            titleStyle={styles.itemTitleDark}
+            subtitle={
+              typeof needsUpdate === 'undefined'
+                ? undefined
+                : needsUpdate
+                ? I18n.t('profile.updateAvailable').replace(
+                    '$0',
+                    `v${latestVersion}`,
+                  )
+                : I18n.t('profile.upToDate')
+            }
+            subtitleStyle={styles.itemSubtitle}
+            buttonGroup={
+              typeof needsUpdate === 'undefined'
+                ? undefined
+                : needsUpdate
+                ? {
+                    buttons: [I18n.t('profile.updateButton')],
+                    onPress: () => update(),
+                  }
+                : undefined
+            }
+            bottomDivider={true}
+          />
+        )}
         <ListItem
           containerStyle={styles.itemContainer}
           onPress={() => signOut()}
@@ -121,18 +204,6 @@ export const Profile: React.FC = (): JSX.Element => {
           title={I18n.t('profile.delete')}
           titleStyle={styles.itemTitleDanger}
           chevron={chevronProps}
-        />
-        <ListItem
-          onPress={() =>
-            Platform.OS === 'web' && document.location.reload(true)
-          }
-          containerStyle={{height: 32}}
-          title={`v${Constants.manifest?.version}`}
-          titleStyle={{
-            textAlign: 'center',
-            color: customTheme.colors.mediumGray,
-          }}
-          bottomDivider={true}
         />
       </View>
     </Wrapper>

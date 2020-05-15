@@ -82,7 +82,7 @@ class Auth {
       uid,
       email,
       pushNotificationsEnabled: Platform.OS === 'android',
-      emailNotificationsEnabled: true,
+      emailNotificationsEnabled: false,
     });
     this.refreshState().catch((err) => console.log(err));
     //await this.sendVerificationEmail();

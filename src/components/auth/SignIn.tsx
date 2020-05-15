@@ -27,7 +27,7 @@ type FormValues = yup.InferType<typeof validationSchema>;
 const initialValues: FormValues = {
   email: '',
   password: '',
-  remember: false,
+  remember: true,
 };
 
 export const SignIn: React.FC = (): JSX.Element => {

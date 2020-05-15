@@ -7,4 +7,5 @@ export default {
   PRIVACY_LINK: 'https://bubblesapp.org/charte-de-confidentialite',
   RECOMMENDATIONS_LINK:
     'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public',
+  CHAT_LINK: 'https://m.me/bubblescommunity',
 };
