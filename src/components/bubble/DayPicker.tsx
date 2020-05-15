@@ -54,7 +54,7 @@ export const DayPicker: React.FC<Props> = (props) => {
       <View style={styles.dayContainer}>
         <Text style={styles.daysAgo}>{daysAgoString(mo)}</Text>
         <Text style={styles.date}>
-          {mo.format(I18n.t('bubble.friends.dayPickerFormat'))}
+          {_.upperFirst(mo.format(I18n.t('bubble.friends.dayPickerFormat')))}
         </Text>
       </View>
       <TouchableOpacity
