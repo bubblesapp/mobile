@@ -1,4 +1,7 @@
 export default {
+  animations: {
+    bubble: require('../assets/animations/bubble.json'),
+  },
   images: {
     chrome: require('../assets/images/Chrome.png'),
     auth: {
@@ -7,8 +10,9 @@ export default {
       emailVerification: require('../assets/images/auth/EmailVerification.png'),
     },
     bubble: {
+      peaceful: require('../assets/images/bubble/bubulle_peaceful.png'),
       bubble: require('../assets/images/bubble/Bubble.png'),
-      alert: require('../assets/images/bubble/BubbleAlert.png'),
+      alert: require('../assets/images/bubble/bubulle_alert.png'),
       avatar: require('../assets/images/bubble/Avatar_small.png'),
       avatarMask: require('../assets/images/bubble/Avatar_mask.png'),
       avatarMulti: require('../assets/images/bubble/Avatar_multi.png'),

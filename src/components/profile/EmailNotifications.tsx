@@ -20,9 +20,14 @@ export const EmailNotifications: React.FC<Props> = ({profile}) => {
       containerStyle={styles.itemContainer}
       leftIcon={<ItemIcon imageSource={Bell} />}
       title={I18n.t('profile.emailNotifications')}
-      titleStyle={styles.itemTitleDark}
+      titleStyle={styles.itemTitle}
+      subtitle={I18n.t('profile.comingSoon')}
+      subtitleStyle={styles.itemSubtitle}
+      disabled={true}
+      disabledStyle={{opacity: 0.5}}
       bottomDivider={true}
       switch={{
+        style: {opacity: 0.2},
         value: profile?.emailNotificationsEnabled,
         onValueChange: (enabled) => switchEmailNotifications(enabled),
       }}

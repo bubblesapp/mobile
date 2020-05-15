@@ -82,6 +82,7 @@ export type Locale = {
     bubbleTitle: string;
     noAlert: string;
     xAlerts: string;
+    sendAlert: string;
     invites: {
       title: string;
       linkLabel: string;
@@ -156,6 +157,7 @@ export type Locale = {
     notifications: string;
     pushNotifications: string;
     emailNotifications: string;
+    comingSoon: string;
     //account: 'Account',
     version: string;
     upToDate: string;

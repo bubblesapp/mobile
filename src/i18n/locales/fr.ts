@@ -91,6 +91,7 @@ export const fr: Locale = {
     bubbleTitle: '$0',
     noAlert: "Pas d'alerte",
     xAlerts: '$0 alerte(s)',
+    sendAlert: 'Envoyer une alerte',
     invites: {
       title: "Inviter quelqu'un",
       linkLabel: 'Votre lien Bubbles',
@@ -102,7 +103,7 @@ export const fr: Locale = {
       shareMessageContent: "Rejoins ma Bulle et veillons l'un sur l'autre. $0",
       shareButton: 'Partager',
       tapToRespond: 'Invitation reçue',
-      awaitingResponse: 'Invitation envoyée...',
+      awaitingResponse: 'En attente...',
       accept: 'Accepter',
       decline: 'Décliner',
       cancel: 'Annuler',
@@ -178,6 +179,7 @@ export const fr: Locale = {
     passwordNote: 'Mot de passe requis par sécurité.',
     helpTitle: 'Des questions, suggestions ?',
     helpSubtitle: 'hello@bubblesapp.org or chat',
+    comingSoon: 'Bientôt disponible',
     changeEmail: {
       title: 'E-mail',
       heading1: 'Modifier votre e-mail',

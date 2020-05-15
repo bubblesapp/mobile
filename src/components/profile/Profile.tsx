@@ -49,18 +49,18 @@ export const Profile: React.FC = (): JSX.Element => {
     }
   };
 
-  const update = () => {
-    if (Platform.OS === 'web') {
-      window.location.reload(true);
-    }
-  };
-
   const currentVersion = ExpoConstants.manifest?.version;
   const latestVersion = webConfig?.latestVersion;
   let needsUpdate: boolean | undefined;
   if (currentVersion && latestVersion) {
     needsUpdate = compareVersions(latestVersion, currentVersion) > 0;
   }
+
+  const update = () => {
+    if (Platform.OS === 'web') {
+      window.location.search = `?v=${latestVersion}`;
+    }
+  };
 
   return (
     <Wrapper topColor={customTheme.colors.lightBlue} bottomColor={'#fff'}>
