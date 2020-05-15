@@ -83,8 +83,11 @@ export const InviteModal: React.FC<Props> = (props) => {
   };
   const shareContent = {
     title: I18n.t('bubble.invites.shareMessageTitle'),
-    text: I18n.t('bubble.invites.shareMessageContent').replace('$0', link),
-    message: I18n.t('bubble.invites.shareMessageContent').replace('$0', link),
+    text: I18n.t('bubble.invites.shareMessageContent').replace('$0', link.url),
+    message: I18n.t('bubble.invites.shareMessageContent').replace(
+      '$0',
+      link.url,
+    ),
   };
   const shareOptions: ShareOptions = {
     subject: I18n.t('bubble.invites.shareMessageTitle'),
