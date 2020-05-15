@@ -156,6 +156,7 @@ export type Locale = {
     notifications: string;
     pushNotifications: string;
     emailNotifications: string;
+    comingSoon: string;
     //account: 'Account',
     version: string;
     upToDate: string;
