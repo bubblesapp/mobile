@@ -6,6 +6,7 @@ import {PeopleList} from './PeopleList';
 import {AlertList} from './AlertList';
 import I18n from '../../i18n';
 import {Alert, Friend, Invite} from '@bubblesapp/api';
+import _ from 'lodash';
 
 type Props = {
   friends: Friend[];
@@ -52,7 +53,7 @@ export const BubbleLists: React.FC<Props> = (props) => {
         />
       </View>
       <View style={{display: selectedButton === 1 ? 'flex' : 'none', flex: 1, backgroundColor: '#fff'}}>
-        <AlertList alerts={props.alerts} />
+        <AlertList alerts={_.orderBy(props.alerts, 'createdAt', 'desc')} />
       </View>
     </View>
   );
