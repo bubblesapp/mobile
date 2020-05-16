@@ -13,6 +13,7 @@ export default {
       peaceful: require('../assets/images/bubble/bubulle_peaceful.png'),
       bubble: require('../assets/images/bubble/Bubble.png'),
       alert: require('../assets/images/bubble/bubulle_alert.png'),
+      avatarAlert: require('../assets/images/bubble/Avatar_alert.png'),
       avatar: require('../assets/images/bubble/Avatar_small.png'),
       avatarMask: require('../assets/images/bubble/Avatar_mask.png'),
       avatarMulti: require('../assets/images/bubble/Avatar_multi.png'),

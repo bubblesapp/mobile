@@ -1,5 +1,11 @@
 import React from 'react';
-import {ImageStyle, Platform, StyleSheet, TextStyle, ViewStyle} from 'react-native';
+import {
+  ImageStyle,
+  Platform,
+  StyleSheet,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import {Avatar, ListItem} from 'react-native-elements';
 import assets from '../../assets';
 import {customTheme} from '../../theme/theme';
@@ -17,18 +23,15 @@ export const AlertItem: React.FC<Props> = ({alert, onPress}) => {
       onPress={() => onPress && onPress(alert)}
       bottomDivider={true}
       containerStyle={styles.container}
-      leftElement={
-        <Avatar
-          size={44}
-          rounded={true}
-          placeholderStyle={{
-            backgroundColor: customTheme.colors.lightBlue,
-          }}
-          containerStyle={styles.avatar}
-          avatarStyle={styles.avatarImage}
-          source={assets.images.bubble.alert}
-        />
-      }
+      leftAvatar={{
+        containerStyle: styles.avatar,
+        size: 45,
+        rounded: true,
+        placeholderStyle: {
+          backgroundColor: customTheme.colors.lightBlue,
+        },
+        source: assets.images.bubble.avatarAlert,
+      }}
       title={alert.message}
       titleStyle={styles.title}
       titleProps={{
@@ -46,7 +49,6 @@ export const AlertItem: React.FC<Props> = ({alert, onPress}) => {
 type Styles = {
   container: ViewStyle;
   avatar: ViewStyle;
-  avatarImage: ImageStyle;
   title: TextStyle;
   subtitle: TextStyle;
 };
@@ -56,15 +58,7 @@ const styles = StyleSheet.create<Styles>({
     height: 72,
   },
   avatar: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: customTheme.colors.red,
     marginRight: Platform.OS === 'web' ? 16 : 0,
-  },
-  avatarImage: {
-    width: 44,
-    height: 44,
   },
   title: {
     fontFamily: customTheme.boldFontFamily,
