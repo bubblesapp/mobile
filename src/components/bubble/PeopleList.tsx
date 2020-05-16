@@ -15,6 +15,7 @@ import {IncomingInviteItem} from '../invites/IncomingInviteItem';
 import {Analytics, Events} from '../../analytics/Analytics';
 import {useNavigation} from '@react-navigation/native';
 import {Routes} from '../../nav/Routes';
+import _ from 'lodash';
 
 type Props = {
   friends: Friend[];
@@ -58,7 +59,8 @@ export const PeopleList: React.FC<Props> = ({
     nav.navigate(Routes.Log, {friend});
   };
 
-  const itemCount = friends.length + incomingInvites.length + outgoingInvites.length;
+  const itemCount =
+    friends.length + incomingInvites.length + outgoingInvites.length;
 
   return (
     <View style={{backgroundColor: '#fff'}}>
@@ -71,15 +73,15 @@ export const PeopleList: React.FC<Props> = ({
           sections={[
             {
               title: 'Incoming',
-              data: incomingInvites,
+              data: _.orderBy(incomingInvites, 'createdAt', 'desc'),
             },
             {
               title: 'Outgoing',
-              data: outgoingInvites,
+              data: _.orderBy(outgoingInvites, 'createdAt', 'desc'),
             },
             {
               title: 'Friends',
-              data: friends,
+              data: _.orderBy(friends, 'lastMet', 'desc'),
             },
           ]}
           renderItem={({item}) => {
@@ -97,15 +99,14 @@ export const PeopleList: React.FC<Props> = ({
             );
           }}
           keyExtractor={(item, index) =>
-            ((item as Friend).uid || (item as Invite).createdAt) +
-            index.toString()
+            ((item as Friend).uid || (item as Invite).from) + index.toString()
           }
           renderHiddenItem={({item}) => {
             const title = isOutgoingInvite(item)
               ? 'bubble.invites.cancel'
               : isIncomingInvite(item)
-                ? 'bubble.invites.decline'
-                : 'bubble.friends.removeFriend';
+              ? 'bubble.invites.decline'
+              : 'bubble.friends.removeFriend';
             return (
               <DestructiveButton
                 title={I18n.t(title)}

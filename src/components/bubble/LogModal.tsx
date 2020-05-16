@@ -134,8 +134,6 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: customTheme.colors.ctaBackground,
-    borderTopStartRadius: 10,
-    borderTopEndRadius: 10,
     padding: 32,
   },
   headerTitle: {
@@ -154,8 +152,6 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderBottomStartRadius: 10,
-    borderBottomEndRadius: 10,
     padding: 32,
   },
   heading1: {

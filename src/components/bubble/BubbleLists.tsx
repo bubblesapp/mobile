@@ -6,6 +6,7 @@ import {PeopleList} from './PeopleList';
 import {AlertList} from './AlertList';
 import I18n from '../../i18n';
 import {Alert, Friend, Invite} from '@bubblesapp/api';
+import _ from 'lodash';
 
 type Props = {
   friends: Friend[];
@@ -25,25 +26,24 @@ export const BubbleLists: React.FC<Props> = (props) => {
   return (
     <View style={styles.lists}>
       <View style={styles.listHeader}>
-        <View style={styles.listHeaderContent}>
+        {/*<View style={styles.listHeaderContent}>
           <View style={styles.handleContainer}>
             <View style={styles.handle} />
-          </View>
-          <ButtonGroup
-            buttons={[
-              I18n.t('bubble.friends.title'),
-              `${I18n.t('bubble.alerts.title')} (${props.alerts.length})`,
-            ]}
-            selectedIndex={selectedButton}
-            onPress={(i) => setSelectedButton(i)}
-            containerStyle={styles.buttonsContainer}
-            buttonStyle={styles.buttons}
-            textStyle={styles.buttonsText}
-            selectedButtonStyle={styles.selectedButton}
-            selectedTextStyle={styles.selectedButtonText}
-            innerBorderStyle={{width: 0}}
-          />
-        </View>
+          </View>*/}
+        <ButtonGroup
+          buttons={[
+            I18n.t('bubble.friends.title'),
+            `${I18n.t('bubble.alerts.title')} (${props.alerts.length})`,
+          ]}
+          selectedIndex={selectedButton}
+          onPress={(i) => setSelectedButton(i)}
+          containerStyle={styles.buttonsContainer}
+          buttonStyle={styles.buttons}
+          textStyle={styles.buttonsText}
+          selectedButtonStyle={styles.selectedButton}
+          selectedTextStyle={styles.selectedButtonText}
+          innerBorderStyle={{width: 0}}
+        />
       </View>
       <View style={{display: selectedButton === 0 ? 'flex' : 'none', flex: 1, backgroundColor: '#fff'}}>
         <PeopleList
@@ -53,7 +53,7 @@ export const BubbleLists: React.FC<Props> = (props) => {
         />
       </View>
       <View style={{display: selectedButton === 1 ? 'flex' : 'none', flex: 1, backgroundColor: '#fff'}}>
-        <AlertList alerts={props.alerts} />
+        <AlertList alerts={_.orderBy(props.alerts, 'createdAt', 'desc')} />
       </View>
     </View>
   );
@@ -117,7 +117,7 @@ HeaderComponent={
 type Styles = {
   lists: ViewStyle;
   listHeader: ViewStyle;
-  listHeaderContent: ViewStyle;
+  //listHeaderContent: ViewStyle;
   handleContainer: ViewStyle;
   handle: ViewStyle;
   buttonsContainer: ViewStyle;
@@ -145,18 +145,20 @@ const styles = StyleSheet.create<Styles>({
     //backgroundColor: '#f00',
   },
   listHeader: {
-    height: 110,
+    height: 72,
     backgroundColor: '#fff',
     borderTopStartRadius: 40,
     borderTopEndRadius: 40,
     shadowRadius: 45,
     shadowColor: customTheme.colors.shadow,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
   },
-  listHeaderContent: {
-    marginTop: 16,
+  /*listHeaderContent: {
     marginHorizontal: 16,
-    paddingBottom: 16,
-  },
+  },*/
   handleContainer: {
     paddingVertical: 8,
     height: 20,
