@@ -16,7 +16,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@bubblesapp/api": "git://github.com/bubblesapp/api.git#v0.1.17",
+    "@bubblesapp/api": "git://github.com/bubblesapp/api.git#v0.1.18",
     "@expo/react-native-action-sheet": "^3.6.0",
     "@react-native-community/async-storage": "^1.10.0",
     "@react-native-community/clipboard": "^1.2.2",

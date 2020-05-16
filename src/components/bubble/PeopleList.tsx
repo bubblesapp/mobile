@@ -73,15 +73,15 @@ export const PeopleList: React.FC<Props> = ({
           sections={[
             {
               title: 'Incoming',
-              data: _.orderBy(incomingInvites, 'createdAt', 'desc'),
+              data: _.orderBy(incomingInvites, (i) => i.createdAt || 0, 'desc'),
             },
             {
               title: 'Outgoing',
-              data: _.orderBy(outgoingInvites, 'createdAt', 'desc'),
+              data: _.orderBy(outgoingInvites, (i) => i.createdAt || 0, 'desc'),
             },
             {
               title: 'Friends',
-              data: _.orderBy(friends, 'lastMet', 'desc'),
+              data: _.orderBy(friends, (f) => f.lastMet || 0, 'desc'),
             },
           ]}
           renderItem={({item}) => {
