@@ -1,19 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Image,
-  ImageStyle,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextStyle,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {Image, ImageStyle, Platform, ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle,} from 'react-native';
 import {customTheme} from '../../theme/theme';
 import {useAuth} from '../../auth/Auth';
 import {BubbleLists} from './BubbleLists';
 import I18n from '../../i18n';
-import {ExtraButton} from '../common/ExtraButton';
 import {Alert, Friend, Invite, Profile} from '@bubblesapp/api';
 import {useAPI} from '../../api/useAPI';
 import {Analytics} from '../../analytics/Analytics';
@@ -22,10 +12,10 @@ import Constants from '../../Constants';
 import {useNavigation} from '@react-navigation/native';
 import {BubbleAnimation} from './BubbleAnimation';
 import {SubmitButton} from '../common/SubmitButton';
-import {PeopleList} from './PeopleList';
 import assets from '../../assets';
 import {Routes} from '../../nav/Routes';
 import _ from 'lodash';
+import {Helmet} from 'react-helmet';
 
 const openRecommendations = async () => {
   openURLInNewTab(Constants.RECOMMENDATIONS_LINK);
@@ -87,6 +77,11 @@ export const Bubble: React.FC = () => {
         justifyContent: 'flex-start',
         backgroundColor: color,
       }}>
+      {Platform.OS === 'web' && (
+        <Helmet>
+          <style>{`body { background: linear-gradient(white 0%, white 50%, ${color} 50%, ${color} 100%); }`}</style>
+        </Helmet>
+      )}
       <View
         style={{
           position: 'absolute',

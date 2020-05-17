@@ -15,10 +15,10 @@ export type BubbleStackParamsList = {
   [Routes.Invite]: undefined;
   [Routes.Alert]: undefined;
   [Routes.Log]: {
-    friend: Friend,
+    friend: Friend;
   };
   [Routes.AlertDetails]: {
-    alert: Alert,
+    alert: Alert;
   };
 };
 
@@ -31,16 +31,22 @@ export type BubbleNavigatorNavigationProp = BottomTabNavigationProp<
 
 export const BubbleNavigator: React.FC = (): JSX.Element => {
   return (
-    <BubbleStack.Navigator headerMode={'none'} mode={'modal'} screenOptions={{
-      cardStyle: {
-        borderRadius: 0,
-      }
-    }}>
+    <BubbleStack.Navigator
+      headerMode={'none'}
+      mode={'modal'}
+      screenOptions={{
+        cardStyle: {
+          borderRadius: 0,
+        },
+      }}>
       <BubbleStack.Screen name={Routes.Bubble} component={Bubble} />
       <BubbleStack.Screen name={Routes.Invite} component={InviteModal} />
       <BubbleStack.Screen name={Routes.Alert} component={AlertModal} />
       <BubbleStack.Screen name={Routes.Log} component={LogModal} />
-      <BubbleStack.Screen name={Routes.AlertDetails} component={AlertDetailsModal} />
+      <BubbleStack.Screen
+        name={Routes.AlertDetails}
+        component={AlertDetailsModal}
+      />
     </BubbleStack.Navigator>
   );
 };

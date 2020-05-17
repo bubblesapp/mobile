@@ -16,26 +16,28 @@ export type Props = {
 
 export const Template: React.FC<Props> = (props) => {
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.wrapper}>
-      {Platform.OS === 'web' && (
-        <Helmet>
-          <style>{`body { background-color: ${customTheme.colors.lightBlue}; }`}</style>
-        </Helmet>
-      )}
-      <View style={[styles.header, props.headerStyle]}>
-        <View style={[styles.titleContainer, props.titleContainerStyle]}>
-          {props.title}
+    <>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.wrapper}>
+        {Platform.OS === 'web' && (
+          <Helmet>
+            <style>{`body { background: linear-gradient(${customTheme.colors.lightBlue} 0%, ${customTheme.colors.lightBlue} 50%, ${customTheme.colors.pink} 50%, ${customTheme.colors.pink} 100%); }`}</style>
+          </Helmet>
+        )}
+        <View style={[styles.header, props.headerStyle]}>
+          <View style={[styles.titleContainer, props.titleContainerStyle]}>
+            {props.title}
+          </View>
+          <View style={[styles.headerContent, props.headerContentStyle]}>
+            {props.headerContent}
+          </View>
         </View>
-        <View style={[styles.headerContent, props.headerContentStyle]}>
-          {props.headerContent}
+        <View style={[styles.content, props.contentStyle]}>
+          {props.content}
         </View>
-      </View>
-      <View style={[styles.content, props.contentStyle]}>
-        {props.content}
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 
