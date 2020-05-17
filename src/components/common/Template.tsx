@@ -1,6 +1,8 @@
 import React from 'react';
-import {Image, KeyboardAvoidingView, Platform, StyleSheet, View, ViewStyle} from 'react-native';
+import {Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, ViewStyle} from 'react-native';
 import {customTheme} from '../../theme/theme';
+import {PlatformAwareWrapper} from './PlatformAwareWrapper';
+import {Helmet} from 'react-helmet';
 
 export type Props = {
   headerStyle?: ViewStyle;
@@ -17,6 +19,11 @@ export const Template: React.FC<Props> = (props) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.wrapper}>
+      {Platform.OS === 'web' && (
+        <Helmet>
+          <style>{`body { background-color: ${customTheme.colors.lightBlue}; }`}</style>
+        </Helmet>
+      )}
       <View style={[styles.header, props.headerStyle]}>
         <View style={[styles.titleContainer, props.titleContainerStyle]}>
           {props.title}
