@@ -9,7 +9,8 @@
     "platforms": ["web"],
     "version": "0.0.12",
     "web": {
-      "display": "standalone"
+      "display": "standalone",
+      "barStyle": "black"
     }
   }
 }
