@@ -10,17 +10,19 @@ export const fr: Locale = {
     rightInstall: 'Installez Bubbles sur votre ordinateur',
   },
   onboarding: {
+    login: 'Se connecter',
+    signUp: 'Créer une bulle',
     screen1: {
       heading1: 'Créez votre Bulle',
-      heading2: 'Agrandissez-là progressivement',
+      heading2: 'En trois clics, simplement avec votre e-mail',
     },
     screen2: {
       heading1: 'Veillez sur votre entourage',
       heading2: 'Historisez vos contacts',
     },
     screen3: {
-      heading1: 'Alertez et soyez alerté',
-      heading2: 'Envoyez un message anonyme si nécessaire',
+      heading1: 'Alertez et soyez alerté.e',
+      heading2: 'Prévenez les bonnes personnes en cas de risque',
     },
   },
   auth: {

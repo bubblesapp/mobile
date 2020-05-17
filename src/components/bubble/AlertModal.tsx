@@ -90,10 +90,11 @@ export const AlertModal: React.FC<Props> = (props) => {
   const sendAlert = async () => {
     try {
       setSendingAlert(true);
-      await api.newAlerts.sendAlert(
+      const id = await api.newAlerts.sendAlert(
         selectedFriends.map((f) => f.uid),
         message,
       );
+      await api.alerts.waitUntilExists(id);
       setSendingAlert(false);
       Toast.success(I18n.t('bubble.alerts.alertSent'));
       Analytics.logEvent(Events.SendAlert);

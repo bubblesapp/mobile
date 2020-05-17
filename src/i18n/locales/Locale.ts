@@ -8,6 +8,8 @@ export type Locale = {
     rightInstall: string;
   };
   onboarding: {
+    login: string;
+    signUp: string;
     screen1: {
       heading1: string;
       heading2: string;

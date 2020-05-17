@@ -1,18 +1,20 @@
 import React, {useRef, useState} from 'react';
 import AppIntroSlider from 'react-native-app-intro-slider';
-import {Image, Platform, SafeAreaView, StyleSheet, Text, View, ViewStyle,} from 'react-native';
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View, ViewStyle,} from 'react-native';
 import {customTheme} from '../theme/theme';
 import {Title} from '../components/auth/common/Title';
 import I18n from '../i18n';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Button} from 'react-native-elements';
-import {useWindowSize} from '../api/useWindowSize';
 import {useNavigation} from '@react-navigation/native';
 import {Routes} from '../nav/Routes';
 import {useAsyncStorage} from '../api/useAsyncStorage';
 import {Splash} from './Splash';
 import {useDevice} from '../device/useDevice';
 import {DeviceType} from 'expo-device';
+import {Helmet} from 'react-helmet';
+import {PlatformAwareWrapper} from '../components/common/PlatformAwareWrapper';
+import assets from '../assets';
 
 type Slide = {
   key: string;
@@ -27,7 +29,7 @@ const slides: Slide[] = [
     key: '1',
     heading1: I18n.t('onboarding.screen1.heading1'),
     heading2: I18n.t('onboarding.screen1.heading2'),
-    image: require('../../assets/images/onboarding/Screen1.png'),
+    image: assets.images.onboarding.screen1,
     imageStyle: {
       width: 246,
       height: 255,
@@ -38,7 +40,7 @@ const slides: Slide[] = [
     key: '2',
     heading1: I18n.t('onboarding.screen2.heading1'),
     heading2: I18n.t('onboarding.screen2.heading2'),
-    image: require('../../assets/images/onboarding/Screen2.png'),
+    image: assets.images.onboarding.screen2,
     imageStyle: {
       width: 236,
       height: 230,
@@ -49,10 +51,10 @@ const slides: Slide[] = [
     key: '3',
     heading1: I18n.t('onboarding.screen3.heading1'),
     heading2: I18n.t('onboarding.screen3.heading2'),
-    image: require('../../assets/images/onboarding/Screen3.png'),
+    image: assets.images.onboarding.screen3[I18n.locale],
     imageStyle: {
-      width: 161,
-      height: 268,
+      width: 256,
+      height: 263,
       marginVertical: 32,
     },
   },
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: customTheme.colors.lightBlue,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'stretch',
   },
   slide: {
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     marginVertical: 16,
     marginHorizontal: 8,
-    paddingHorizontal: 32,
+    paddingHorizontal: 16,
   },
   ctaLight: {
     backgroundColor: customTheme.colors.lightBlue,
@@ -122,12 +124,13 @@ const styles = StyleSheet.create({
   },
   ctaDarkText: {
     color: '#fff',
+    //fontSize: 16,
   },
   paginationContainer: {
-    /*position: 'absolute',
-    bottom: 16,
+    position: 'absolute',
+    bottom: 0,
     left: 16,
-    right: 16,*/
+    right: 16,
   },
   paginationDots: {
     height: 16,
@@ -145,7 +148,7 @@ const styles = StyleSheet.create({
     opacity: 0.2,
   },
   activeDot: {
-    backgroundColor: customTheme.colors.ctaBackground,
+    opacity: 1,
   },
   ctaContainer: {
     flexDirection: 'row',
@@ -160,7 +163,6 @@ type Props = {
 export const Onboarding: React.FC<Props> = () => {
   const nav = useNavigation();
   const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
   const [onboarded, setOnboarded] = useAsyncStorage('onboarded', false);
   const device = useDevice();
   const slider = useRef<AppIntroSlider<Slide>>(null);
@@ -170,8 +172,6 @@ export const Onboarding: React.FC<Props> = () => {
   } else if (onboarded === true) {
     //nav.navigate(Routes.SignIn);
   }
-
-  const contentHeight = height ? height - 128 : undefined;
 
   const goToSignIn = async () => {
     await setOnboarded(true);
@@ -183,42 +183,64 @@ export const Onboarding: React.FC<Props> = () => {
     nav.navigate(Routes.SignUp);
   };
 
+  const renderPagination = (activeIndex: number) => {
+    console.log('renderPagination', activeIndex);
+    return (
+      <View style={styles.paginationContainer}>
+        <View style={styles.paginationDots}>
+          {slides.length > 1 &&
+            slides.map((_, i) => (
+              <TouchableOpacity
+                key={i}
+                style={[
+                  styles.dot,
+                  i === activeIndex ? styles.activeDot : undefined,
+                ]}
+                onPress={() => slider.current?.goToSlide(i, true)}
+              />
+            ))}
+        </View>
+      </View>
+    );
+  };
+
   return (
-    <SafeAreaView
+    <PlatformAwareWrapper
       style={styles.wrapper}
-      onLayout={(e) => {
-        setHeight(e.nativeEvent.layout.height);
-        setWidth(e.nativeEvent.layout.width);
-      }}>
+      onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+      {Platform.OS === 'web' && (
+        <Helmet>
+          <style>{`body { background-color: ${
+            StyleSheet.flatten(styles.wrapper).backgroundColor
+          }; }`}</style>
+        </Helmet>
+      )}
       <AppIntroSlider<Slide>
         ref={slider}
         keyExtractor={(item) => item.heading1}
         data={slides}
         renderItem={(slide: any) => {
-          const {item} = slide;
+          const {item, dimensions} = slide;
           return (
-            <View style={[styles.slide, {height: contentHeight}]}>
-              <SafeAreaView
-                style={{
-                  flex: 1,
-                  flexDirection: 'column',
-                  justifyContent: 'space-evenly',
-                  alignItems: 'center',
-                }}>
-                <View style={styles.titleContainer}>
-                  <Title />
-                </View>
-                <Image source={item.image} style={item.imageStyle} />
-                <View>
-                  <Text style={styles.heading1}>{item.heading1}</Text>
-                  <Text style={styles.heading2}>{item.heading2}</Text>
-                </View>
-              </SafeAreaView>
+            <View
+              style={{
+                height: dimensions.height - 32,
+                flexDirection: 'column',
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+              }}>
+              <View style={styles.titleContainer}>
+                <Title />
+              </View>
+              <Image source={item.image} style={item.imageStyle} />
+              <View>
+                <Text style={styles.heading1}>{item.heading1}</Text>
+                <Text style={styles.heading2}>{item.heading2}</Text>
+              </View>
             </View>
           );
         }}
-        dotStyle={styles.dot}
-        activeDotStyle={styles.activeDot}
+        renderPagination={renderPagination}
         showDoneButton={false}
         renderNextButton={() => (
           <View style={styles.buttonCircle}>
@@ -253,16 +275,16 @@ export const Onboarding: React.FC<Props> = () => {
         <Button
           onPress={() => goToSignIn()}
           buttonStyle={[styles.cta, styles.ctaLight]}
-          title={'Log in'}
+          title={I18n.t('onboarding.login')}
           titleStyle={[styles.ctaText, styles.ctaLightText]}
         />
         <Button
           onPress={() => goToSignUp()}
           buttonStyle={[styles.cta, styles.ctaDark]}
-          title={'Sign up'}
+          title={I18n.t('onboarding.signUp')}
           titleStyle={[styles.ctaText, styles.ctaDarkText]}
         />
       </View>
-    </SafeAreaView>
+    </PlatformAwareWrapper>
   );
 };

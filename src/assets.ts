@@ -3,6 +3,14 @@ export default {
     bubble: require('../assets/animations/bubble.json'),
   },
   images: {
+    onboarding: {
+      screen1: require('../assets/images/onboarding/Screen1.png'),
+      screen2: require('../assets/images/onboarding/Screen2.png'),
+      screen3: {
+        en: require('../assets/images/onboarding/Screen3_en.png'),
+        fr: require('../assets/images/onboarding/Screen3_fr.png'),
+      },
+    },
     chrome: require('../assets/images/Chrome.png'),
     auth: {
       man: require('../assets/images/auth/Man.png'),

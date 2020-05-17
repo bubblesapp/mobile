@@ -16,7 +16,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@bubblesapp/api": "git://github.com/bubblesapp/api.git#v0.1.18",
+    "@bubblesapp/api": "git://github.com/bubblesapp/api.git#v0.1.19",
     "@expo/react-native-action-sheet": "^3.6.0",
     "@react-native-community/async-storage": "^1.10.0",
     "@react-native-community/clipboard": "^1.2.2",
@@ -50,6 +50,7 @@
     "react": "16.11.0",
     "react-datepicker": "^2.14.1",
     "react-dom": "^16.13.1",
+    "react-helmet": "^6.0.0",
     "react-native": "0.62.0",
     "react-native-app-intro-slider": "^4.0.2",
     "react-native-device-info": "^5.5.6",
@@ -84,6 +85,7 @@
     "@types/jest": "^24.0.24",
     "@types/lodash": "^4.14.149",
     "@types/react-dom": "^16.9.8",
+    "@types/react-helmet": "^6.0.0",
     "@types/react-native": "^0.62.0",
     "@types/react-responsive": "^8.0.2",
     "@types/react-router": "^5.1.5",

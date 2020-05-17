@@ -45,32 +45,34 @@ export const AuthNavigator: React.FC = (): JSX.Element => {
   const [onboarded] = useAsyncStorage('onboarded', false);
 
   return (
-    <ScrollView
-      alwaysBounceVertical={false}
-      contentContainerStyle={styles.contentContainer}>
-      <AuthStack.Navigator headerMode={'none'} screenOptions={screenOptions}>
-        {!onboarded && (
-          <AuthStack.Screen name="Onboarding" component={Onboarding} />
-        )}
-        <AuthStack.Screen name={Routes.SignIn} component={SignIn} />
-        <AuthStack.Screen name={Routes.SignUp} component={SignUp} />
-        <AuthStack.Screen name={Routes.SignUpNext} component={SignUpNext} />
-        <AuthStack.Screen
-          name={Routes.ConfirmSignUp}
-          component={ConfirmSignUp}
-        />
-        <AuthStack.Screen
-          name={Routes.ForgotPassword}
-          component={ForgotPassword}
-        />
-        <AuthStack.Screen
-          name={Routes.ResetPasswordEmailSent}
-          component={ResetPasswordEmailSent}
-        />
-      </AuthStack.Navigator>
-    </ScrollView>
+    <AuthStack.Navigator headerMode={'none'} screenOptions={screenOptions}>
+      {!onboarded && (
+        <AuthStack.Screen name="Onboarding" component={Onboarding} />
+      )}
+      <AuthStack.Screen name={Routes.SignIn} component={SignIn} />
+      <AuthStack.Screen name={Routes.SignUp} component={SignUp} />
+      <AuthStack.Screen name={Routes.SignUpNext} component={SignUpNext} />
+      <AuthStack.Screen
+        name={Routes.ConfirmSignUp}
+        component={ConfirmSignUp}
+      />
+      <AuthStack.Screen
+        name={Routes.ForgotPassword}
+        component={ForgotPassword}
+      />
+      <AuthStack.Screen
+        name={Routes.ResetPasswordEmailSent}
+        component={ResetPasswordEmailSent}
+      />
+    </AuthStack.Navigator>
   );
 };
+
+/*
+<ScrollView
+      alwaysBounceVertical={false}
+      contentContainerStyle={styles.contentContainer}>
+ */
 
 type Styles = {
   contentContainer: ViewStyle;
