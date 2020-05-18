@@ -7,7 +7,7 @@
     "icon": "assets/images/icon_1024.png",
     "slug": "bubbles",
     "platforms": ["web"],
-    "version": "0.0.12",
+    "version": "1.0.0",
     "web": {
       "display": "standalone",
       "barStyle": "black-translucent"

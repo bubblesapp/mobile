@@ -13,7 +13,7 @@ export type Props = {
   contentStyle?: ViewStyle;
   content?: React.ReactNode;
 };
-
+// ${customTheme.colors.lightBlue} 0%, ${customTheme.colors.lightBlue} 50%, ${customTheme.colors.pink} 50%, ${customTheme.colors.pink} 100%
 export const Template: React.FC<Props> = (props) => {
   return (
     <>
@@ -22,7 +22,7 @@ export const Template: React.FC<Props> = (props) => {
         style={styles.wrapper}>
         {Platform.OS === 'web' && (
           <Helmet>
-            <style>{`body { background: linear-gradient(${customTheme.colors.lightBlue} 0%, ${customTheme.colors.lightBlue} 50%, ${customTheme.colors.pink} 50%, ${customTheme.colors.pink} 100%); }`}</style>
+            <style>{`html { overflow: hidden; } body { overflow: hidden; }`}</style>
           </Helmet>
         )}
         <View style={[styles.header, props.headerStyle]}>

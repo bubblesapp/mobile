@@ -159,7 +159,7 @@ export const AlertModal: React.FC<Props> = (props) => {
             </Text>
             <FlatList<Friend>
               style={{alignSelf: 'stretch'}}
-              data={friends}
+              data={_.orderBy(friends, (f) => f.lastMet ?? 0, 'desc')}
               scrollEnabled={true}
               ListHeaderComponent={
                 <RecentFriendsItem

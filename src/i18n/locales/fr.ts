@@ -102,7 +102,7 @@ export const fr: Locale = {
       copiedToClipboard: 'Lien copié.',
       clipboardError: 'Erreur lors de la copie.',
       shareMessageTitle: 'Rejoins ma Bulle',
-      shareMessageContent: "Rejoins ma Bulle et veillons l'un sur l'autre. $0",
+      shareMessageContent: "Rejoins ma Bulle, veillons l'un sur l'autre et alertons-nous en cas de danger. $0",
       shareButton: 'Partager',
       tapToRespond: 'Invitation reçue',
       awaitingResponse: 'En attente...',

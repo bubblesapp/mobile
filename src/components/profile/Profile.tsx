@@ -80,7 +80,7 @@ export const Profile: React.FC = (): JSX.Element => {
       }}>
       {Platform.OS === 'web' && (
         <Helmet>
-          <style>{`body { background: linear-gradient(white 0%, white 50%, ${customTheme.colors.lightBlue} 50%, ${customTheme.colors.lightBlue} 100%); }`}</style>
+          <style>{`html { overflow: hidden; position: fixed; } body { overflow: hidden; position: fixed; }`}</style>
         </Helmet>
       )}
       <View style={styles.header}>

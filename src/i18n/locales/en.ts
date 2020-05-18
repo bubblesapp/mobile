@@ -103,7 +103,7 @@ export const en: Locale = {
       clipboardError: 'Failed to copy link.',
       shareMessageTitle: 'Join my Bubble',
       shareMessageContent:
-        "Join my Bubble and let's help each other stay safe. $0",
+        "Join my Bubble, let's stay safe together and warn each other in case of risk. $0",
       shareButton: 'Share',
       tapToRespond: 'Incoming invite',
       awaitingResponse: 'Invitation pending...',

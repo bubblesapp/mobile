@@ -79,7 +79,7 @@ export const Bubble: React.FC = () => {
       }}>
       {Platform.OS === 'web' && (
         <Helmet>
-          <style>{`body { background: linear-gradient(white 0%, white 50%, ${color} 50%, ${color} 100%); }`}</style>
+          <style>{`html { overflow: hidden; } body { overflow: hidden; }`}</style>
         </Helmet>
       )}
       <View
