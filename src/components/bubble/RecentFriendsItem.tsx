@@ -100,8 +100,8 @@ const styles = StyleSheet.create<Styles>({
     marginRight: Platform.OS === 'web' ? 16 : 0,
   },
   avatarImage: {
-    width: 30,
-    height: 30,
+    width: 45,
+    height: 45,
   },
   friendTitle: {
     fontFamily: customTheme.boldFontFamily,

@@ -5,7 +5,6 @@ type Styles = {
   wrapper: ViewStyle;
   header: ViewStyle;
   headerContent: ViewStyle;
-  avatarImage: ImageStyle;
   title: TextStyle;
   subtitle: TextStyle;
   content: ViewStyle;
@@ -28,19 +27,21 @@ export const profileStyles = StyleSheet.create<Styles>({
     backgroundColor: '#fff',
   },
   header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '40%',
+    maxHeight: 350,
     flexDirection: 'column',
-    alignItems: 'center',
-    paddingVertical: 35,
+    justifyContent: 'space-evenly',
+    alignItems: 'stretch',
     backgroundColor: customTheme.colors.lightBlue,
   },
   headerContent: {
+    flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  avatarImage: {
-    width: 100,
-    height: 100,
   },
   title: {
     fontSize: 24,
@@ -55,7 +56,12 @@ export const profileStyles = StyleSheet.create<Styles>({
     fontFamily: customTheme.boldFontFamily,
   },
   content: {
-    flex: 1,
+    position: 'absolute',
+    top: '40%',
+    left: 0,
+    right: 0,
+    //bottom: 0,
+    //flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     backgroundColor: '#fff', //customTheme.colors.lightBlue,

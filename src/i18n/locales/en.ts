@@ -10,9 +10,11 @@ export const en: Locale = {
     rightInstall: 'Install Bubbles on your computer',
   },
   onboarding: {
+    login: 'Log In',
+    signUp: 'Sign Up',
     screen1: {
       heading1: 'Create your Bubble',
-      heading2: 'Invite people and carefully expand it',
+      heading2: "Using your e-mail, it's just three clicks away",
     },
     screen2: {
       heading1: 'Take care of your Bubble',
@@ -20,7 +22,7 @@ export const en: Locale = {
     },
     screen3: {
       heading1: 'Warn and be warned',
-      heading2: 'Send anonymous messages if needed',
+      heading2: 'Send an alert to the right people in case of risk',
     },
   },
   auth: {
@@ -101,7 +103,7 @@ export const en: Locale = {
       clipboardError: 'Failed to copy link.',
       shareMessageTitle: 'Join my Bubble',
       shareMessageContent:
-        "Join my Bubble and let's help each other stay safe. $0",
+        "Join my Bubble, let's stay safe together and warn each other in case of risk. $0",
       shareButton: 'Share',
       tapToRespond: 'Incoming invite',
       awaitingResponse: 'Invitation pending...',

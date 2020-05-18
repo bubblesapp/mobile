@@ -1,7 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ImageStyle, Platform, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  ImageStyle,
+  Platform,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Invite} from '../../models/Invite';
-import {Avatar, Badge, ListItem} from 'react-native-elements';
+import {Avatar, Badge, Button, Icon, ListItem} from 'react-native-elements';
 import assets from '../../assets';
 import {customTheme} from '../../theme/theme';
 import {Profile} from '@bubblesapp/api';
@@ -16,6 +25,7 @@ type Props = {
 
 export const IncomingInviteItem: React.FC<Props> = ({invite}) => {
   const [profile, setProfile] = useState<Profile>();
+  const [isAcceptingInvite, setIsAcceptingInvite] = useState(false);
 
   const api = useAPI();
   const Toast = useToast();
@@ -29,7 +39,10 @@ export const IncomingInviteItem: React.FC<Props> = ({invite}) => {
 
   const accept = async () => {
     try {
+      setIsAcceptingInvite(true);
       await api.invites.incoming.accept(invite.from);
+      await api.friends.waitUntilExists(invite.from);
+      setIsAcceptingInvite(false);
       Toast.success(I18n.t('bubble.invites.acceptSuccess'));
       Analytics.logEvent(Events.AcceptInvite);
     } catch (err) {
@@ -69,14 +82,32 @@ export const IncomingInviteItem: React.FC<Props> = ({invite}) => {
       subtitleProps={{
         numberOfLines: 1,
       }}
-      rightIcon={{
+      rightElement={
+        <View style={styles.rightIcon}>
+          {isAcceptingInvite ? (
+            <ActivityIndicator
+              size={20}
+              color={customTheme.colors.ctaBackground}
+            />
+          ) : (
+            <Icon
+              name={'check'}
+              type={'font-awesome'}
+              size={20}
+              color={customTheme.colors.ctaBackground}
+              onPress={() => accept()}
+            />
+          )}
+        </View>
+      }
+      /* rightIcon={{
         type: 'font-awesome',
         name: 'check',
         size: 20,
         color: customTheme.colors.ctaBackground,
         onPress: () => accept(),
         containerStyle: styles.rightIcon,
-      }}
+      }} */
     />
   );
 };

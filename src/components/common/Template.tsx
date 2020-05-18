@@ -1,6 +1,8 @@
 import React from 'react';
-import {Image, KeyboardAvoidingView, Platform, StyleSheet, View, ViewStyle} from 'react-native';
+import {Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, ViewStyle} from 'react-native';
 import {customTheme} from '../../theme/theme';
+import {PlatformAwareWrapper} from './PlatformAwareWrapper';
+import {Helmet} from 'react-helmet';
 
 export type Props = {
   headerStyle?: ViewStyle;
@@ -11,24 +13,31 @@ export type Props = {
   contentStyle?: ViewStyle;
   content?: React.ReactNode;
 };
-
+// ${customTheme.colors.lightBlue} 0%, ${customTheme.colors.lightBlue} 50%, ${customTheme.colors.pink} 50%, ${customTheme.colors.pink} 100%
 export const Template: React.FC<Props> = (props) => {
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.wrapper}>
-      <View style={[styles.header, props.headerStyle]}>
-        <View style={[styles.titleContainer, props.titleContainerStyle]}>
-          {props.title}
+    <>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.wrapper}>
+        {Platform.OS === 'web' && (
+          <Helmet>
+            <style>{`html { overflow: hidden; } body { overflow: hidden; }`}</style>
+          </Helmet>
+        )}
+        <View style={[styles.header, props.headerStyle]}>
+          <View style={[styles.titleContainer, props.titleContainerStyle]}>
+            {props.title}
+          </View>
+          <View style={[styles.headerContent, props.headerContentStyle]}>
+            {props.headerContent}
+          </View>
         </View>
-        <View style={[styles.headerContent, props.headerContentStyle]}>
-          {props.headerContent}
+        <View style={[styles.content, props.contentStyle]}>
+          {props.content}
         </View>
-      </View>
-      <View style={[styles.content, props.contentStyle]}>
-        {props.content}
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 

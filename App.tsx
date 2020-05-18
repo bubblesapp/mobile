@@ -21,7 +21,8 @@ console.disableYellowBox = true;
 export type AppProps = {
   isHeadless: boolean;
 };
-type Styles = {
+
+/*type Styles = {
   containerStyle: ViewStyle;
   wrapperStyle: ViewStyle;
 };
@@ -50,7 +51,7 @@ const styles = StyleSheet.create<Styles>({
 
 const Container: React.FC = ({children}) => {
   return <View style={styles.containerStyle}>{children}</View>;
-};
+};*/
 
 const App: React.FC<AppProps> = ({isHeadless}) => {
   const [ready, setReady] = useState(false);
@@ -102,25 +103,21 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
   }
   return (
     <ResponsiveContainer>
-      <View style={styles.wrapperStyle}>
-        <ThemeProvider<CustomTheme> theme={customTheme}>
-          <ToastProvider>
-            <Container>
-              <DeviceContext.Provider value={device}>
-                <APIProvider>
-                  <AuthProvider>
-                    <NavigationContainer ref={navigationRef}>
-                      <ActionSheetProvider>
-                        <Root />
-                      </ActionSheetProvider>
-                    </NavigationContainer>
-                  </AuthProvider>
-                </APIProvider>
-              </DeviceContext.Provider>
-            </Container>
-          </ToastProvider>
-        </ThemeProvider>
-      </View>
+      <ThemeProvider<CustomTheme> theme={customTheme}>
+        <ToastProvider>
+          <DeviceContext.Provider value={device}>
+            <APIProvider>
+              <AuthProvider>
+                <NavigationContainer ref={navigationRef}>
+                  <ActionSheetProvider>
+                    <Root />
+                  </ActionSheetProvider>
+                </NavigationContainer>
+              </AuthProvider>
+            </APIProvider>
+          </DeviceContext.Provider>
+        </ToastProvider>
+      </ThemeProvider>
     </ResponsiveContainer>
   );
 };
