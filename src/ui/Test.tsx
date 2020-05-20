@@ -4,8 +4,8 @@ import {Button, Platform, SafeAreaView, Text, View} from 'react-native';
 export const Test: React.FC = () => {
   console.log(Platform.OS === 'web', window.navigator.standalone);
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#f00'}}>
-      <Text>Test v2</Text>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#f00', paddingTop: 32}}>
+      <Text>Test v6</Text>
       <Text>
         Standalone:{' '}
         {(Platform.OS === 'web' && window.navigator.standalone)?.toString()}

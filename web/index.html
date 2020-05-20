@@ -12,6 +12,7 @@
       content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1.00001, viewport-fit=auto"
     />
     <title>%WEB_TITLE%</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
     <style>
       /**
        * Extend the react-native-web reset:
@@ -60,6 +61,34 @@
           background-color: black;
         }
       }*/
+      .show {
+        display: flex;
+      }
+      .hide {
+        display: none;
+      }
+      #update-button-container {
+        height: 32px;
+        background-color: #314DCB;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        right: 0;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+      #update-text {
+        color: #fff;
+        font-size: 14px;
+        font-family: 'Nunito', sans-serif;
+      }
+      #update-cta {
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+      }
     </style>
   </head>
 
@@ -88,6 +117,9 @@
         </div>
       </form>
     </noscript>
+    <div id="update-button-container" class="hide" onclick="function() ">
+      <p id="update-text">A new version is available. <span id="update-cta">Click to update</span>.</p>
+    </div>
     <!-- The root element for your Expo app. -->
     <div id="root"></div>
   </body>

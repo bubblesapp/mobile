@@ -7,6 +7,10 @@ export type Locale = {
     rightTip: string;
     rightInstall: string;
   };
+  update: {
+    text: string;
+    cta: string;
+  };
   onboarding: {
     login: string;
     signUp: string;

@@ -9,6 +9,10 @@ export const en: Locale = {
     rightTip: 'Tip',
     rightInstall: 'Install Bubbles on your computer',
   },
+  update: {
+    text: 'New version available.',
+    cta: 'Click to update',
+  },
   onboarding: {
     login: 'Log In',
     signUp: 'Sign Up',

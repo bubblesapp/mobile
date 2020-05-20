@@ -9,18 +9,16 @@ import * as Font from 'expo-font';
 import {Splash} from './src/ui/auth/Splash';
 import * as Device from 'expo-device';
 import {CurrentDevice, DeviceContext} from './src/services/util/useDevice';
-import {isMountedRef, navigationRef} from './src/services/navigation/Navigation';
+import {isMountedRef, navigationRef,} from './src/services/navigation/Navigation';
 import {customTheme, CustomTheme} from './src/ui/theme';
 import {ToastProvider} from './src/ui/common/Toast';
 import {ThemeProvider} from 'react-native-elements';
 import {Analytics} from './src/services/analytics/Analytics';
 import {ResponsiveContainer} from './src/ui/common/ResponsiveContainer';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {Test} from './src/ui/Test';
-import env from './active.env';
-import ENV from './environment';
-import {LinkingOptions} from '@react-navigation/native/lib/typescript/src/types';
 import {linking} from './src/services/navigation/Routes';
+import {UpdateWatcher} from './src/ui/common/UpdateWatcher';
+import {Test} from './src/ui/Test';
 
 console.disableYellowBox = true;
 
@@ -77,7 +75,6 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
     return <Splash />;
   }
 
-  //return <Test />;
   return (
     <SafeAreaProvider>
       <ResponsiveContainer>
@@ -86,6 +83,7 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
             <DeviceContext.Provider value={device}>
               <FirebaseAPIProvider>
                 <FirebaseAuthProvider>
+                  <UpdateWatcher />
                   <NavigationContainer
                     ref={navigationRef}
                     linking={linking}

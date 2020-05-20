@@ -46,6 +46,9 @@ export const linking: LinkingOptions = {
       initialRouteName: Routes.SignIn,
       path: 'auth',
       screens: {
+        [Routes.Onboarding]: {
+          path: 'welcome',
+        },
         [Routes.SignIn]: {
           path: 'sign-in',
         },

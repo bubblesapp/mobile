@@ -1,10 +1,6 @@
 /* eslint-env serviceworker */
 
-const v = '2';
-
-self.addEventListener('install', (event) => {
-  console.log(event);
-});
+self.version = '59';
 
 /**
  * Store notification icon string in service worker.
@@ -16,6 +12,15 @@ self.addEventListener('message', (event) => {
     try {
       data = JSON.parse(event.data);
     } catch (e) {}
+  }
+
+  if (event?.data?.action === 'skipWaiting') {
+    self
+      .skipWaiting()
+      .then(() => {
+        console.log('skipWaiting success');
+      })
+      .catch((err) => console.error(err));
   }
 
   if (data && data.fromExpoWebClient) {
@@ -33,7 +38,7 @@ self.addEventListener('push', (event) => {
   } catch (e) {
     // If `event.data.text()` is not a JSON object, we just treat it
     // as a plain string and display it as the body.
-    payload = { title: '', body: event.data.text() };
+    payload = {title: '', body: event.data.text()};
   }
 
   const title = payload.title;
@@ -53,7 +58,7 @@ self.addEventListener('push', (event) => {
 });
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Clients
-self.addEventListener('notificationclick', event => {
+self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
   event.waitUntil(
@@ -90,7 +95,7 @@ self.addEventListener('notificationclick', event => {
         data: event.notification.data,
         remote: !event.notification._isLocal,
       });
-    })()
+    })(),
   );
 });
 

@@ -33,13 +33,6 @@ export const Profile: React.FC = (): JSX.Element => {
   console.log(route);
 
   useEffect(() => {
-    const configSubscription = api.config
-      .observe('web')
-      .subscribe(setWebConfig);
-    return () => configSubscription.unsubscribe();
-  }, [api]);
-
-  useEffect(() => {
     const profileSubscription = api.profiles.observe().subscribe(setProfile);
     return () => profileSubscription.unsubscribe();
   }, [api]);
