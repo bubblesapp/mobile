@@ -1,57 +1,32 @@
 import React, {useEffect, useState} from 'react';
-import {Root} from './src/components/Root';
-import {APIProvider} from './src/api/useAPI';
-import {AuthProvider} from './src/auth/Auth';
-import {Platform, StyleSheet, View, ViewStyle, Text} from 'react-native';
+import {Root} from './src/ui/Root';
+import {FirebaseAPIProvider} from './src/services/api/firebase/FirebaseAPIProvider';
+import {FirebaseAuthProvider} from './src/services/auth/firebase/FirebaseAuthProvider';
+import {Platform, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import * as Font from 'expo-font';
-import {Splash} from './src/onboarding/Splash';
+import {Splash} from './src/ui/auth/Splash';
 import * as Device from 'expo-device';
-import {CurrentDevice, DeviceContext} from './src/device/useDevice';
-import {isMountedRef, navigationRef} from './src/nav/Navigation';
-import {customTheme, CustomTheme} from './src/theme/theme';
-import {ToastProvider} from './src/components/Toast';
+import {CurrentDevice, DeviceContext} from './src/services/util/useDevice';
+import {isMountedRef, navigationRef} from './src/services/navigation/Navigation';
+import {customTheme, CustomTheme} from './src/ui/theme';
+import {ToastProvider} from './src/ui/common/Toast';
 import {ThemeProvider} from 'react-native-elements';
-import {Analytics} from './src/analytics/Analytics';
-import {ResponsiveContainer} from './src/components/common/ResponsiveContainer';
+import {Analytics} from './src/services/analytics/Analytics';
+import {ResponsiveContainer} from './src/ui/common/ResponsiveContainer';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {Test} from './src/ui/Test';
+import env from './active.env';
+import ENV from './environment';
+import {LinkingOptions} from '@react-navigation/native/lib/typescript/src/types';
+import {linking} from './src/services/navigation/Routes';
 
 console.disableYellowBox = true;
 
 export type AppProps = {
   isHeadless: boolean;
 };
-
-/*type Styles = {
-  containerStyle: ViewStyle;
-  wrapperStyle: ViewStyle;
-};
-
-const webContainerStyle: ViewStyle = {
-  flex: 1,
-  flexDirection: 'row',
-  justifyContent: 'center',
-};
-
-const nativeContainerStyle: ViewStyle = {
-  flex: 1,
-  flexDirection: 'row',
-  justifyContent: 'center',
-};
-
-const styles = StyleSheet.create<Styles>({
-  containerStyle:
-    Platform.OS === 'web' ? webContainerStyle : nativeContainerStyle,
-  wrapperStyle: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-});
-
-const Container: React.FC = ({children}) => {
-  return <View style={styles.containerStyle}>{children}</View>;
-};*/
 
 const App: React.FC<AppProps> = ({isHeadless}) => {
   const [ready, setReady] = useState(false);
@@ -101,24 +76,31 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
   if (!ready) {
     return <Splash />;
   }
+
+  //return <Test />;
   return (
-    <ResponsiveContainer>
-      <ThemeProvider<CustomTheme> theme={customTheme}>
-        <ToastProvider>
-          <DeviceContext.Provider value={device}>
-            <APIProvider>
-              <AuthProvider>
-                <NavigationContainer ref={navigationRef}>
-                  <ActionSheetProvider>
-                    <Root />
-                  </ActionSheetProvider>
-                </NavigationContainer>
-              </AuthProvider>
-            </APIProvider>
-          </DeviceContext.Provider>
-        </ToastProvider>
-      </ThemeProvider>
-    </ResponsiveContainer>
+    <SafeAreaProvider>
+      <ResponsiveContainer>
+        <ThemeProvider<CustomTheme> theme={customTheme}>
+          <ToastProvider>
+            <DeviceContext.Provider value={device}>
+              <FirebaseAPIProvider>
+                <FirebaseAuthProvider>
+                  <NavigationContainer
+                    ref={navigationRef}
+                    linking={linking}
+                    fallback={<Text>Loading...</Text>}>
+                    <ActionSheetProvider>
+                      <Root />
+                    </ActionSheetProvider>
+                  </NavigationContainer>
+                </FirebaseAuthProvider>
+              </FirebaseAPIProvider>
+            </DeviceContext.Provider>
+          </ToastProvider>
+        </ThemeProvider>
+      </ResponsiveContainer>
+    </SafeAreaProvider>
   );
 };
 

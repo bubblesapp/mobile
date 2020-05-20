@@ -17,7 +17,7 @@ buck-out/
 .fakebuckversion
 
 .firebase
-src/api/FirebaseAPI.web.ts
+src/services/api/firebase/FirebaseAPI.web.ts
 
 ### ReactNative.Node Stack ###
 # Logs
