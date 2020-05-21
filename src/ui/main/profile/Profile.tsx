@@ -1,59 +1,36 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Routes} from '../../../services/navigation/Routes';
 import I18n from '../../../services/i18n';
 import {useAuth} from '../../../services/auth/useAuth';
-import {useAPI} from '../../../services/api/useAPI';
-import {Config, Profile as ProfileModel} from '@bubblesapp/api';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {Notifications} from './Notifications';
 import {Icon, ListItem} from 'react-native-elements';
-import {Image, Linking, Platform, Text, View} from 'react-native';
+import {ActivityIndicator, Image, Linking, Platform, Text, View,} from 'react-native';
 import {useToast} from '../../common/Toast';
 import {profileStyles as styles} from './Styles';
 import {ItemIcon} from './ItemIcon';
-import {customTheme} from '../../theme';
 import assets from '../../assets';
-import ExpoConstants from 'expo-constants';
 import Constants from '../../../services/util/Constants';
-import compareVersions from 'compare-versions';
 import {openURLInNewTab} from '../../../services/util/utils';
 import {Template} from '../Template';
+import {useProfile} from '../../../services/state/profile/useProfile';
+import {useVersionAPI} from '../../../services/state/version/useVersionAPI';
+import {customTheme} from '../../theme';
 
 const chevronProps = {size: 24, marginEnd: 8};
 
 export const Profile: React.FC = (): JSX.Element => {
-  const [profile, setProfile] = useState<ProfileModel>();
-  const [webConfig, setWebConfig] = useState<Config>();
   const nav = useNavigation();
   const auth = useAuth();
-  const api = useAPI();
   const Toast = useToast();
-  const route = useRoute();
-  console.log(route);
-
-  useEffect(() => {
-    const profileSubscription = api.profiles.observe().subscribe(setProfile);
-    return () => profileSubscription.unsubscribe();
-  }, [api]);
+  const profile = useProfile();
+  const versionAPI = useVersionAPI();
 
   const signOut = async () => {
     try {
       await auth.signOut();
     } catch (e) {
       await Toast.danger(e.message);
-    }
-  };
-
-  const currentVersion = ExpoConstants.manifest?.version;
-  const latestVersion = webConfig?.latestVersion;
-  let needsUpdate: boolean | undefined;
-  if (currentVersion && latestVersion) {
-    needsUpdate = compareVersions(latestVersion.toString(), currentVersion) > 0;
-  }
-
-  const update = () => {
-    if (Platform.OS === 'web') {
-      window.location.search = `?v=${latestVersion}`;
     }
   };
 
@@ -168,11 +145,8 @@ export const Profile: React.FC = (): JSX.Element => {
           chevron={chevronProps}
           bottomDivider={true}
         />
-        {currentVersion && (
+        {versionAPI.state.current && (
           <ListItem
-            onPress={() =>
-              Platform.OS === 'web' && document.location.reload(true)
-            }
             containerStyle={styles.itemContainer}
             leftIcon={{
               type: 'font-awesome',
@@ -184,29 +158,48 @@ export const Profile: React.FC = (): JSX.Element => {
             }}
             title={I18n.t('profile.version').replace(
               '$0',
-              `v${currentVersion}`,
+              `v${versionAPI.state.current}`,
             )}
             titleStyle={styles.itemTitleDark}
             subtitle={
-              typeof needsUpdate === 'undefined'
-                ? undefined
-                : needsUpdate
+              versionAPI.state.isUpdateAvailable
                 ? I18n.t('profile.updateAvailable').replace(
                     '$0',
-                    `v${latestVersion}`,
+                    `v${versionAPI.state.latest}`,
                   )
                 : I18n.t('profile.upToDate')
             }
             subtitleStyle={styles.itemSubtitle}
-            buttonGroup={
-              typeof needsUpdate === 'undefined'
-                ? undefined
-                : needsUpdate
-                ? {
-                    buttons: [I18n.t('profile.updateButton')],
-                    onPress: () => update(),
-                  }
-                : undefined
+            rightElement={
+              versionAPI.state.isUpdateAvailable ? (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderWidth: 2,
+                    borderColor: customTheme.colors.lightGray,
+                    borderRadius: 15,
+                    width: 50,
+                    height: 30,
+                    marginLeft: 16,
+                  }}>
+                  {versionAPI.state.isUpdating ? (
+                    <ActivityIndicator
+                      size={20}
+                      color={customTheme.colors.ctaBackground}
+                    />
+                  ) : (
+                    <Icon
+                      name={'refresh'}
+                      type={'font-awesome'}
+                      size={20}
+                      color={customTheme.colors.ctaBackground}
+                      onPress={() => versionAPI.startUpdate()}
+                    />
+                  )}
+                </View>
+              ) : undefined
             }
             bottomDivider={true}
           />

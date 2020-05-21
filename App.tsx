@@ -17,8 +17,9 @@ import {Analytics} from './src/services/analytics/Analytics';
 import {ResponsiveContainer} from './src/ui/common/ResponsiveContainer';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {linking} from './src/services/navigation/Routes';
-import {UpdateWatcher} from './src/ui/common/UpdateWatcher';
+import {UpdateBanner} from './src/ui/common/UpdateBanner';
 import {Test} from './src/ui/Test';
+import {VersionAPIProvider} from './src/services/state/version/VersionAPIProvider';
 
 console.disableYellowBox = true;
 
@@ -84,15 +85,17 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
             <DeviceContext.Provider value={device}>
               <FirebaseAPIProvider>
                 <FirebaseAuthProvider>
-                  <UpdateWatcher />
-                  <NavigationContainer
-                    ref={navigationRef}
-                    linking={linking}
-                    fallback={<Text>Loading...</Text>}>
-                    <ActionSheetProvider>
-                      <Root />
-                    </ActionSheetProvider>
-                  </NavigationContainer>
+                  <VersionAPIProvider>
+                    <UpdateBanner />
+                    <NavigationContainer
+                      ref={navigationRef}
+                      linking={linking}
+                      fallback={<Text>Loading...</Text>}>
+                      <ActionSheetProvider>
+                        <Root />
+                      </ActionSheetProvider>
+                    </NavigationContainer>
+                  </VersionAPIProvider>
                 </FirebaseAuthProvider>
               </FirebaseAPIProvider>
             </DeviceContext.Provider>
