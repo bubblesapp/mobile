@@ -75,6 +75,7 @@ const App: React.FC<AppProps> = ({isHeadless}) => {
     return <Splash />;
   }
 
+  //return <Test />
   return (
     <SafeAreaProvider>
       <ResponsiveContainer>

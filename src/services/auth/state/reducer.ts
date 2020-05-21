@@ -1,5 +1,5 @@
 import {Reducer} from 'react';
-import {AuthState} from '../../AuthAPI';
+import {AuthState} from '../AuthAPI';
 import {
   AuthAction,
   AuthStateChangedAction,

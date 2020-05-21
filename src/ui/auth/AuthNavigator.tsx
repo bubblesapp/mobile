@@ -41,6 +41,8 @@ export const AuthNavigator: React.FC = (): JSX.Element => {
 
   const [onboarded] = useAsyncStorage('onboarded', false);
 
+  console.log('Onboarded', onboarded);
+
   return (
     <AuthStack.Navigator headerMode={'none'} screenOptions={screenOptions}>
       {!onboarded && (

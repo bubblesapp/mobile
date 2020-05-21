@@ -1,6 +1,6 @@
 /* eslint-env serviceworker */
 
-self.version = '59';
+self.version = '1.0.1';
 
 /**
  * Store notification icon string in service worker.

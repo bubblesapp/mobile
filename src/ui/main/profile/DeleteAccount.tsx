@@ -13,6 +13,7 @@ import {Header} from './Header';
 import {Input} from '../../common/Input';
 import {customTheme} from '../../theme';
 import assets from '../../assets';
+import {Template} from '../Template';
 
 const validationSchema = yup.object().shape({
   password: yup.string().required().min(6),
@@ -36,7 +37,7 @@ export const DeleteAccount: React.FC = (): JSX.Element => {
   };
 
   return (
-    <Wrapper topColor={customTheme.colors.red} bottomColor={'#fff'}>
+    <Template topColor={customTheme.colors.red}>
       <View style={[styles.header, {backgroundColor: customTheme.colors.red}]}>
         <Header title={I18n.t('profile.deleteAccount.title')} color={'#fff'} />
       </View>
@@ -90,6 +91,6 @@ export const DeleteAccount: React.FC = (): JSX.Element => {
           )}
         </Formik>
       </View>
-    </Wrapper>
+    </Template>
   );
 };

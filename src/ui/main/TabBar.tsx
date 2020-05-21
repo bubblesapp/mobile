@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Image,
-  ImageStyle,
+  ImageStyle, SafeAreaView,
   StyleSheet,
   Text,
   TextStyle,
@@ -97,44 +97,46 @@ export const TabBar: React.FC<BottomTabBarProps> = ({
   navigation,
 }): JSX.Element => {
   return (
-    <View style={styles.tabBar}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          if (state.index !== 0) {
-            navigation.navigate(Routes.BubbleNavigator);
+    <SafeAreaView>
+      <View style={styles.tabBar}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            if (state.index !== 0) {
+              navigation.navigate(Routes.BubbleNavigator);
+            }
+          }}>
+          <View style={styles.buttonContainer}>
+            <TabBarIcon imageSource={Oval} />
+            <TabBarLabel
+              focused={state.index === 0}
+              color={customTheme.colors.gray}
+              title={I18n.t('bubble.title')}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            if (state.index !== 1) {
+              navigation.navigate(Routes.ProfileNavigator);
+            }
+          }}>
+          <View style={styles.buttonContainer}>
+            <TabBarIcon imageSource={User} />
+            <TabBarLabel
+              focused={state.index === 1}
+              color={customTheme.colors.gray}
+              title={I18n.t('profile.title')}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(Routes.Invite, {})
           }
-        }}>
-        <View style={styles.buttonContainer}>
-          <TabBarIcon imageSource={Oval} />
-          <TabBarLabel
-            focused={state.index === 0}
-            color={customTheme.colors.gray}
-            title={I18n.t('bubble.title')}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          if (state.index !== 1) {
-            navigation.navigate(Routes.ProfileNavigator);
-          }
-        }}>
-        <View style={styles.buttonContainer}>
-          <TabBarIcon imageSource={User} />
-          <TabBarLabel
-            focused={state.index === 1}
-            color={customTheme.colors.gray}
-            title={I18n.t('profile.title')}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate(Routes.Invite, {})
-        }
-        style={styles.buttonContainer}>
-        <InviteButton />
-      </TouchableOpacity>
-    </View>
+          style={styles.buttonContainer}>
+          <InviteButton />
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };

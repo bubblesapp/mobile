@@ -7,11 +7,10 @@ import {useAuth} from '../../../services/auth/useAuth';
 import _ from 'lodash';
 import {Text, View} from 'react-native';
 import {useToast} from '../../common/Toast';
-import {customTheme} from '../../theme';
 import {profileStyles as styles} from './Styles';
 import {Header} from './Header';
 import {Input} from '../../common/Input';
-import {Wrapper} from '../../common/Wrapper';
+import {Template} from '../Template';
 
 const validationSchema = yup.object().shape({
   name: yup
@@ -42,7 +41,7 @@ export const ChangePersonalInfo: React.FC = (): JSX.Element => {
   initialValues.name = auth.state?.name ?? initialValues.name;
 
   return (
-    <Wrapper topColor={customTheme.colors.lightBlue} bottomColor={'#fff'}>
+    <Template>
       <View style={styles.header}>
         <Header title={I18n.t('profile.changePersonalInfo.title')} />
       </View>
@@ -93,6 +92,6 @@ export const ChangePersonalInfo: React.FC = (): JSX.Element => {
           )}
         </Formik>
       </View>
-    </Wrapper>
+    </Template>
   );
 };

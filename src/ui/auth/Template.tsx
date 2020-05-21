@@ -1,8 +1,15 @@
 import React from 'react';
-import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewStyle} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {customTheme} from '../theme';
 import {PlatformAwareWrapper} from '../common/PlatformAwareWrapper';
 import {Helmet} from 'react-helmet';
+import {SafeAreaContainer} from '../common/SafeAreaContainer';
 
 export type Props = {
   headerStyle?: ViewStyle;
@@ -16,50 +23,19 @@ export type Props = {
 
 export const Template: React.FC<Props> = (props) => {
   return (
-    <PlatformAwareWrapper style={{flex: 1}}>
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 0,
-          height: '50%',
-          backgroundColor: customTheme.colors.pink,
-        }}
-      />
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 0,
-          top: '50%',
-          backgroundColor: customTheme.colors.lightBlue,
-        }}
-      />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.wrapper}>
-        {Platform.OS === 'web' && (
-          <Helmet>
-            <style>{`html { overflow: hidden; position: fixed; } body { overflow: hidden; position: fixed; }`}</style>
-          </Helmet>
-        )}
-        <View style={[styles.header, props.headerStyle]}>
-          <View style={[styles.titleContainer, props.titleContainerStyle]}>
-            {props.title}
-          </View>
-          <View style={[styles.headerContent, props.headerContentStyle]}>
-            {props.headerContent}
-          </View>
+    <SafeAreaContainer
+      topColor={customTheme.colors.pink}
+      bottomColor={customTheme.colors.lightBlue}>
+      <View style={[styles.header, props.headerStyle]}>
+        <View style={[styles.titleContainer, props.titleContainerStyle]}>
+          {props.title}
         </View>
-        <View style={[styles.content, props.contentStyle]}>
-          {props.content}
+        <View style={[styles.headerContent, props.headerContentStyle]}>
+          {props.headerContent}
         </View>
-      </KeyboardAvoidingView>
-    </PlatformAwareWrapper>
+      </View>
+      <View style={[styles.content, props.contentStyle]}>{props.content}</View>
+    </SafeAreaContainer>
   );
 };
 

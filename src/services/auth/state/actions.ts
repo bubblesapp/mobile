@@ -1,8 +1,5 @@
-import {AuthState} from '../../AuthAPI';
-
-export class Action<P = undefined> {
-  constructor(public payload?: P) {}
-}
+import {AuthState} from '../AuthAPI';
+import {Action} from '../../state/Action';
 
 export class AuthStateChangedAction extends Action<AuthState> {
   constructor(public payload: AuthState) {

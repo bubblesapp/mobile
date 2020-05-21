@@ -29,9 +29,13 @@ export type ProfileNavigatorNavigationProp = BottomTabNavigationProp<
 
 export const ProfileNavigator: React.FC = (): JSX.Element => {
   const route = useRoute();
-  console.log(route);
   return (
     <ProfileStack.Navigator
+      screenOptions={{
+        cardStyle: {
+          flex: 1,
+        },
+      }}
       headerMode={'none'}
       initialRouteName={Routes.Profile}>
       <ProfileStack.Screen name={Routes.Profile} component={Profile} />

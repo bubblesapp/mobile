@@ -1,3 +1,3 @@
 import React from 'react';
 
-export const UpdateWatch: React.FC = () => null;
+export const UpdateWatcher: React.FC = () => null;

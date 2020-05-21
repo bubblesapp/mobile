@@ -1,224 +1,145 @@
-import React, {useEffect, useState} from 'react';
-import {Image, ImageStyle, Platform, ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle,} from 'react-native';
+import React from 'react';
+import {Image, ImageStyle, StyleSheet, Text, TextStyle, View, ViewStyle,} from 'react-native';
 import {customTheme} from '../../theme';
-import {useAuth} from '../../../services/auth/useAuth';
 import {BubbleLists} from './BubbleLists';
 import I18n from '../../../services/i18n';
-import {Alert, Friend, Invite, Profile} from '@bubblesapp/api';
-import {useAPI} from '../../../services/api/useAPI';
-import {Analytics} from '../../../services/analytics/Analytics';
 import {openURLInNewTab} from '../../../services/util/utils';
 import Constants from '../../../services/util/Constants';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {BubbleAnimation} from './BubbleAnimation';
 import {SubmitButton} from '../../common/SubmitButton';
 import assets from '../../assets';
 import {Routes} from '../../../services/navigation/Routes';
 import _ from 'lodash';
-import {Helmet} from 'react-helmet';
-import {PlatformAwareWrapper} from '../../common/PlatformAwareWrapper';
-import {BubbleStackParamsList} from './BubbleNavigator';
+import {Template} from '../Template';
+import {useBubble} from '../../../services/state/bubble/useBubble';
+import {useProfile} from '../../../services/state/profile/useProfile';
 
 const openRecommendations = async () => {
   openURLInNewTab(Constants.RECOMMENDATIONS_LINK);
 };
 
 export const Bubble: React.FC = () => {
-  const [profile, setProfile] = useState<Profile>();
-  const [friends, setFriends] = useState<Friend[]>([]);
-  const [incomingInvites, setIncomingInvites] = useState<Invite[]>([]);
-  const [outgoingInvites, setOutgoingInvites] = useState<Invite[]>([]);
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-  const auth = useAuth();
-  const api = useAPI();
   const nav = useNavigation();
-
-  console.log(I18n);
-
-  useEffect(() => {
-    const friendsSubscription = api.friends.observeAll().subscribe((f) => {
-      Analytics.set('people_count', f.length);
-      setFriends(f);
-    });
-    return () => friendsSubscription.unsubscribe();
-  }, [api]);
-
-  useEffect(() => {
-    const outgoingInvitesSubscription = api.invites.outgoing
-      .observeAll()
-      .subscribe(setOutgoingInvites);
-    return () => outgoingInvitesSubscription.unsubscribe();
-  }, [auth.state.uid, api]);
-
-  useEffect(() => {
-    const incomingInvitesSubscription = api.invites.incoming
-      .observeAll()
-      .subscribe(setIncomingInvites);
-    return () => incomingInvitesSubscription.unsubscribe();
-  }, [auth.state.uid, api]);
-
-  useEffect(() => {
-    const alertsSubscription = api.alerts.observeAll().subscribe((a) => {
-      Analytics.set('alert_count', a.length);
-      setAlerts(a);
-    });
-    return () => alertsSubscription.unsubscribe();
-  }, [api]);
-
-  useEffect(() => {
-    const profileSubscription = api.profiles.observe().subscribe(setProfile);
-    return () => profileSubscription.unsubscribe();
-  }, [api]);
+  const {friends, incomingInvites, outgoingInvites, alerts} = useBubble();
+  const profile = useProfile();
 
   const color =
     alerts.length === 0 ? customTheme.colors.green : customTheme.colors.red;
 
   return (
-    <PlatformAwareWrapper style={{flex: 1}}>
+    <Template
+      topColor={color}
+      scrollViewContentContainerStyle={{backgroundColor: color}}>
       <View
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 0,
-          height: '50%',
-          backgroundColor: color,
-        }}
-      />
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 0,
-          top: '50%',
-          backgroundColor: '#fff',
-        }}
-      />
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
+          height: '65%',
           backgroundColor: color,
         }}>
-        {Platform.OS === 'web' && (
-          <Helmet>
-            <style>{`html { overflow: hidden; } body { overflow: hidden; }`}</style>
-          </Helmet>
-        )}
         <View
           style={{
             position: 'absolute',
             top: 0,
+            bottom: 0,
             left: 0,
             right: 0,
-            height: '65%',
             backgroundColor: color,
+            zIndex: -1,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View style={{flex: 2}} />
+          <View
+            style={{
+              flex: 2,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <BubbleAnimation
+              speed={alerts.length > 0 ? 2 : 0.5}
+              containerStyle={{height: '200%', aspectRatio: 1}}
+            />
+          </View>
+          <View style={{flex: 1}} />
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
           <View
             style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: color,
-              zIndex: -1,
+              flex: 2,
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <View style={{flex: 2}} />
-            <View
-              style={{
-                flex: 2,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <BubbleAnimation
-                speed={alerts.length > 0 ? 2 : 0.5}
-                containerStyle={{height: '200%', aspectRatio: 1}}
-              />
+            <Text style={styles.title}>
+              {profile?.name
+                ? I18n.t('bubble.bubbleTitle').replace('$0', profile.name)
+                : I18n.t('bubble.title')}
+            </Text>
+            <View style={styles.badgeContainer}>
+              <Text style={[styles.badgeText, {color}]}>
+                {alerts.length === 0
+                  ? I18n.t('bubble.noAlert')
+                  : I18n.t('bubble.xAlerts').replace(
+                      '$0',
+                      alerts.length.toString(),
+                    )}
+              </Text>
             </View>
-            <View style={{flex: 1}} />
           </View>
           <View
             style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
+              flex: 2,
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <View
-              style={{
-                flex: 2,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={styles.title}>
-                {profile?.name
-                  ? I18n.t('bubble.bubbleTitle').replace('$0', profile.name)
-                  : I18n.t('bubble.title')}
-              </Text>
-              <View style={styles.badgeContainer}>
-                <Text style={[styles.badgeText, {color}]}>
-                  {alerts.length === 0
-                    ? I18n.t('bubble.noAlert')
-                    : I18n.t('bubble.xAlerts').replace(
-                        '$0',
-                        alerts.length.toString(),
-                      )}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flex: 2,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={
-                  alerts.length > 0
-                    ? assets.images.bubble.alert
-                    : assets.images.bubble.peaceful
-                }
-                style={{width: 75, height: 75}}
-              />
-            </View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-              }}>
-              <SubmitButton
-                titleStyle={{color: '#fff', paddingHorizontal: 24}}
-                onPress={() => nav.navigate(Routes.Alert, {})}
-                title={I18n.t('bubble.sendAlert')}
-              />
-            </View>
+            <Image
+              source={
+                alerts.length > 0
+                  ? assets.images.bubble.alert
+                  : assets.images.bubble.peaceful
+              }
+              style={{width: 75, height: 75}}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}>
+            <SubmitButton
+              titleStyle={{color: '#fff', paddingHorizontal: 24}}
+              onPress={() => nav.navigate(Routes.Alert, {})}
+              title={I18n.t('bubble.sendAlert')}
+            />
           </View>
         </View>
-        <BubbleLists
-          friends={_.sortBy(friends, 'lastMet')}
-          incomingInvites={incomingInvites}
-          outgoingInvites={outgoingInvites}
-          alerts={alerts}
-        />
-      </ScrollView>
-    </PlatformAwareWrapper>
+      </View>
+      <BubbleLists
+        friends={_.sortBy(friends, 'lastMet')}
+        incomingInvites={incomingInvites}
+        outgoingInvites={outgoingInvites}
+        alerts={alerts}
+      />
+    </Template>
   );
 };
 

@@ -2,7 +2,6 @@ import React, {useRef, useState} from 'react';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import {
   Image,
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,9 +19,8 @@ import {useAsyncStorage} from '../../services/util/useAsyncStorage';
 import {Splash} from './Splash';
 import {useDevice} from '../../services/util/useDevice';
 import {DeviceType} from 'expo-device';
-import {Helmet} from 'react-helmet';
-import {PlatformAwareWrapper} from '../common/PlatformAwareWrapper';
 import assets from '../assets';
+import {SafeAreaContainer} from '../common/SafeAreaContainer';
 
 type Slide = {
   key: string;
@@ -191,8 +189,37 @@ export const Onboarding: React.FC<Props> = () => {
     nav.navigate(Routes.SignUp);
   };
 
+  const renderPrevButton = (activeIndex: number) => {
+    return (
+      <TouchableOpacity
+        onPress={() => slider.current?.goToSlide(activeIndex - 1)}
+        style={[{position: 'absolute', left: 0}, styles.buttonCircle]}>
+        <FontAwesome5
+          name={'arrow-left'}
+          color={customTheme.colors.darkBlue}
+          size={24}
+        />
+      </TouchableOpacity>
+    );
+  };
+
+  const renderNextButton = (activeIndex: number) => {
+    return (
+      <TouchableOpacity
+        onPress={() => slider.current?.goToSlide(activeIndex + 1)}
+        style={[{position: 'absolute', right: 0}, styles.buttonCircle]}>
+        <FontAwesome5
+          name={'arrow-right'}
+          color={customTheme.colors.darkBlue}
+          size={24}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   const renderPagination = (activeIndex: number) => {
-    console.log('renderPagination', activeIndex);
+    const isLastSlide = activeIndex === slides.length - 1;
+    const isFirstSlide = activeIndex === 0;
     return (
       <View style={styles.paginationContainer}>
         <View style={styles.paginationDots}>
@@ -208,21 +235,28 @@ export const Onboarding: React.FC<Props> = () => {
               />
             ))}
         </View>
+        {device?.type === DeviceType.DESKTOP &&
+          !isFirstSlide &&
+          renderPrevButton(activeIndex)}
+        {device?.type === DeviceType.DESKTOP &&
+          !isLastSlide &&
+          renderNextButton(activeIndex)}
       </View>
     );
   };
 
   return (
-    <PlatformAwareWrapper
-      style={styles.wrapper}
-      onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
-      {Platform.OS === 'web' && (
-        <Helmet>
-          <style>{`body { background-color: ${
-            StyleSheet.flatten(styles.wrapper).backgroundColor
-          }; }`}</style>
-        </Helmet>
-      )}
+    <SafeAreaContainer
+      containerProps={{
+        onLayout: (e) => setWidth(e.nativeEvent.layout.width),
+      }}
+      scrollViewProps={{
+        contentContainerStyle: {
+          flex: 1,
+        },
+      }}
+      topColor={customTheme.colors.lightBlue}
+      bottomColor={customTheme.colors.lightBlue}>
       <AppIntroSlider<Slide>
         ref={slider}
         keyExtractor={(item) => item.heading1}
@@ -249,27 +283,8 @@ export const Onboarding: React.FC<Props> = () => {
           );
         }}
         renderPagination={renderPagination}
+        showPrevButton={false}
         showDoneButton={false}
-        renderNextButton={() => (
-          <View style={styles.buttonCircle}>
-            <FontAwesome5
-              name={'arrow-right'}
-              color={customTheme.colors.darkBlue}
-              size={24}
-            />
-          </View>
-        )}
-        renderPrevButton={() => (
-          <View style={styles.buttonCircle}>
-            <FontAwesome5
-              name={'arrow-left'}
-              color={customTheme.colors.darkBlue}
-              size={24}
-            />
-          </View>
-        )}
-        showNextButton={device?.type === DeviceType.DESKTOP}
-        showPrevButton={device?.type === DeviceType.DESKTOP}
         showSkipButton={false}
         dotClickEnabled={false}
         onScroll={(e) => {
@@ -293,6 +308,6 @@ export const Onboarding: React.FC<Props> = () => {
           titleStyle={[styles.ctaText, styles.ctaDarkText]}
         />
       </View>
-    </PlatformAwareWrapper>
+    </SafeAreaContainer>
   );
 };

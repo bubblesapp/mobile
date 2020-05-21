@@ -1,11 +1,11 @@
 import React, {Dispatch, ReducerAction, useEffect, useMemo, useReducer,} from 'react';
 import {AuthState} from '../AuthAPI';
-import {authReducer, AuthReducer} from './state/reducer';
-import {AuthStateChangedAction} from './state/actions';
+import {authReducer, AuthReducer} from '../state/reducer';
+import {AuthStateChangedAction} from '../state/actions';
 import {useAPI} from '../../api/useAPI';
 import {Platform} from 'react-native';
 // @ts-ignore
-import {firebaseAuth, setPersistence} from './FirebaseAuth';
+import {firebaseAuth, setPersistence} from './firebaseAuth';
 import {API, Device} from '@bubblesapp/api';
 import {Analytics, Events} from '../../analytics/Analytics';
 import env from '../../../../active.env';

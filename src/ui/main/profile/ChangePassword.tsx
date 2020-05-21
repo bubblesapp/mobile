@@ -7,11 +7,10 @@ import {SubmitButton} from '../../common/SubmitButton';
 import {useAuth} from '../../../services/auth/useAuth';
 import _ from 'lodash';
 import {useToast} from '../../common/Toast';
-import {customTheme} from '../../theme';
 import {profileStyles as styles} from './Styles';
 import {Header} from './Header';
 import {Input} from '../../common/Input';
-import {Wrapper} from '../../common/Wrapper';
+import {Template} from '../Template';
 
 const validationSchema = yup.object().shape({
   currentPassword: yup
@@ -50,7 +49,7 @@ export const ChangePassword: React.FC = (): JSX.Element => {
   };
 
   return (
-    <Wrapper topColor={customTheme.colors.lightBlue} bottomColor={'#fff'}>
+    <Template>
       <View style={styles.header}>
         <Header title={I18n.t('profile.changePassword.title')} />
       </View>
@@ -118,6 +117,6 @@ export const ChangePassword: React.FC = (): JSX.Element => {
           )}
         </Formik>
       </View>
-    </Wrapper>
+    </Template>
   );
 };

@@ -4,60 +4,72 @@ import {ProfileNavigator} from './profile/ProfileNavigator';
 import {BubbleNavigator} from './bubble/BubbleNavigator';
 import {Routes} from '../../services/navigation/Routes';
 import {TabBar} from './TabBar';
-import {createStackNavigator} from '@react-navigation/stack';
-import {InviteModal} from './bubble/InviteModal';
-import {useRoute} from '@react-navigation/native';
+import {Platform, StyleSheet, View, ViewStyle} from 'react-native';
+import {Helmet} from 'react-helmet';
 
 const BottomTabs = createBottomTabNavigator();
-//const ModalStack = createStackNavigator();
 
 export type MainTabsParamList = {
   BubbleNavigator: undefined;
   ProfileNavigator: undefined;
 };
 
-/* const Tabs: React.FC = () => {
+type Props = {
+  webCss?: string;
+  containerStyle?: ViewStyle;
+};
+
+const Container: React.FC<Props> = ({children, ...otherProps}) => {
   return (
-    <BottomTabs.Navigator
-      initialRouteName={Routes.Bubble}
-      tabBarOptions={{
-        keyboardHidesTabBar: true,
-      }}
-      tabBar={(props) => <TabBar {...props} />}>
-      <BottomTabs.Screen name={Routes.BubbleNavigator} component={BubbleNavigator} />
-      <BottomTabs.Screen name={Routes.ProfileNavigator} component={ProfileNavigator} />
-    </BottomTabs.Navigator>
+    <View style={styles.container}>
+      {Platform.OS === 'web' && (
+        <Helmet>
+          <style>{otherProps.webCss}</style>
+        </Helmet>
+      )}
+      {children}
+    </View>
   );
 };
 
-const Modal: React.FC = ({navigation}) => {
-  return <InviteModal visible={true} onCancel={() => navigation.goBack()} />;
-}; */
+Container.defaultProps = {
+  webCss:
+    'html { overflow: hidden; position: fixed; } body { overflow: hidden; position: fixed; }',
+};
+
+type Styles = {
+  container: ViewStyle;
+};
+
+const styles = StyleSheet.create<Styles>({
+  container: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#fff',
+  },
+});
 
 export const MainNavigator = () => {
-  /* return (
-    <ModalStack.Navigator
-      mode={'modal'}
-      headerMode={'none'}
-      screenOptions={{
-        cardStyle: {
-          backgroundColor: 'transparent',
-        },
-        animationEnabled: false,
-      }}>
-      <ModalStack.Screen name={Routes.TabsNavigator} component={Tabs} />
-      <ModalStack.Screen name={Routes.Invite} component={Modal} />
-    </ModalStack.Navigator>
-  ); */
   return (
-    <BottomTabs.Navigator
-      initialRouteName={Routes.Bubble}
-      tabBarOptions={{
-        keyboardHidesTabBar: true,
-      }}
-      tabBar={(props) => <TabBar {...props} />}>
-      <BottomTabs.Screen name={Routes.BubbleNavigator} component={BubbleNavigator} />
-      <BottomTabs.Screen name={Routes.ProfileNavigator} component={ProfileNavigator} />
-    </BottomTabs.Navigator>
+    <Container>
+      <BottomTabs.Navigator
+        initialRouteName={Routes.Bubble}
+        tabBarOptions={{
+          keyboardHidesTabBar: true,
+        }}
+        tabBar={(props) => <TabBar {...props} />}>
+        <BottomTabs.Screen
+          name={Routes.BubbleNavigator}
+          component={BubbleNavigator}
+        />
+        <BottomTabs.Screen
+          name={Routes.ProfileNavigator}
+          component={ProfileNavigator}
+        />
+      </BottomTabs.Navigator>
+    </Container>
   );
 };

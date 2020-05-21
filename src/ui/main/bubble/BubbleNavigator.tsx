@@ -38,6 +38,7 @@ export const BubbleNavigator: React.FC = (): JSX.Element => {
       screenOptions={{
         cardStyle: {
           borderRadius: 0,
+          flex: 1,
         },
       }}>
       <BubbleStack.Screen name={Routes.Bubble} initialParams={{tab: 'people'}} component={Bubble} />

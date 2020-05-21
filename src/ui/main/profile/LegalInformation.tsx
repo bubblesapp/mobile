@@ -1,7 +1,6 @@
 import React from 'react';
 import I18n from '../../../services/i18n';
 import {Linking, View} from 'react-native';
-import {Wrapper} from '../../common/Wrapper';
 import {profileStyles as styles} from './Styles';
 import {Header} from './Header';
 import {customTheme} from '../../theme';
@@ -9,6 +8,7 @@ import {ItemIcon} from './ItemIcon';
 import Paper from '../../../../assets/images/profile/Paper.png';
 import {ListItem} from 'react-native-elements';
 import Constants from '../../../services/util/Constants';
+import {Template} from '../Template';
 
 const rightIconProps = {
   type: 'font-awesome',
@@ -23,7 +23,7 @@ const rightIconProps = {
 
 export const LegalInformation: React.FC = (): JSX.Element => {
   return (
-    <Wrapper topColor={customTheme.colors.lightBlue} bottomColor={'#fff'}>
+    <Template>
       <View style={styles.header}>
         <Header title={I18n.t('profile.legalInfo.title')} />
       </View>
@@ -55,6 +55,6 @@ export const LegalInformation: React.FC = (): JSX.Element => {
           rightIcon={rightIconProps}
         />
       </View>
-    </Wrapper>
+    </Template>
   );
 };
