@@ -85,7 +85,8 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+.env.dev
+.env.prod
 .env.test
 active.env.js
 
