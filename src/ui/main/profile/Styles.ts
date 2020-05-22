@@ -16,6 +16,7 @@ type Styles = {
   itemTitleDanger: TextStyle;
   itemTitle: TextStyle;
   itemSubtitle: TextStyle;
+  itemRightElement: ViewStyle;
   extraText: TextStyle;
 };
 
@@ -102,6 +103,17 @@ export const profileStyles = StyleSheet.create<Styles>({
   },
   itemSubtitle: {
     fontFamily: customTheme.fontFamily,
+  },
+  itemRightElement: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: customTheme.colors.lightGray,
+    borderRadius: 15,
+    width: 50,
+    height: 30,
+    marginLeft: 16,
   },
   extraText: {
     fontFamily: 'Nunito',

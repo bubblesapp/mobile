@@ -5,7 +5,15 @@ import {useAuth} from '../../../services/auth/useAuth';
 import {useNavigation} from '@react-navigation/native';
 import {Notifications} from './Notifications';
 import {Icon, ListItem} from 'react-native-elements';
-import {ActivityIndicator, Image, Linking, Platform, Text, View,} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  Linking,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useToast} from '../../common/Toast';
 import {profileStyles as styles} from './Styles';
 import {ItemIcon} from './ItemIcon';
@@ -114,22 +122,18 @@ export const Profile: React.FC = (): JSX.Element => {
           containerStyle={styles.itemContainer}
           onPress={() => Linking.openURL('mailto:hello@bubblesapp.org')}
           leftIcon={<ItemIcon imageSource={assets.images.profile.chatBubble} />}
-          buttonGroup={{
-            containerStyle: {flex: 0.2},
-            buttons: [
-              {
-                element: () => (
-                  <Icon
-                    color={'#1BA2FC'}
-                    name={'facebook-messenger'}
-                    type={'font-awesome-5'}
-                    size={20}
-                  />
-                ),
-              },
-            ],
-            onPress: () => openURLInNewTab(Constants.CHAT_LINK),
-          }}
+          rightElement={
+            <TouchableOpacity
+              style={styles.itemRightElement}
+              onPress={() => openURLInNewTab(Constants.CHAT_LINK)}>
+              <Icon
+                color={'#1BA2FC'}
+                name={'facebook-messenger'}
+                type={'font-awesome-5'}
+                size={20}
+              />
+            </TouchableOpacity>
+          }
           title={I18n.t('profile.helpTitle')}
           titleStyle={styles.itemTitle}
           subtitle={I18n.t('profile.helpSubtitle')}
@@ -172,18 +176,7 @@ export const Profile: React.FC = (): JSX.Element => {
             subtitleStyle={styles.itemSubtitle}
             rightElement={
               versionAPI.state.isUpdateAvailable ? (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderWidth: 2,
-                    borderColor: customTheme.colors.lightGray,
-                    borderRadius: 15,
-                    width: 50,
-                    height: 30,
-                    marginLeft: 16,
-                  }}>
+                <View style={styles.itemRightElement}>
                   {versionAPI.state.isUpdating ? (
                     <ActivityIndicator
                       size={20}
