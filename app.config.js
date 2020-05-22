@@ -1,9 +1,8 @@
-/* const env = require('./active.env');
-const dotenv = require('dotenv');
-
-dotenv.config({path: `.env.${env}`});
-
 module.exports = function ({config, mode}) {
+  const env = require('./active.env');
+  const dotenv = require('dotenv');
+
+  dotenv.config({path: `.env.${env}`});
   return {
     ...config,
     extra: {
@@ -16,9 +15,9 @@ module.exports = function ({config, mode}) {
       amplitudeApiKey: process.env.AMPLITUDE_API_KEY,
     },
   };
-}; */
+};
 
-module.exports = {
+/* module.exports = {
   name: 'Bubbles',
   version: '1.0.0',
-};
+}; */

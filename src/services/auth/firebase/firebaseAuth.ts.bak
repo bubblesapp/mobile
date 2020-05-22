@@ -1,0 +1,22 @@
+import {Platform} from 'react-native';
+
+let firebaseAuth;
+let setPersistence;
+
+if (Platform.OS === 'web') {
+  const firebase = require('firebase/app');
+  require('firebase/auth');
+  setPersistence = (remember: boolean) =>
+    firebase
+      .auth()
+      .setPersistence(
+        remember
+          ? firebase.auth.Auth.Persistence.LOCAL
+          : firebase.auth.Auth.Persistence.SESSION,
+      );
+  firebaseAuth = firebase.auth;
+} else {
+  firebaseAuth = require('@react-native-firebase/auth');
+  setPersistence = () => {};
+}
+export {setPersistence, firebaseAuth};
