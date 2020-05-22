@@ -17,7 +17,7 @@
   };
 }; */
 
-module.exports = function () {
+module.exports = function ({config, mode}) {
   return {
     name: 'Bubbles',
     version: '1.0.0',
