@@ -1,0 +1,7 @@
+import {FirebaseAPI} from '@bubblesapp/api';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import ExpoConstants from 'expo-constants';
+
+const firebaseConfig = ExpoConstants.manifest.extra.firebaseConfig;
+export const api = new FirebaseAPI(firebase.initializeApp(firebaseConfig));
