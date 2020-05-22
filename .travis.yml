@@ -11,9 +11,8 @@ cache:
   - "~/.npm"
 install:
 - npm ci
-- npm install --save-dev expo-cli
+- npm install --save expo-cli
 script:
-- npx expo-optimize
 - expo build:web
 deploy:
   provider: firebase
