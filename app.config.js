@@ -1,9 +1,9 @@
-import env from './active.env';
-import dotenv from 'dotenv';
+const env = require('./active.env');
+const dotenv = require('dotenv');
 
 dotenv.config({path: `.env.${env}`});
 
-export default function ({config, mode}) {
+module.exports = function ({config, mode}) {
   return {
     ...config,
     extra: {
@@ -16,4 +16,4 @@ export default function ({config, mode}) {
       amplitudeApiKey: process.env.AMPLITUDE_API_KEY,
     },
   };
-}
+};
