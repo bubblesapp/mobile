@@ -18,6 +18,8 @@
 }; */
 
 module.exports = function ({config, mode}) {
+  const env = require('./active.env');
+  const dotenv = require('dotenv');
   return {
     name: 'Bubbles',
     version: '1.0.0',
