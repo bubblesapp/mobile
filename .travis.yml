@@ -11,7 +11,7 @@ cache:
   - "~/.npm"
 install:
 - npm ci
-- npm install --save expo-cli
+- npm install --save expo-cli@3.20.5
 script:
 - expo build:web
 deploy:
