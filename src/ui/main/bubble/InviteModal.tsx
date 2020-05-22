@@ -21,13 +21,12 @@ import I18n from '../../../services/i18n';
 import {ExtraButton} from '../../common/ExtraButton';
 import {useToast} from '../../common/Toast';
 import Clipboard from '@react-native-community/clipboard';
-import ENV from '../../../../environment';
-import env from '../../../../active.env';
 import {Analytics, Events} from '../../../services/analytics/Analytics';
 import {useNavigation} from '@react-navigation/native';
 import {useAPI} from '../../../services/api/useAPI';
 import {Link} from '@bubblesapp/api';
 import {Routes} from '../../../services/navigation/Routes';
+import ExpoConstants from 'expo-constants';
 
 type Props = {
   onCancel: () => void;
@@ -81,7 +80,7 @@ export const InviteModal: React.FC<Props> = () => {
   }, [api]);
 
   link = link || {
-    url: `${ENV[env].baseUrl}?mode=invite&n=${auth.state.name}&e=${auth.state.email}`,
+    url: `${ExpoConstants.manifest.extra.baseUrl}?mode=invite&n=${auth.state.name}&e=${auth.state.email}`,
   };
   const shareContent = {
     title: I18n.t('bubble.invites.shareMessageTitle'),

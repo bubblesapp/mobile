@@ -1,10 +1,9 @@
 import amplitude from 'amplitude-js';
-import ENV from '../../../environment';
-import env from '../../../active.env';
-import Constants from 'expo-constants';
+import ExpoConstants from 'expo-constants';
 
 export const Analytics = {
-  init: () => amplitude.getInstance().init(ENV[env].amplitudeApiKey),
+  init: () =>
+    amplitude.getInstance().init(ExpoConstants.manifest.extra.amplitudeApiKey),
   setUserId: (uid: string) => amplitude.getInstance().setUserId(uid),
   logEvent: (event: string) => amplitude.getInstance().logEvent(event),
   set: (property: string, value: any) =>
@@ -12,8 +11,8 @@ export const Analytics = {
       .getInstance()
       .identify(new amplitude.Identify().set(property, value)),
   setVersionName: () => {
-    if (Constants.manifest?.version) {
-      amplitude.getInstance().setVersionName(Constants.manifest?.version);
+    if (ExpoConstants.manifest?.version) {
+      amplitude.getInstance().setVersionName(ExpoConstants.manifest?.version);
     }
   },
 };

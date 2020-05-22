@@ -1,6 +1,5 @@
 import {LinkingOptions} from '@react-navigation/native/lib/typescript/src/types';
-import ENV from '../../../environment';
-import env from '../../../active.env';
+import ExpoConstants from 'expo-constants';
 
 export enum Routes {
   // Auth flow
@@ -40,7 +39,7 @@ export enum Routes {
 }
 
 export const linking: LinkingOptions = {
-  prefixes: [ENV[env].baseUrl],
+  prefixes: [ExpoConstants.manifest.extra.baseUrl],
   config: {
     [Routes.AuthNavigator]: {
       initialRouteName: Routes.SignIn,

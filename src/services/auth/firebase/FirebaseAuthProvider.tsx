@@ -1,5 +1,5 @@
 import React, {Dispatch, ReducerAction, useEffect, useMemo, useReducer,} from 'react';
-import {AuthState} from '../AuthAPI';
+import {AuthAPI, AuthState} from '../AuthAPI';
 import {authReducer, AuthReducer} from '../state/reducer';
 import {AuthStateChangedAction} from '../state/actions';
 import {useAPI} from '../../api/useAPI';
@@ -8,11 +8,9 @@ import {Platform} from 'react-native';
 import {firebaseAuth, setPersistence} from './firebaseAuth';
 import {API, Device} from '@bubblesapp/api';
 import {Analytics, Events} from '../../analytics/Analytics';
-import env from '../../../../active.env';
-import ENV from '../../../../environment';
 import _ from 'lodash';
-import {AuthAPI} from '../AuthAPI';
 import {AuthContext} from '../useAuth';
+import ExpoConstants from 'expo-constants';
 
 class FirebaseAuth implements AuthAPI {
   constructor(
@@ -32,7 +30,7 @@ class FirebaseAuth implements AuthAPI {
     handleCodeInApp: true,
     dynamicLinkDomain: ENV[env].dynamicLinksDomain,*/
     handleCodeInApp: false,
-    url: ENV[env].baseUrl,
+    url: ExpoConstants.manifest.extra.baseUrl,
   };
 
   private changeState = (authState: AuthState) =>
@@ -199,6 +197,8 @@ export const FirebaseAuthProvider: React.FC = (props): JSX.Element => {
     () => new FirebaseAuth(state, dispatch, api),
     [state, dispatch],
   );
+
+  console.log('EXPOCONSTANT', ExpoConstants.manifest.extra.baseUrl);
 
   useEffect(() => {
     return firebaseAuth().onAuthStateChanged(async (user) => {
