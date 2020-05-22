@@ -1,1 +1,1 @@
-export default 'prod';
+module.exports = 'dev';

@@ -1,0 +1,22 @@
+language: node_js
+node_js:
+- node
+branches:
+  only:
+    - master
+warnings_are_errors: false
+cache:
+  directories:
+  - "~/.npm"
+install:
+- npm ci
+- npm install --save-dev expo-cli
+script:
+- npx expo-optimize
+- expo build:web
+deploy:
+  provider: firebase
+  skip_cleanup: true
+  project: $PRODUCTION_FIREBASE_PROJECT
+  token:
+    secure: f7FEpbwbZ1kQgAjNqc9w68Epkt6GqxtAME8V5qCszDcMc6X0qjvr5LeMvWvnG6wOCgrObUltfr1uhfuFcq9umZ26ABwdJgKdm1oO1UG7qGGJEVYuaOVlj9RyvVKUFaf8wgS1VCJaJATD3rjUrkcYvHMMiseXpRHrTk1Xj//tcJu6etKMeuKRrXgQnLd/7ibLoFebbT7BD/VbJeHsfcETkC4GwHeY03zb4IPfHAhcgmT/DAJvuqP0D0CQLtpcdguvfQFqastrMLX/elHyxBBU3BvcXy9O9YDmah2MbDnbOGXuR9JZXbDW4ywqSOhSXjcbgk9uPVFhMHBg+y+1su+HKBWLFYB5Ot5RezjuK+pbDWdDkBi4/+9lcyWzZW+wjdk6J0JI9tz+fJTIeoSlxe2MfrDak8yTmCfW4z237gRNapBoQAZKO3SHKt8h/KIN+XnfYIjSClb8MEEqS+I+U3YRAx0Q6QJRJdFJOm8b2Or9utvgKLcG2uFk2NCJsjcE8TlKg+kwSpR0puMhvUuMo2BXZIcbiF5Zezkym/41PGwabqEgq8awhpqDwxK0xTqFgXcAymri/vJ2aw5w8DTPjOB8wWS5zNK1td67eiEFbaaUBYzTVBpRFrDTj8ONMoclfZLsu4zm3AH/xOgZV3kprtZrZldqLrZtIYPTUdTuB7ODzd8=

@@ -1,16 +1,16 @@
 {
-  "name": "bubbles",
-  "displayName": "Bubbles",
+  "name": "Bubbles",
   "expo": {
     "name": "Bubbles",
     "description": "Safely get your social life back.",
     "icon": "assets/images/icon_1024.png",
     "slug": "bubbles",
     "platforms": ["web"],
-    "version": "1.0.0",
+    "version": "1.1.5",
     "web": {
       "display": "standalone",
-      "barStyle": "black-translucent"
+      "barStyle": "default",
+      "orientation": "portrait"
     }
   }
 }

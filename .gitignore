@@ -17,7 +17,7 @@ buck-out/
 .fakebuckversion
 
 .firebase
-src/api/FirebaseAPI.web.ts
+src/services/api/firebase/FirebaseAPI.web.ts
 
 ### ReactNative.Node Stack ###
 # Logs
@@ -88,7 +88,6 @@ typings/
 .env
 .env.test
 active.env.js
-environment.js
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
