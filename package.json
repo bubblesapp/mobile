@@ -77,7 +77,7 @@
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/runtime": "^7.6.2",
-    "@expo/webpack-config": "^0.12.9",
+    "@expo/webpack-config": "^0.12.82",
     "@firebase/testing": "^0.18.1",
     "@react-native-community/eslint-config": "^1.0.0",
     "@types/amplitude-js": "^5.11.0",
